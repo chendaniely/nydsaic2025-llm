@@ -1,0 +1,21 @@
+---
+title: More resources
+---
+
+- Hadley Wickham's LLM hackathon slides: <br>
+  <https://github.com/hadley/workshop-llm-hackathon>
+- Joe Cheng's LLM Quickstart Hackathon slides: <br>
+  <https://github.com/jcheng5/llm-quickstart>
+
+- Stephen Turner's overview of all of the AI tools in R: <br>
+  <https://blog.stephenturner.us/p/r-production-ai>
+
+- Chatlas articles (e.g., RAG): <br>
+  <https://posit-dev.github.io/chatlas/rag.html>
+- Shiny for Python GenAI concepts: <br>
+  <https://shiny.posit.co/py/docs/genai-inspiration.html>
+
+- Large Language Model tools for R book: <br>
+  <https://luisdva.github.io/llmsr-book/>
+
+A few more on the [References](references.qmd) page.

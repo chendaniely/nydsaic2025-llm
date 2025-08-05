@@ -1,0 +1,12 @@
+---
+title: "References"
+bibliography: references.bib
+
+nocite: |
+  @*
+---
+
+:::::: {.column-page-inset-right}
+::: {#refs}
+:::
+::::::

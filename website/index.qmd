@@ -1,0 +1,23 @@
+---
+title: "Intro to LLMs"
+toc: false
+---
+
+Me sharing my experiences with LLMs and what I know so far from participating in an LLM hackathon.
+
+:::{.column-body}
+| Time  | Activity                                                      |
+| :---- | :------------------------------------------------------------ |
+| 13:30 | [Welcome! Introduction and overview](010-welcome.qmd)         |
+| 13:45 | [Anatomy of a conversation](020-anatomy.qmd)                  |
+| 14:20 | *break*                                                       |
+| 14:30 | [Demo: 20 Questions][demo20q] by Winston Chang                |
+| 14:35 | [Your first chat with an LLM](030-first.qmd)                  |
+| 15:20 | *break*                                                       |
+| 15:30 | [AI Chat Interfaces](050-chatbot.qmd)                         |
+| 15:45 | [Tool Calling](060-tools.qmd)                                 |
+| 16:00 | *End* / Wrap up / [Dan's AI Hackathon Demo][dan-ai-hackathon] |
+:::
+
+[demo20q]: https://github.com/chendaniely/nydsaic2025-llm/blob/main/demo/20-questions/app.R
+[dan-ai-hackathon]: https://github.com/chendaniely/ai-hackathon-2024

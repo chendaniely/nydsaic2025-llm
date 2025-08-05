@@ -1,0 +1,11 @@
+| Time  | Activity                      |
+| :---- | :---------------------------- |
+| 13:30 | Welcome!                      |
+| 13:45 | Introduction and Overview     |
+| 14:15 | *break*                       |
+| 14:20 | LLM Packages: Chatlas + Elmer |
+| 15:00 | *break*                       |
+| 15:15 | Demos 1                       |
+| 16:00 | *break*                       |
+| 16:00 | Now you try                   |
+| 16:30 | End                           |

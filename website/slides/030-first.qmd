@@ -1,0 +1,148 @@
+---
+title: Your first chat with an LLM 🗣️🤖
+
+format:
+  revealjs:
+    smaller: true
+    css: styles.css
+    slide-number: true
+
+    footer: >
+      The New York Data Science & AI Conference. 2025.
+      <https://github.com/chendaniely/nydsaic2025-llm>
+
+editor:
+  render-on-save: true
+---
+
+## Working with an LLM
+
+Many different chat providers
+
+- OpenAI ChatGPT
+- Anthropic Claude
+- Google Gemini
+- xAI Grok
+- Meta Llama
+
+etc...
+
+## Demo: OpenAI ChatGPT
+
+```python
+{{< include /../code/01-basics/openai.py >}}
+```
+
+## GitHub Models {footer=false}
+
+GitHub Models: <https://github.com/marketplace/models>
+
+::: {.columns}
+::: {.column width='60%'}
+![](/img/github-limits.png)
+:::
+::: {.column width='40%'}
+- Free tiers  of all the latest models
+- Playground to tinker with them
+:::
+:::
+
+
+<https://docs.github.com/en/github-models/use-github-models/prototyping-with-ai-models#rate-limits>
+
+
+## Your turn: OpenAI / GitHub {footer=false}
+
+{{< countdown "5:00" play_sound="true">}}
+
+:::{.callout-note}
+Make sure you have created a GitHub PAT (you do not need any specific context)
+:::
+
+```python
+{{< include /../code/01-basics/github-openai.py >}}
+```
+
+## Educator Developer Blog
+
+[How to use any Python AI agent framework with free GitHub Models](https://techcommunity.microsoft.com/blog/educatordeveloperblog/how-to-use-any-python-ai-agent-framework-with-free-github-models/4403526)
+
+![](/img/githubmodels-agents_square.png)
+
+## Demo: Langchain
+
+```python
+{{< include /../code/01-basics/langchain.py >}}
+```
+
+## Different chat APIs
+
+Each Chat API can have a different JSON payload, functions, ways to construct the chat history, etc...
+
+## Chatlas + Ellmer
+
+Unify the prompt creation process and steps
+
+::: {.columns}
+::: {.column}
+Python
+
+![](/img/logo-chatlas.png){height="400px"}
+
+<https://posit-dev.github.io/chatlas/>
+:::
+
+::: {.column}
+R
+
+![](/img/logo-ellmer.png){height="400px"}
+
+<https://ellmer.tidyverse.org/>
+:::
+
+:::
+
+
+## Demo: Chatlas + Ellmer (OpenAI)
+
+Python Chatlas
+
+```python
+{{< include /../code/01-basics/chatlas.py >}}
+```
+
+R Ellmer
+
+```r
+{{< include /../code/01-basics/ellmer.R >}}
+```
+
+## Demo: Chatlas + Ellmer (Claude)
+
+Python Chatlas
+
+```python
+{{< include /../code/01-basics/chatlas-anthropic.py >}}
+```
+
+R Ellmer
+
+```r
+{{< include /../code/01-basics/ellmer-anthropic.R >}}
+```
+
+## Your turn: Chatlas Ellmer GitHub {footer=false}
+
+{{< countdown "10:00" play_sound="true">}}
+
+Python Chatlas
+
+```python
+{{< include /../code/01-basics/chatlas-github-openai.py >}}
+```
+
+R Ellmer
+
+```r
+{{< include /../code/01-basics/ellmer-github-openai.R >}}
+```

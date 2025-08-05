@@ -1,0 +1,70 @@
+---
+title: Setup
+---
+
+## R + Python
+
+1. Clone this repository: <https://github.com/chendaniely/nydsaic2025-llm>
+```bash
+git clone https://github.com/chendaniely/nydsaic2025-llm.git
+git clone git@github.com:chendaniely/nydsaic2025-llm.git
+```
+
+2. Use the provided `requirements.txt` and `renv.lock` file to create the virtual environments
+    - R: you can use the `setup-r` `Makefile` target
+    - Python: if you have `uv` installed (<https://docs.astral.sh/uv/>) you can also use the `setup-python` target
+    - There is a convenience `make setup` target that combines both for you
+
+```bash
+make setup
+```
+
+## IDE
+
+I'm using Positron: <https://positron.posit.co/>, but feel free to use VS Code and/or RStudio
+
+## GitHub Models
+
+You will need to create a GitHub Personal Access Token (PAT).
+It does not need any context (e.g., repo, workflow, etc).
+
+General instructions from the GitHub docs on creating a PAT: <https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic>
+
+Instructions from the GitHub Models docs: <https://github.com/Azure-Samples/python-ai-agent-frameworks-demos/tree/main?tab=readme-ov-file#configuring-github-models>
+
+
+## Local LLM: Ollama
+
+1. Download Ollama: <https://ollama.com/>
+2. Pick one of the many llama models on their model page from: <https://ollama.com/search>.
+    - Pick any random model that will fit on your computer
+    - You can pick multiple models if you'd like, we will compare results during workshop.
+    - Here are a few example models with their download sizes you can try:
+
+| Model          | Download Size | URL                                         | Install Command                  |
+| -------------- | ------------- | ------------------------------------------- | -------------------------------- |
+| qwen3:0.6b     | 523MB         | <https://ollama.com/library/qwen3>          | `ollama run qwen3:0.6b`          |
+| qwen           | 5.2GB         | -                                           | `ollama run qwen3`               |
+| Phi 4 mini     | 3.2GB         | <https://ollama.com/library/phi4-reasoning> | `ollama run phi4-mini-reasoning` |
+| devstral       | 14GB          | <https://ollama.com/library/devstral>       | `ollama run devstral`            |
+| llama4         | 67GB          | <https://ollama.com/library/llama4>         | `ollama run llama4`              |
+| llama4:128x17b | 245GB         | -                                           | `ollama run llama4:128x17b`      |
+
+## (Optional): Chat provider with API
+
+If you pay for Claude, OpenAI, etc access with their web/desktop application,
+this is a separate purchase for the API key.
+Depending on your usage, you may even find that paying for the API key could be cheaper!
+
+### Anthropic Claude
+
+1. Sign up at <https://console.anthropic.com>.
+2. Load up enough credit so you won't be sad if something goes wrong.
+3. Create a key at <https://console.anthropic.com/settings/keys>
+
+### Google Gemini
+
+1. Log in to <https://aistudio.google.com> with a google account
+2. Click create API key & copy it to the clipboard.
+
+### OpenAI ChatGPT

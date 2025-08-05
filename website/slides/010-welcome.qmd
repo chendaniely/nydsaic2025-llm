@@ -1,0 +1,70 @@
+---
+title: "Welcome"
+format:
+  revealjs:
+    smaller: true
+    slide-number: true
+
+    footer: >
+      The New York Data Science & AI Conference. 2025.
+      <https://github.com/chendaniely/nydsaic2025-llm>
+
+editor:
+  render-on-save: true
+---
+
+## Install + Setup
+
+Take a look at the workshop website and go through the setup instructions:
+<https://github.com/chendaniely/nydsaic2025-llm>
+
+Url is at the bottom of all the slides.
+
+1. Clone this repo
+2. Install your R + Python packages
+3. Download at least one of the Ollama models, I provided a few to pick from.
+   Feel free to pick any other one.
+4. (Optional) use the `.env.template` file to provide your API key into `.env`
+
+:::{.callout-note}
+If you pay for Claude, OpenAI, etc access with their web/desktop application,
+this is a separate purchase for the API key.
+Depending on your usage, you may even find that paying for the API key could be cheaper!
+:::
+
+## Passing along what I learned {footer=false}
+
+![](/img/youtube-joe-llm.png)
+
+Joe will do a better job than I can, but I can demo you code today.
+
+<https://www.youtube.com/watch?v=owDd1CJ17uQ>
+
+## Poll: Experience with LLMs
+
+:::{.incremental}
+
+1. Used an LLM before (ChatGPT/Claude/Ollama desktop/web application)?
+2. Used it for a homework assignment?
+3. Tasks outside of school work?
+
+4. Skeptical about LLMs/AI (1-2 out of 5)? Why?
+5. Neutral about LLMs/AI (3 out of 5)? Why?
+6. Enthusiastic about LLMs/AI (4-5 out of 5)? Why?
+
+:::
+
+## Today
+
+- Today, we will treat LLMs as black boxes
+- Practical introduction
+- Get some hands on practice to demystify using them
+
+## Goal
+
+Quick Start course on LLMs. You will leave having used a Chat API.
+
+## Security
+
+- **DO NOT** send proprietary code or data to any LLM, unless you are sure IT policies allow it
+- Local models (e.g., Ollama) typically perform worse than frontier models

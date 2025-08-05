@@ -1,0 +1,18 @@
+meta:
+  name: brand.yml
+  link: https://posit-dev.github.io/brand-yml
+
+#logo: logos/icon/brand-yml-icon-color.svg
+
+typography:
+  fonts:
+    - family: Atkinson Hyperlegible
+      source: google
+    - family: Atkinson Hyperlegible Mono
+      source: google
+
+  base: Atkinson Hyperlegible
+  headings:
+    family: Atkinson Hyperlegible
+    weight: 700
+  monospace: Atkinson Hyperlegible Mono

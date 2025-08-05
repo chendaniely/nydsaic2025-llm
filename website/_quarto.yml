@@ -1,0 +1,46 @@
+project:
+  type: website
+  preview:
+    port: 9708
+    watch-inputs: true
+  render:
+    - "./*.qmd"
+    - "slides/*.qmd"
+  resources:
+    - slides
+
+website:
+  title: "Intro to LLMs"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: setup.qmd
+
+    right:
+      - href: references.qmd
+      - icon: github
+        href: https://github.com/chendaniely/nydsaic2025-llm
+
+  page-footer: |
+    <a href="https://github.com/chendaniely/nydsaic2025-llm">chendaniely/nydsaic2025-llm</a>
+
+  repo-url: https://github.com/chendaniely/nydsaic2025-llm
+  repo-subdir: website
+  repo-actions: [edit, issue]
+
+format:
+  html:
+    theme:
+      - simplex
+      - brand
+    css: styles.css
+    toc: true
+    toc-expand: 2
+
+
+editor:
+  render-on-save: true
+
+
+brand: _brand.yml
