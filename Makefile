@@ -3,6 +3,10 @@
 preview:
 	cd website && quarto preview
 
+.PHONY: render
+render:
+	cd website && quarto render
+
 .PHONY: setup-python
 setup-python:
 	uv venv venv
