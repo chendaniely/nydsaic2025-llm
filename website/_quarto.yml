@@ -10,11 +10,10 @@ project:
     - slides
 
 website:
-  title: "Intro to LLMs"
+  title: "NYDSAIC 2025"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
+      - href: workshop.qmd
       - href: setup.qmd
 
     right:

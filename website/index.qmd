@@ -3,21 +3,32 @@ title: "Intro to LLMs"
 toc: false
 ---
 
-Me sharing my experiences with LLMs and what I know so far from participating in an LLM hackathon.
+Hello! I'm Daniel.
 
-:::{.column-body}
-| Time  | Activity                                                      |
-| :---- | :------------------------------------------------------------ |
-| 13:30 | [Welcome! Introduction and overview](010-welcome.qmd)         |
-| 13:45 | [Anatomy of a conversation](020-anatomy.qmd)                  |
-| 14:20 | *break*                                                       |
-| 14:30 | [Demo: 20 Questions][demo20q] by Winston Chang                |
-| 14:35 | [Your first chat with an LLM](030-first.qmd)                  |
-| 15:20 | *break*                                                       |
-| 15:30 | [AI Chat Interfaces](050-chatbot.qmd)                         |
-| 15:45 | [Tool Calling](060-tools.qmd)                                 |
-| 16:00 | *End* / Wrap up / [Dan's AI Hackathon Demo][dan-ai-hackathon] |
-:::
+Here are my workshop and talk materials for
+[The New York Data Science and AI Conference](https://rstats.ai/nyc).
 
-[demo20q]: https://github.com/chendaniely/nydsaic2025-llm/blob/main/demo/20-questions/app.R
-[dan-ai-hackathon]: https://github.com/chendaniely/ai-hackathon-2024
+This site won't be ready until the Conference Aug 25 - Aug 27, 2025.
+
+## Workshop: Introduction of LLMs/AI
+
+There's a lot of hype around AI around all their use cases and the amazing things they can do.
+This workshop aims to demystify how LLMs work and give you a practical understanding of how they work and how to use them beyond the desktop application.
+
+We will code with LLMs using an API and introduce two packages, chatlas (python) and ellmer (r),
+that make it easier to interact with LLMs programitaclly.
+We'll also see how we can use LLMs in Shiny dashboards to create a user interface with your own chat bots.
+We'll then expand on these basics to learn about RAG (retrieval augmented generation) and tool calling to give our bots more context and abilities to work as "agents".
+Finally, we'll see how we can use LLMs to help us work with our data science projects.
+
+
+## Talk: LLMs, Chatbots, and Dashboards: Visualize Your Data with Natural Language
+
+LLMs have a lot of hype around them these days.
+Let's demystify how they work and see how we can put them in context for data science use.
+As data scientists, we want to make sure our results are inspectable, reliable, reproducible, and replicable.
+We already have many tools to help us in this front.
+However, LLMs provide a new challenge; we may not always be given the same results back from a query.
+This means trying to work out areas where LLMs excel in, and use those behaviors in our data science artifacts.
+This talk will introduce you to LLms, the Ellmer, and Chatlas packages for R and Python, and how they can be integrated into a Shiny to create an AI-powered dashboard.
+We'll see how we can leverage the tasks LLMs are good at to better our data science products.

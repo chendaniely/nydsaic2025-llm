@@ -1,0 +1,27 @@
+---
+title: Workshop
+---
+
+:::{.column-body}
+| Time  | Activity                                                        |
+| :---- | :-------------------------------------------------------------- |
+| 09:15 | Settling in, [Setup](setup.qmd) instructions, and introductions |
+| 09:30 | [Welcome! Introduction and overview](010-welcome.qmd)           |
+| 09:45 | [Anatomy of a conversation](020-anatomy.qmd)                    |
+| 10:20 | *break*                                                         |
+| 10:30 | [Demo: 20 Questions][demo20q] by Winston Chang                  |
+| 10:35 | [Your first chat with an LLM](030-first.qmd)                    |
+| 11:20 | *break*                                                         |
+| 13:00 | [Your first Shiny application]()                                |
+| 14:30 | [Shiny's reactivity programming model]()                        |
+| 13:30 | [AI Chat Interfaces](050-chatbot.qmd)                           |
+| 13:50 | *break*                                                         |
+| 14:00 | [Tool Calling](060-tools.qmd)                                   |
+| 14:50 | *break*                                                         |
+| 15:00 | Retrieval-augmented generation (RAG)                            |
+| 15:50 | *break*                                                         |
+| 16:30 | *End* / Wrap up / [Dan's AI Hackathon Demo][dan-ai-hackathon]   |
+:::
+
+[demo20q]: https://github.com/chendaniely/nydsaic2025-llm/blob/main/demo/20-questions/app.R
+[dan-ai-hackathon]: https://github.com/chendaniely/ai-hackathon-2024
