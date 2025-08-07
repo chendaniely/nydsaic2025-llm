@@ -1,0 +1,45 @@
+---
+title: Tool Calling
+
+format:
+  revealjs:
+    smaller: true
+    css: styles.css
+    slide-number: true
+
+    footer: >
+      The New York Data Science & AI Conference. 2025.
+      <https://github.com/chendaniely/nydsaic2025-llm>
+
+editor:
+  render-on-save: true
+---
+
+## What is Tool Calling?
+
+- Allows LLMs to interact with other systems
+- Supported by most of the newest LLMs, but not all
+
+- Sounds complicated? Scary? It's not too bad, actually...
+
+Reference: <https://jcheng5.github.io/llm-quickstart/quickstart.html#/how-it-works>
+
+## How it does NOT work
+
+![](/img/toolcalling-no.png)
+
+## How it DOES work
+
+![](/img/toolcalling-yes.png)
+
+## Demo: Weather R
+
+```r
+{{< include /../code/03-tools/ellmer-weather.R >}}
+```
+
+## Demo: Weather Python
+
+```python
+{{< include /../code/03-tools/chatlas-weather.py >}}
+```
