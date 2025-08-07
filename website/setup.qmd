@@ -1,5 +1,7 @@
 ---
 title: Setup
+editor:
+    render-on-save: true
 ---
 
 ## R + Python
@@ -43,6 +45,8 @@ Instructions from the GitHub Models docs: <https://github.com/Azure-Samples/pyth
 
 | Model          | Download Size | URL                                         | Install Command                  |
 | -------------- | ------------- | ------------------------------------------- | -------------------------------- |
+| gpt-oss:20b    | 14GB          | <https://gpt-oss.com/>                      | `ollama run gpt-oss:20b`         |
+| gpt-oss:120b   | 65GB          | -                                           | `ollama run gpt-oss:120b`        |
 | qwen3:0.6b     | 523MB         | <https://ollama.com/library/qwen3>          | `ollama run qwen3:0.6b`          |
 | qwen           | 5.2GB         | -                                           | `ollama run qwen3`               |
 | Phi 4 mini     | 3.2GB         | <https://ollama.com/library/phi4-reasoning> | `ollama run phi4-mini-reasoning` |
@@ -68,3 +72,6 @@ Depending on your usage, you may even find that paying for the API key could be 
 2. Click create API key & copy it to the clipboard.
 
 ### OpenAI ChatGPT
+
+1. Log into <https://platform.openai.com/>.
+2. Create a key at <https://platform.openai.com/settings/organization/api-keys>
