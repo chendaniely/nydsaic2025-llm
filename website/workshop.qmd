@@ -5,28 +5,31 @@ title: Workshop
 :::{.column-body}
 | Time  | Activity                                                                 |
 | :---- | :----------------------------------------------------------------------- |
-| 09:15 | Settling in, [Setup](setup.qmd) instructions, and introductions          |
+| 08:30 | Registration and Breakfast                                               |
+| 09:00 | Settling in                                                              |
+| 09:15 | [Setup](setup.qmd) instructions, and introductions                       |
 | 09:30 | [Welcome! Introduction and overview](01-welcome.qmd)                     |
 | 09:45 | [Anatomy of a conversation](02-anatomy.qmd)                              |
-| 10:20 | *break*                                                                  |
-| 10:30 | [Demo: 20 Questions][demo20q] by Winston Chang                           |
-| 10:35 | [Your first chat with an LLM](03-first.qmd)                              |
-| 10:35 | [Prompting](04-prompt.qmd) / [Dan's AI Hackathon Demo][dan-ai-hackathon] |
-| 10:35 | [Models](05-models.qmd)                                                  |
-| 11:20 | *break*                                                                  |
-| 13:00 | [Introduction to Shiny](06-shiny.qmd)                                    |
-| 14:30 | [Your first Shiny application](07-app.qmd)                               |
-| 14:30 | [Shiny's reactivity programming model](08-reactivity.qmd)                |
-| 13:30 | [AI Chat Interfaces](09-chatbot.qmd)                                     |
-| 13:30 | [Chat with your data: Querychat](10-querychat.qmd)                       |
-| 13:50 | *break*                                                                  |
-| 14:00 | [Tool Calling](11-tools.qmd)                                             |
-| 14:00 | [Structured Data](12-structure.qmd)                                      |
-| 14:50 | *break*                                                                  |
-| 15:00 | [Retrieval-augmented generation (RAG)](13-rag.qmd)                       |
-| 15:00 | [Model Context Protocol (MCP)](14-mcp.qmd)                               |
-| 15:50 | *break*                                                                  |
+| 10:00 | *break*                                                                  |
+| 10:15 | [Demo: 20 Questions][demo20q] by Winston Chang                           |
+| 10:20 | [Your first chat with an LLM](03-first.qmd)                              |
+| 10:50 | [Prompting](04-prompt.qmd) / [Dan's AI Hackathon Demo][dan-ai-hackathon] |
+| 11:00 | *break*                                                                  |
+| 11:15 | [Models](05-models.qmd)                                                  |
+| 11:20 | [Introduction to Shiny](06-shiny.qmd)                                    |
+| 11:30 | [Your first Shiny application](07-app.qmd)                               |
+| 12:30 | *Lunch*                                                                  |
+| 13:30 | [Shiny's reactivity programming model](08-reactivity.qmd)                |
+| 13:45 | [AI Chat Interfaces](09-chatbot.qmd)                                     |
+| 14:00 | [Chat with your data: Querychat](10-querychat.qmd)                       |
+| 14:15 | *break*                                                                  |
+| 14:30 | [Tool Calling](11-tools.qmd)                                             |
+| 15:00 | [Structured Data](12-structure.qmd)                                      |
+| 15:15 | *break*                                                                  |
+| 15:30 | [Retrieval-augmented generation (RAG)](13-rag.qmd)                       |
+| 16:00 | [Model Context Protocol (MCP)](14-mcp.qmd)                               |
 | 16:30 | [Resources](90-more.qmd) / Wrap up / *End*                               |
+| 17:00 | *Finish*                                                                 |
 :::
 
 [demo20q]: https://github.com/chendaniely/nydsaic2025-llm/blob/main/code/20-questions/app.R
