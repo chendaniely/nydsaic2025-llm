@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Choosing a model – NYDSAIC 2025</title>
+<title>app – NYDSAIC 2025</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -119,185 +119,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Choosing a model</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<div class="column-page-inset-right">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Provider</th>
-<th>Model</th>
-<th>Description</th>
-<th>Notes</th>
-<th>Takeaway</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>OpenAI</td>
-<td>GPT-4.1</td>
-<td>Good general-purpose model</td>
-<td>1 million token context length</td>
-<td>Good models for general-purpose use</td>
-</tr>
-<tr class="even">
-<td>OpenAI</td>
-<td>GPT-4.1-mini</td>
-<td>Faster, cheaper, and dumber version of GPT-4.1</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>OpenAI</td>
-<td>GPT-4.1-nano</td>
-<td>Even faster, cheaper, and dumber</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>OpenAI</td>
-<td>o3</td>
-<td>Better at complex math and coding</td>
-<td>Slower and more expensive</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>OpenAI</td>
-<td>o4-mini</td>
-<td>Reasoning model, not as strong as o3</td>
-<td>Cheaper than GPT-4.1</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>OpenAI</td>
-<td>API</td>
-<td>Access via OpenAI or Azure</td>
-<td><a href="https://platform.openai.com/docs/overview/">OpenAI</a>, <a href="https://azure.microsoft.com/en-us/products/ai-services/openai-service">Azure</a></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Anthropic</td>
-<td>Claude 3.7 Sonnet</td>
-<td>Good general-purpose model</td>
-<td>Best for code generation</td>
-<td>Best model for code generation</td>
-</tr>
-<tr class="even">
-<td>Anthropic</td>
-<td>Claude 3.5 Sonnet v2</td>
-<td>Older but still excellent</td>
-<td>Some prefer it to 3.7</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Anthropic</td>
-<td>Claude 3.5 Haiku</td>
-<td>Faster, cheaper, and dumber</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Anthropic</td>
-<td>API</td>
-<td>Access via Anthropic or AWS Bedrock</td>
-<td><a href="https://docs.anthropic.com/">Anthropic</a>, <a href="https://aws.amazon.com/bedrock/claude/">AWS Bedrock</a></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Google</td>
-<td>Gemini 2.0 Flash</td>
-<td>Very fast</td>
-<td>1 million token context length</td>
-<td>Largest context length — good for big input</td>
-</tr>
-<tr class="even">
-<td>Google</td>
-<td>Gemini 2.0 Pro</td>
-<td>Smarter than Flash</td>
-<td>2 million token context length</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>LLaMA</td>
-<td>LLaMA 3.1 405b</td>
-<td>Text-only</td>
-<td>229GB, not as smart as best closed models</td>
-<td>Good for on-premise/local use</td>
-</tr>
-<tr class="even">
-<td>LLaMA</td>
-<td>LLaMA 3.2 90b</td>
-<td>Text + vision</td>
-<td>55GB</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>LLaMA</td>
-<td>LLaMA 3.2 11b</td>
-<td>Text + vision</td>
-<td>7.9GB, can run on a MacBook</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>LLaMA</td>
-<td>Open weights + API access</td>
-<td>Can run locally</td>
-<td>Via <a href="https://ollama.com/">Ollama</a>, <a href="https://openrouter.ai/">OpenRouter</a>, <a href="https://groq.com/">Groq</a>, <a href="https://aws.amazon.com/bedrock/llama/">AWS Bedrock</a></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>DeepSeek</td>
-<td>DeepSeek R1 671b</td>
-<td>Uses chain of thought</td>
-<td>404GB, claimed similar performance to OpenAI o1</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>DeepSeek</td>
-<td>DeepSeek R1 32b</td>
-<td>Smaller variant</td>
-<td>20GB, not actually DeepSeek architecture, significantly worse</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>DeepSeek</td>
-<td>DeepSeek R1 70b</td>
-<td>Mid-size variant</td>
-<td>43GB, not actually DeepSeek architecture</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>DeepSeek</td>
-<td>Open weights + API access</td>
-<td>Can run locally</td>
-<td>Via <a href="https://platform.deepseek.com/">DeepSeek</a>, <a href="https://openrouter.ai/deepseek/deepseek-r1">OpenRouter</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Table values taken from <a href="https://github.com/jcheng5/llm-quickstart/blob/main/quickstart.qmd#L301C1-L340C62">Joe Cheng’s LLM Quickstart</a> and converted into a table using ChatGPT.</p>
 
 
 
@@ -709,7 +539,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
 <p><a href="https://github.com/chendaniely/nydsaic2025-llm">chendaniely/nydsaic2025-llm</a></p>
-<div class="toc-actions"><ul><li><a href="https://github.com/chendaniely/nydsaic2025-llm/edit/main/website/040-models.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/chendaniely/nydsaic2025-llm/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+<div class="toc-actions"><ul><li><a href="https://github.com/chendaniely/nydsaic2025-llm/edit/main/website/07-app.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/chendaniely/nydsaic2025-llm/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       &nbsp;
     </div>

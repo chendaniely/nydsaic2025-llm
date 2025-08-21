@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/tabby.min.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.33">
 
-  <title>NYDSAIC 2025 – Tool Calling</title>
+  <title>NYDSAIC 2025 – Introduction to Shiny</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -27,79 +27,12 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d25e68c9ad75043bc9785404553ea3be.css">
-  <link rel="stylesheet" href="styles.css">
-  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-d25e68c9ad75043bc9785404553ea3be.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -193,146 +126,155 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Tool Calling</h1>
+  <h1 class="title">Introduction to Shiny</h1>
 
 <div class="quarto-title-authors">
 </div>
 
 </section>
-<section id="what-is-tool-calling" class="slide level2">
-<h2>What is Tool Calling?</h2>
+<section id="what-is-a-shiny-app" class="slide level2">
+<h2>What is a Shiny app?</h2>
+<p>Each Shiny app involves:</p>
+<ol type="1">
+<li>A web page</li>
+<li>A computer that watches the web page and responds to user events on that page</li>
+</ol>
+
+<img data-src="../../img/app-architecture.001.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="what-is-a-shiny-app-1" class="slide level2">
+<h2>What is a Shiny app?</h2>
+<p>Each Shiny app involves:</p>
+<ol type="1">
+<li>A web page</li>
+<li>A computer that watches the web page and responds to user events on that page</li>
+</ol>
+
+<img data-src="../../img/app-architecture.002.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="what-is-a-shiny-app-2" class="slide level2">
+<h2>What is a Shiny app?</h2>
+<p>Each Shiny app involves:</p>
+<ol type="1">
+<li>A web page</li>
+<li>A computer that watches the web page and responds to user events on that page</li>
+</ol>
+
+<img data-src="../../img/app-architecture.003.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="components" class="slide level2">
+<h2>Components</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>Each Shiny app consists of:</p>
+<ol type="1">
+<li>Inputs</li>
+</ol>
+</div><div class="column" style="width:60%;">
+<p><img data-src="../../img/app-components.001.png"></p>
+</div></div>
+</section>
+<section id="components-1" class="slide level2">
+<h2>Components</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>Each Shiny app consists of:</p>
+<ol type="1">
+<li>Inputs</li>
+<li>Outputs</li>
+</ol>
+</div><div class="column" style="width:60%;">
+<p><img data-src="../../img/app-components.002.png"></p>
+</div></div>
+</section>
+<section id="components-2" class="slide level2">
+<h2>Components</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>Each Shiny app consists of:</p>
+<ol type="1">
+<li>Inputs</li>
+<li>Outputs</li>
+<li>Instructions on how to build outputs from inputs</li>
+</ol>
+</div><div class="column" style="width:60%;">
+<p><img data-src="../../img/app-components.003.png"></p>
+</div></div>
+</section>
+<section id="reactivity" class="slide level2">
+<h2>Reactivity</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>When an input changes, Shiny reacts by rebuilding the outputs that depend on it, and <em>only those outputs</em>.</p>
+</div><div class="column" style="width:60%;">
+<p><img data-src="../../img/app-components.003.png"></p>
+</div></div>
+</section>
+<section id="spreadsheet-analogy" class="slide level2">
+<h2>Spreadsheet Analogy</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../img/spreadsheets.gif" class="quarto-figure quarto-figure-center" height="300"></p>
+</figure>
+</div>
+<ol type="1">
+<li>Inputs</li>
+<li>Outputs</li>
+<li>Instructions on how to build outputs from inputs</li>
+</ol>
+</section>
+<section id="spreadsheet-analogy-1" class="slide level2">
+<h2>Spreadsheet Analogy</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../img/spreadsheets-2.gif" class="quarto-figure quarto-figure-center" height="300"></p>
+</figure>
+</div>
+<p>Updates:</p>
+<ol type="1">
+<li>When an input changes</li>
+<li>Only the parts of the app that depend on the input</li>
+</ol>
+</section>
+<section id="key-features-of-reactivity" class="slide level2">
+<h2>Key features of reactivity</h2>
 <ul>
-<li><p>Allows LLMs to interact with other systems</p></li>
-<li><p>Supported by most of the newest LLMs, but not all</p></li>
-<li><p>Sounds complicated? Scary? It’s not too bad, actually…</p></li>
+<li>Easy enough to use for prototypes</li>
+<li>Efficient enough to handle complexity</li>
+<li>Scales to build production quality apps</li>
 </ul>
-<p>Reference: <a href="https://jcheng5.github.io/llm-quickstart/quickstart.html#/how-it-works" class="uri">https://jcheng5.github.io/llm-quickstart/quickstart.html#/how-it-works</a></p>
 </section>
-<section id="how-it-does-not-work" class="slide level2">
-<h2>How it does NOT work</h2>
-
-<img data-src="../img/toolcalling-no.png" class="r-stretch"></section>
-<section id="how-it-does-work" class="slide level2">
-<h2>How it DOES work</h2>
-
-<img data-src="../img/toolcalling-yes.png" class="r-stretch"></section>
-<section id="demo-weather-r" class="slide level2">
-<h2>Demo: Weather R</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(httr)</span>
-<span id="cb1-2"><a></a><span class="fu">library</span>(ellmer)</span>
-<span id="cb1-3"><a></a><span class="fu">library</span>(dotenv)</span>
-<span id="cb1-4"><a></a></span>
-<span id="cb1-5"><a></a><span class="co"># Load environment variables</span></span>
-<span id="cb1-6"><a></a><span class="fu">load_dot_env</span>()</span>
-<span id="cb1-7"><a></a></span>
-<span id="cb1-8"><a></a><span class="co"># Define weather function</span></span>
-<span id="cb1-9"><a></a>get_weather <span class="ot">&lt;-</span> <span class="cf">function</span>(latitude, longitude) {</span>
-<span id="cb1-10"><a></a>  base_url <span class="ot">&lt;-</span> <span class="st">"https://api.open-meteo.com/v1/forecast"</span></span>
-<span id="cb1-11"><a></a></span>
-<span id="cb1-12"><a></a>  <span class="fu">tryCatch</span>(</span>
-<span id="cb1-13"><a></a>    {</span>
-<span id="cb1-14"><a></a>      response <span class="ot">&lt;-</span> <span class="fu">GET</span>(</span>
-<span id="cb1-15"><a></a>        base_url,</span>
-<span id="cb1-16"><a></a>        <span class="at">query =</span> <span class="fu">list</span>(</span>
-<span id="cb1-17"><a></a>          <span class="at">latitude =</span> latitude,</span>
-<span id="cb1-18"><a></a>          <span class="at">longitude =</span> longitude,</span>
-<span id="cb1-19"><a></a>          <span class="at">current =</span> <span class="st">"temperature_2m,wind_speed_10m,relative_humidity_2m"</span></span>
-<span id="cb1-20"><a></a>        )</span>
-<span id="cb1-21"><a></a>      )</span>
-<span id="cb1-22"><a></a>      <span class="fu">rawToChar</span>(response<span class="sc">$</span>content)</span>
-<span id="cb1-23"><a></a>    },</span>
-<span id="cb1-24"><a></a>    <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
-<span id="cb1-25"><a></a>      <span class="fu">paste</span>(<span class="st">"Error fetching weather data:"</span>, e<span class="sc">$</span>message)</span>
-<span id="cb1-26"><a></a>    }</span>
-<span id="cb1-27"><a></a>  )</span>
-<span id="cb1-28"><a></a>}</span>
-<span id="cb1-29"><a></a></span>
-<span id="cb1-30"><a></a><span class="co"># Create chat instance</span></span>
-<span id="cb1-31"><a></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>(</span>
-<span id="cb1-32"><a></a>  <span class="at">model =</span> <span class="st">"gpt-4.1"</span>,</span>
-<span id="cb1-33"><a></a>  <span class="at">system_prompt =</span> <span class="st">"You are a helpful assistant that can check the weather. Report results in imperial units."</span></span>
-<span id="cb1-34"><a></a>)</span>
-<span id="cb1-35"><a></a></span>
-<span id="cb1-36"><a></a><span class="co"># Register the weather tool</span></span>
-<span id="cb1-37"><a></a><span class="co">#</span></span>
-<span id="cb1-38"><a></a><span class="co"># Created using `ellmer::create_tool_def(get_weather)`</span></span>
-<span id="cb1-39"><a></a>chat<span class="sc">$</span><span class="fu">register_tool</span>(<span class="fu">tool</span>(</span>
-<span id="cb1-40"><a></a>  get_weather,</span>
-<span id="cb1-41"><a></a>  <span class="st">"Fetches weather information for a specified location given by latitude and</span></span>
-<span id="cb1-42"><a></a><span class="st">longitude."</span>,</span>
-<span id="cb1-43"><a></a>  <span class="at">latitude =</span> <span class="fu">type_number</span>(</span>
-<span id="cb1-44"><a></a>    <span class="st">"The latitude of the location for which weather information is requested."</span></span>
-<span id="cb1-45"><a></a>  ),</span>
-<span id="cb1-46"><a></a>  <span class="at">longitude =</span> <span class="fu">type_number</span>(</span>
-<span id="cb1-47"><a></a>    <span class="st">"The longitude of the location for which weather information is requested."</span></span>
-<span id="cb1-48"><a></a>  )</span>
-<span id="cb1-49"><a></a>))</span>
-<span id="cb1-50"><a></a></span>
-<span id="cb1-51"><a></a><span class="co"># Test the chat</span></span>
-<span id="cb1-52"><a></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"What is the weather in Seattle?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="demo-weather-python" class="slide level2">
-<h2>Demo: Weather Python</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> requests</span>
-<span id="cb2-2"><a></a><span class="im">from</span> chatlas <span class="im">import</span> ChatAnthropic</span>
-<span id="cb2-3"><a></a><span class="im">from</span> dotenv <span class="im">import</span> load_dotenv</span>
-<span id="cb2-4"><a></a></span>
-<span id="cb2-5"><a></a>load_dotenv()  <span class="co"># Loads OPENAI_API_KEY from the .env file</span></span>
-<span id="cb2-6"><a></a></span>
-<span id="cb2-7"><a></a><span class="co"># Define a simple tool for getting the current weather</span></span>
-<span id="cb2-8"><a></a><span class="kw">def</span> get_weather(latitude: <span class="bu">float</span>, longitude: <span class="bu">float</span>):</span>
-<span id="cb2-9"><a></a>    <span class="co">"""</span></span>
-<span id="cb2-10"><a></a><span class="co">    Get the current weather for a location using latitude and longitude.</span></span>
-<span id="cb2-11"><a></a><span class="co">    """</span></span>
-<span id="cb2-12"><a></a>    base_url <span class="op">=</span> <span class="st">"https://api.open-meteo.com/v1/forecast"</span></span>
-<span id="cb2-13"><a></a>    params <span class="op">=</span> {</span>
-<span id="cb2-14"><a></a>        <span class="st">"latitude"</span>: latitude,</span>
-<span id="cb2-15"><a></a>        <span class="st">"longitude"</span>: longitude,</span>
-<span id="cb2-16"><a></a>        <span class="st">"current"</span>: <span class="st">"temperature_2m,wind_speed_10m,relative_humidity_2m"</span>,</span>
-<span id="cb2-17"><a></a>    }</span>
-<span id="cb2-18"><a></a></span>
-<span id="cb2-19"><a></a>    <span class="cf">try</span>:</span>
-<span id="cb2-20"><a></a>        response <span class="op">=</span> requests.get(base_url, params<span class="op">=</span>params)</span>
-<span id="cb2-21"><a></a>        response.raise_for_status()  <span class="co"># Raise an exception for bad status codes</span></span>
-<span id="cb2-22"><a></a>        <span class="cf">return</span> response.text</span>
-<span id="cb2-23"><a></a>    <span class="cf">except</span> requests.RequestException <span class="im">as</span> e:</span>
-<span id="cb2-24"><a></a>        <span class="cf">return</span> <span class="ss">f"Error fetching weather data: </span><span class="sc">{</span><span class="bu">str</span>(e)<span class="sc">}</span><span class="ss">"</span></span>
-<span id="cb2-25"><a></a></span>
-<span id="cb2-26"><a></a></span>
-<span id="cb2-27"><a></a>chat <span class="op">=</span> ChatAnthropic(</span>
-<span id="cb2-28"><a></a>    model<span class="op">=</span><span class="st">"claude-3-5-sonnet-latest"</span>,</span>
-<span id="cb2-29"><a></a>    system_prompt<span class="op">=</span>(</span>
-<span id="cb2-30"><a></a>        <span class="st">"You are a helpful assistant that can check the weather. "</span></span>
-<span id="cb2-31"><a></a>        <span class="st">"Report results in imperial units."</span></span>
-<span id="cb2-32"><a></a>    ),</span>
-<span id="cb2-33"><a></a>)</span>
-<span id="cb2-34"><a></a></span>
-<span id="cb2-35"><a></a>chat.register_tool(get_weather)</span>
-<span id="cb2-36"><a></a>chat.chat(<span class="st">"What is the weather in Seattle?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="why-shiny" class="slide level2">
+<h2>Why Shiny?</h2>
+<p>Shiny lets you quickly create reactive web apps without worrying about:</p>
+<ul>
+<li>cache</li>
+<li>state</li>
+<li>callbacks</li>
+<li>…or even HTML, CSS, and JavaScript</li>
+</ul>
+<p>And, these apps can scale from prototype to production-ready.</p>
 
 
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>The New York Data Science &amp; AI Conference. 2025. <a href="https://github.com/chendaniely/nydsaic2025-llm" class="uri">https://github.com/chendaniely/nydsaic2025-llm</a></p>
+<p>SciPy 2025. <a href="https://github.com/chendaniely/scipy-2025-shiny" class="uri">https://github.com/chendaniely/scipy-2025-shiny</a></p>
 </div>
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
-  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

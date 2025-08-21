@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-html/tabby.min.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/quarto-contrib/countdown-0.5.0/countdown.js"></script>
+<link href="../../site_libs/quarto-contrib/countdown-0.5.0/countdown.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.33">
 
-  <title>NYDSAIC 2025 – Anatomy of a Conversation</title>
+  <title>NYDSAIC 2025 – Chat with your data: Querychat</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -94,12 +96,12 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d25e68c9ad75043bc9785404553ea3be.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-d25e68c9ad75043bc9785404553ea3be.css">
   <link rel="stylesheet" href="styles.css">
-  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -193,215 +195,109 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Anatomy of a Conversation</h1>
+  <h1 class="title">Chat with your data: Querychat</h1>
 
 <div class="quarto-title-authors">
 </div>
 
 </section>
-<section id="llm-conversations-are-http-requests" class="slide level2">
-<h2>LLM Conversations are HTTP Requests</h2>
+<section id="chatting-with-your-data" class="slide level2">
+<h2>Chatting with your data</h2>
 <ul>
-<li class="fragment">Each interaction is a separate HTTP API request</li>
-<li class="fragment">The API server is entirely stateless (despite conversations being inherently stateful!)</li>
+<li>Interact with your data(frame) with SQL</li>
+<li><a href="https://github.com/posit-dev/querychat" class="uri">https://github.com/posit-dev/querychat</a></li>
 </ul>
 </section>
-<section id="example-conversation" class="slide level2">
-<h2>Example Conversation</h2>
-<div style="text-align: right;">
-<p>“What’s the capital of the moon?”</p>
-</div>
-<div class="fragment">
-<p><code>"There isn't one."</code></p>
-</div>
-<div class="fragment">
-<div style="text-align: right;">
-<p>“Are you sure?”</p>
-</div>
-</div>
-<div class="fragment">
-<p><code>"Yes, I am sure."</code></p>
-</div>
+<section id="demo-querychat-r" class="slide level2">
+<h2>Demo: querychat R</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(dotenv)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(bslib)</span>
+<span id="cb1-4"><a></a><span class="fu">library</span>(querychat)</span>
+<span id="cb1-5"><a></a></span>
+<span id="cb1-6"><a></a><span class="co"># 1. Configure querychat. This is where you specify the dataset and can also</span></span>
+<span id="cb1-7"><a></a><span class="co">#    override options like the greeting message, system prompt, model, etc.</span></span>
+<span id="cb1-8"><a></a>querychat_config <span class="ot">&lt;-</span> <span class="fu">querychat_init</span>(mtcars)</span>
+<span id="cb1-9"><a></a></span>
+<span id="cb1-10"><a></a>ui <span class="ot">&lt;-</span> <span class="fu">page_sidebar</span>(</span>
+<span id="cb1-11"><a></a>  <span class="co"># 2. Use querychat_sidebar(id) in a bslib::page_sidebar.</span></span>
+<span id="cb1-12"><a></a>  <span class="co">#    Alternatively, use querychat_ui(id) elsewhere if you don't want your</span></span>
+<span id="cb1-13"><a></a>  <span class="co">#    chat interface to live in a sidebar.</span></span>
+<span id="cb1-14"><a></a>  <span class="at">sidebar =</span> <span class="fu">querychat_sidebar</span>(<span class="st">"chat"</span>),</span>
+<span id="cb1-15"><a></a>  DT<span class="sc">::</span><span class="fu">DTOutput</span>(<span class="st">"dt"</span>)</span>
+<span id="cb1-16"><a></a>)</span>
+<span id="cb1-17"><a></a></span>
+<span id="cb1-18"><a></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb1-19"><a></a></span>
+<span id="cb1-20"><a></a>  <span class="co"># 3. Create a querychat object using the config from step 1.</span></span>
+<span id="cb1-21"><a></a>  querychat <span class="ot">&lt;-</span> <span class="fu">querychat_server</span>(<span class="st">"chat"</span>, querychat_config)</span>
+<span id="cb1-22"><a></a></span>
+<span id="cb1-23"><a></a>  output<span class="sc">$</span>dt <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">renderDT</span>({</span>
+<span id="cb1-24"><a></a>    <span class="co"># 4. Use the filtered/sorted data frame anywhere you wish, via the</span></span>
+<span id="cb1-25"><a></a>    <span class="co">#    querychat$df() reactive.</span></span>
+<span id="cb1-26"><a></a>    DT<span class="sc">::</span><span class="fu">datatable</span>(querychat<span class="sc">$</span><span class="fu">df</span>())</span>
+<span id="cb1-27"><a></a>  })</span>
+<span id="cb1-28"><a></a>}</span>
+<span id="cb1-29"><a></a></span>
+<span id="cb1-30"><a></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="example-request" class="slide level2">
-<h2>Example Request</h2>
-<div class="sourceCode" id="cb1" data-code-line-numbers="|5|6-9|7|8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a></a><span class="ex">curl</span> https://api.openai.com/v1/chat/completions <span class="dt">\</span></span>
-<span id="cb1-2"><a></a>  <span class="at">-H</span> <span class="st">"Content-Type: application/json"</span> <span class="dt">\</span></span>
-<span id="cb1-3"><a></a>  <span class="at">-H</span> <span class="st">"Authorization: Bearer </span><span class="va">$OPENAI_API_KEY</span><span class="st">"</span> <span class="dt">\</span></span>
-<span id="cb1-4"><a></a>  <span class="at">-d</span> <span class="st">'{</span></span>
-<span id="cb1-5"><a></a><span class="st">    "model": "gpt-4.1",</span></span>
-<span id="cb1-6"><a></a><span class="st">    "messages": [</span></span>
-<span id="cb1-7"><a></a><span class="st">        {"role": "system", "content": "You are a terse assistant."},</span></span>
-<span id="cb1-8"><a></a><span class="st">        {"role": "user", "content": "What is the capital of the moon?"}</span></span>
-<span id="cb1-9"><a></a><span class="st">    ]</span></span>
-<span id="cb1-10"><a></a><span class="st">}'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li>Model: model used</li>
-<li>System prompt: behind-the-scenes instructions and information for the model</li>
-<li>User prompt: a question or statement for the model to respond to</li>
-</ul>
+<section id="demo-querychat-python" class="slide level2">
+<h2>Demo: querychat Python</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> querychat</span>
+<span id="cb2-2"><a></a><span class="im">from</span> chatlas <span class="im">import</span> ChatAnthropic</span>
+<span id="cb2-3"><a></a><span class="im">from</span> seaborn <span class="im">import</span> load_dataset</span>
+<span id="cb2-4"><a></a><span class="im">from</span> shiny.express <span class="im">import</span> render</span>
+<span id="cb2-5"><a></a></span>
+<span id="cb2-6"><a></a><span class="co"># data -----</span></span>
+<span id="cb2-7"><a></a>titanic <span class="op">=</span> load_dataset(<span class="st">"titanic"</span>)</span>
+<span id="cb2-8"><a></a></span>
+<span id="cb2-9"><a></a><span class="co"># chatbot setup -----</span></span>
+<span id="cb2-10"><a></a><span class="kw">def</span> create_chat_callback(system_prompt):</span>
+<span id="cb2-11"><a></a>    <span class="cf">return</span> ChatAnthropic(system_prompt<span class="op">=</span>system_prompt)</span>
+<span id="cb2-12"><a></a></span>
+<span id="cb2-13"><a></a></span>
+<span id="cb2-14"><a></a>querychat_config <span class="op">=</span> querychat.init(</span>
+<span id="cb2-15"><a></a>    titanic,</span>
+<span id="cb2-16"><a></a>    <span class="st">"titanic"</span>,</span>
+<span id="cb2-17"><a></a>    greeting<span class="op">=</span><span class="st">"""Hello! I'm here to help you explore the Titanic dataset."""</span>,</span>
+<span id="cb2-18"><a></a>    create_chat_callback<span class="op">=</span>create_chat_callback,</span>
+<span id="cb2-19"><a></a>)</span>
+<span id="cb2-20"><a></a></span>
+<span id="cb2-21"><a></a>chat <span class="op">=</span> querychat.server(<span class="st">"chat"</span>, querychat_config)</span>
+<span id="cb2-22"><a></a></span>
+<span id="cb2-23"><a></a><span class="co"># shiny application -----</span></span>
+<span id="cb2-24"><a></a></span>
+<span id="cb2-25"><a></a><span class="co"># querychat UI</span></span>
+<span id="cb2-26"><a></a>querychat.sidebar(<span class="st">"chat"</span>)</span>
+<span id="cb2-27"><a></a></span>
+<span id="cb2-28"><a></a><span class="co"># querychat filtered dataframe</span></span>
+<span id="cb2-29"><a></a><span class="at">@render.data_frame</span></span>
+<span id="cb2-30"><a></a><span class="kw">def</span> data_table():</span>
+<span id="cb2-31"><a></a>    <span class="cf">return</span> chat[<span class="st">"df"</span>]()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="example-response" class="slide level2">
-<h2>Example Response</h2>
-<p>Abridged response:</p>
-<div class="sourceCode" id="cb2" data-code-line-numbers="|3-6|7|12"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a></a><span class="fu">{</span></span>
-<span id="cb2-2"><a></a>  <span class="dt">"choices"</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span></span>
-<span id="cb2-3"><a></a>    <span class="dt">"message"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-4"><a></a>      <span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span></span>
-<span id="cb2-5"><a></a>      <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"The moon does not have a capital. It is not inhabited or governed."</span><span class="fu">,</span></span>
-<span id="cb2-6"><a></a>    <span class="fu">},</span></span>
-<span id="cb2-7"><a></a>    <span class="dt">"finish_reason"</span><span class="fu">:</span> <span class="st">"stop"</span></span>
-<span id="cb2-8"><a></a>  <span class="fu">}</span><span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb2-9"><a></a>  <span class="dt">"usage"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-10"><a></a>    <span class="dt">"prompt_tokens"</span><span class="fu">:</span> <span class="dv">9</span><span class="fu">,</span></span>
-<span id="cb2-11"><a></a>    <span class="dt">"completion_tokens"</span><span class="fu">:</span> <span class="dv">12</span><span class="fu">,</span></span>
-<span id="cb2-12"><a></a>    <span class="dt">"total_tokens"</span><span class="fu">:</span> <span class="dv">21</span><span class="fu">,</span></span>
-<span id="cb2-13"><a></a>    <span class="dt">"completion_tokens_details"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb2-14"><a></a>      <span class="dt">"reasoning_tokens"</span><span class="fu">:</span> <span class="dv">0</span></span>
-<span id="cb2-15"><a></a>    <span class="fu">}</span></span>
-<span id="cb2-16"><a></a>  <span class="fu">}</span></span>
-<span id="cb2-17"><a></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="your-turn-change-querrychat-llm" class="slide level2">
+<h2>Your turn: Change querrychat LLM</h2>
 <ul>
-<li>Assistant: Response from model</li>
-<li>Why did the model stop responding</li>
-<li>Tokens: “words” used in the input and output</li>
+<li>Modify one of the querychat examples and swap it with another model</li>
+<li>Try using one of the local Ollama models and compare with your neighbor</li>
 </ul>
+<div id="timer_6442e866c9d97e78c6ea164836fa0fab6511e5fc" class="countdown" data-warn-when="0" data-update-every="1" data-play-sound="true" data-blink-colon="false" data-start-immediately="false" tabindex="0" style="right: 0;bottom: 0;">
+  <div class="countdown-controls">
+    <button class="countdown-bump-down">−</button>
+    <button class="countdown-bump-up">+</button>
+ </div>
+ <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+ </div>
 </section>
-<section id="example-followup-request" class="slide level2">
-<h2>Example Followup Request</h2>
-<div class="sourceCode" id="cb3" data-code-line-numbers="|9|10"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="ex">curl</span> https://api.openai.com/v1/chat/completions <span class="dt">\</span></span>
-<span id="cb3-2"><a></a>  <span class="at">-H</span> <span class="st">"Content-Type: application/json"</span> <span class="dt">\</span></span>
-<span id="cb3-3"><a></a>  <span class="at">-H</span> <span class="st">"Authorization: Bearer </span><span class="va">$OPENAI_API_KEY</span><span class="st">"</span> <span class="dt">\</span></span>
-<span id="cb3-4"><a></a>  <span class="at">-d</span> <span class="st">'{</span></span>
-<span id="cb3-5"><a></a><span class="st">    "model": "gpt-4.1",</span></span>
-<span id="cb3-6"><a></a><span class="st">    "messages": [</span></span>
-<span id="cb3-7"><a></a><span class="st">      {"role": "system", "content": "You are a terse assistant."},</span></span>
-<span id="cb3-8"><a></a><span class="st">      {"role": "user", "content": "What is the capital of the moon?"},</span></span>
-<span id="cb3-9"><a></a><span class="st">      {"role": "assistant", "content": "The moon does not have a capital. It is not inhabited or governed."},</span></span>
-<span id="cb3-10"><a></a><span class="st">      {"role": "user", "content": "Are you sure?"}</span></span>
-<span id="cb3-11"><a></a><span class="st">    ]</span></span>
-<span id="cb3-12"><a></a><span class="st">}'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="extending-querychat---sidebot" class="slide level2">
+<h2>Extending querychat -&gt; sidebot</h2>
 <ul>
-<li>The entire history is re-passed into the request</li>
+<li>Side bot extends querychat into a fullblown dashboard</li>
+<li>Demo: <a href="https://shiny.posit.co/py/templates/sidebot/" class="uri">https://shiny.posit.co/py/templates/sidebot/</a></li>
+<li>use natural language to drill down into a dataset</li>
 </ul>
-</section>
-<section id="example-followup-response" class="slide level2">
-<h2>Example Followup Response</h2>
-<p>Abridged Response:</p>
-<div class="sourceCode" id="cb4" data-code-line-numbers="|3-6|10-12"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a></a><span class="fu">{</span></span>
-<span id="cb4-2"><a></a>  <span class="dt">"choices"</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span></span>
-<span id="cb4-3"><a></a>    <span class="dt">"message"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb4-4"><a></a>      <span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span></span>
-<span id="cb4-5"><a></a>      <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"Yes, I am sure. The moon has no capital or formal governance."</span></span>
-<span id="cb4-6"><a></a>    <span class="fu">},</span></span>
-<span id="cb4-7"><a></a>    <span class="dt">"finish_reason"</span><span class="fu">:</span> <span class="st">"stop"</span></span>
-<span id="cb4-8"><a></a>  <span class="fu">}</span><span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb4-9"><a></a>  <span class="dt">"usage"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb4-10"><a></a>    <span class="dt">"prompt_tokens"</span><span class="fu">:</span> <span class="dv">52</span><span class="fu">,</span></span>
-<span id="cb4-11"><a></a>    <span class="dt">"completion_tokens"</span><span class="fu">:</span> <span class="dv">15</span><span class="fu">,</span></span>
-<span id="cb4-12"><a></a>    <span class="dt">"total_tokens"</span><span class="fu">:</span> <span class="dv">67</span><span class="fu">,</span></span>
-<span id="cb4-13"><a></a>    <span class="dt">"completion_tokens_details"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb4-14"><a></a>      <span class="dt">"reasoning_tokens"</span><span class="fu">:</span> <span class="dv">0</span></span>
-<span id="cb4-15"><a></a>    <span class="fu">}</span></span>
-<span id="cb4-16"><a></a>  <span class="fu">}</span></span>
-<span id="cb4-17"><a></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="fragment">
-<p>Previous usage:</p>
-<div class="sourceCode" id="cb5" data-code-line-numbers="2-4"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a></a>  <span class="er">"usage":</span> <span class="fu">{</span></span>
-<span id="cb5-2"><a></a>    <span class="dt">"prompt_tokens"</span><span class="fu">:</span> <span class="dv">9</span><span class="fu">,</span></span>
-<span id="cb5-3"><a></a>    <span class="dt">"completion_tokens"</span><span class="fu">:</span> <span class="dv">12</span><span class="fu">,</span></span>
-<span id="cb5-4"><a></a>    <span class="dt">"total_tokens"</span><span class="fu">:</span> <span class="dv">21</span><span class="fu">,</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="tokens" class="slide level2">
-<h2>Tokens</h2>
-<ul>
-<li><p>Fundamental units of information for LLMs</p></li>
-<li><p>Words, parts of words, or individual characters</p></li>
-<li><p>Important for:</p>
-<ul>
-<li>Model input/output limits</li>
-<li>API pricing is usually by token
-<ul>
-<li><a href="https://gptforwork.com/tools/openai-chatgpt-api-pricing-calculator" class="uri">https://gptforwork.com/tools/openai-chatgpt-api-pricing-calculator</a></li>
-</ul></li>
-</ul></li>
-</ul>
-<p>Try it yourself:</p>
-<ul>
-<li><a href="https://tiktokenizer.vercel.app/" class="uri">https://tiktokenizer.vercel.app/</a></li>
-<li><a href="https://platform.openai.com/tokenizer" class="uri">https://platform.openai.com/tokenizer</a></li>
-</ul>
-</section>
-<section id="token-example" class="slide level2">
-<h2>Token example</h2>
-<p>Common words represented with a single number:</p>
-<ul>
-<li class="fragment">What is the capital of the moon?</li>
-<li class="fragment">4827, 382, 290, 9029, 328, 290, 28479, 30</li>
-<li class="fragment">8 tokens total (including punctuation)</li>
-</ul>
-<div class="fragment">
-<p>Other words may require multiple numbers</p>
-<ul>
-<li class="fragment">counterrevolutionary</li>
-<li class="fragment">counter, re, volution, ary</li>
-<li class="fragment">32128, 264, 9477, 815</li>
-<li class="fragment">4 tokens total</li>
-</ul>
-</div>
-</section>
-<section id="token-pricing-anthropic" class="slide level2">
-<h2>Token pricing (Anthropic)</h2>
-<p><a href="https://www.anthropic.com/pricing" class="uri">https://www.anthropic.com/pricing</a> -&gt; API tab</p>
-<div class="columns">
-<div class="column" style="width:60%;">
-<p><img data-src="../img/anthropic-pricing.png"></p>
-</div><div class="column" style="width:40%;">
-<p>Claude Sonnet 4</p>
-<ul>
-<li>Input: $3 / million tokens</li>
-<li>Output: $15 / million tokens</li>
-<li>Context window: 200k</li>
-</ul>
-</div></div>
-</section>
-<section id="context-window" class="slide level2">
-<h2>Context window</h2>
-<ul>
-<li>Determines how much input can be incorporated into each output</li>
-<li>How much of the current history the agent has in the response</li>
-</ul>
-<p>For Claude Sonnet:</p>
-<ul>
-<li>200k token context window</li>
-<li>150,000 words / 300 - 600 pages / 1.5 - 2 novels</li>
-<li>“Gödel, Escher, Bach” ~ 67,755 words</li>
-</ul>
-</section>
-<section id="context-window---chat-history" class="slide level2">
-<h2>Context window - chat history</h2>
-<p>200k tokens <em>seems</em> like a lot of context…</p>
-<div class="fragment">
-<p>… but the entire chat is passed along each chat iteration</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource json number-lines code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a></a><span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"system"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"You are a terse assistant."</span><span class="fu">}</span><span class="er">,</span></span>
-<span id="cb6-2"><a></a><span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"user"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"What is the capital of the moon?"</span><span class="fu">}</span><span class="er">,</span></span>
-<span id="cb6-3"><a></a><span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"The moon does not have a capital. It is not inhabited or governed."</span><span class="fu">}</span><span class="er">,</span></span>
-<span id="cb6-4"><a></a><span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"user"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"Are you sure?"</span><span class="fu">}</span><span class="er">,</span></span>
-<span id="cb6-5"><a></a><span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"Yes, I am sure. The moon has no capital or formal governance."</span><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="summary" class="slide level2">
-<h2>Summary</h2>
-<ul>
-<li>A message is an object with:
-<ul>
-<li>role (e.g., “system”, “user”, “assistant”)</li>
-<li>content string</li>
-</ul></li>
-<li>A chat conversation is a growing list of messages</li>
-<li>The OpenAI chat API is a stateless HTTP endpoint: takes a list of messages as input, returns a new message as output</li>
-</ul>
+<p>Python template example code:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="ex">shiny</span> create <span class="at">--mode</span> core <span class="at">--github</span> jcheng5/py-databot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
@@ -413,19 +309,19 @@
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
-  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>

@@ -1,67 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/060-tools.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/04-misc/04-mcp.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/030-first.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/04-misc/02-structure.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/010-welcome.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/03-shiny-llm/02-querychat.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/02-shiny/03-reactivity.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/02-shiny/01-shiny.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/01-intro/03-first.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/01-intro/01-welcome.html</loc>
+    <lastmod>2025-08-21T04:30:38.717Z</lastmod>
   </url>
   <url>
     <loc>https://chendaniely.github.io/nydsaic2025-llm/setup.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <lastmod>2025-08-21T04:30:38.717Z</lastmod>
   </url>
   <url>
     <loc>https://chendaniely.github.io/nydsaic2025-llm/index.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <lastmod>2025-08-21T04:30:38.717Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/060-tools.html</loc>
-    <lastmod>2025-08-21T04:27:57.056Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/14-mcp.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/040-models.html</loc>
-    <lastmod>2025-08-21T04:27:57.056Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/12-structure.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/020-anatomy.html</loc>
-    <lastmod>2025-08-21T04:27:57.056Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/10-querychat.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/010-welcome.html</loc>
-    <lastmod>2025-08-21T04:27:57.056Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/08-chatbot.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/030-first.html</loc>
-    <lastmod>2025-08-21T04:27:57.056Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/06-shiny.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/050-chatbot.html</loc>
-    <lastmod>2025-08-21T04:27:57.056Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/04-prompt.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/090-more.html</loc>
-    <lastmod>2025-08-21T04:27:57.056Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/02-anatomy.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/01-welcome.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/03-first.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/05-models.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/07-app.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/09-reactivity.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/11-tools.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/13-rag.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/90-more.html</loc>
+    <lastmod>2025-08-21T04:30:38.670Z</lastmod>
   </url>
   <url>
     <loc>https://chendaniely.github.io/nydsaic2025-llm/references.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <lastmod>2025-08-21T04:30:38.717Z</lastmod>
   </url>
   <url>
     <loc>https://chendaniely.github.io/nydsaic2025-llm/workshop.html</loc>
-    <lastmod>2025-08-21T04:27:57.075Z</lastmod>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/020-anatomy.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/01-intro/02-anatomy.html</loc>
+    <lastmod>2025-08-21T04:30:38.717Z</lastmod>
   </url>
   <url>
-    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/050-chatbot.html</loc>
-    <lastmod>2025-08-21T04:27:57.074Z</lastmod>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/01-intro/04-prompt.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/02-shiny/02-app.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/03-shiny-llm/01-chatbot.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/04-misc/01-tools.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
+  </url>
+  <url>
+    <loc>https://chendaniely.github.io/nydsaic2025-llm/slides/04-misc/03-rag.html</loc>
+    <lastmod>2025-08-21T04:30:38.718Z</lastmod>
   </url>
 </urlset>
