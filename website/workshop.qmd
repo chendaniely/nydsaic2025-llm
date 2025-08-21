@@ -29,5 +29,5 @@ title: Workshop
 | 16:30 | [Resources](90-more.qmd) / Wrap up / *End*                               |
 :::
 
-[demo20q]: https://github.com/chendaniely/nydsaic2025-llm/blob/main/demo/20-questions/app.R
+[demo20q]: https://github.com/chendaniely/nydsaic2025-llm/blob/main/code/20-questions/app.R
 [dan-ai-hackathon]: https://github.com/chendaniely/ai-hackathon-2024
