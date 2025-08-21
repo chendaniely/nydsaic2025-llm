@@ -1,0 +1,10 @@
+---
+title: Talk
+toc: false
+---
+
+:::{.column-page-inset-right}
+
+{{< revealjs file="slides/talk/index.html" height="500px" class="ratio ratio-16x9" >}}
+
+:::
