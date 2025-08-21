@@ -5,6 +5,9 @@ langchain
 langchain-anthropic
 langchain-openai
 langgraph
+llama-index
+mcp
+mcp[cli]
 openai
 pillow
 python-dotenv

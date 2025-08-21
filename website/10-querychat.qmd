@@ -1,0 +1,10 @@
+---
+title: "Chat with your data: Querychat"
+toc: false
+---
+
+:::{.column-page-inset-right}
+
+{{< revealjs file="slides/03-shiny-llm/02-querychat.html" height="500px" class="ratio ratio-16x9" >}}
+
+:::

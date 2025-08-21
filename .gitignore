@@ -2,6 +2,10 @@
 .quarto
 /.quarto/
 /.luarc.json
+temp/
+node_modules
+*_files
+*.html
 
 _site/
 

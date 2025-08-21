@@ -1,5 +1,5 @@
 ---
-title: Chatbot User Interfaces
+title: "Chat with your data: Querychat"
 
 format:
   revealjs:
@@ -14,23 +14,6 @@ format:
 editor:
   render-on-save: true
 ---
-
-## Shiny (R/Python)
-
-- R: <https://posit-dev.github.io/shinychat/r/>
-- Python: <https://posit-dev.github.io/shinychat/py/>
-
-## Demo: shinychat R
-
-```r
-{{< include /../code/02-shiny/app-shinychat.R >}}
-```
-
-## Demo: shinychat Python
-
-```python
-{{< include /../code/02-shiny/app-shinychat.py >}}
-```
 
 ## Chatting with your data
 

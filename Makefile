@@ -20,7 +20,8 @@ setup-r:
 setup-quarto:
 	cd website && \
 		quarto add --no-prompt coatless-quarto/embedio && \
-		quarto add --no-prompt gadenbuie/countdown/quarto
+		quarto add --no-prompt gadenbuie/countdown/quarto && \
+		quarto add --no-prompt quarto-ext/shinylive
 
 .PHONY: setup
 setup:

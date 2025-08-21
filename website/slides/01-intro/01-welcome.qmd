@@ -22,7 +22,7 @@ Url is at the bottom of all the slides.
 
 1. Clone this repo
 2. Install your R + Python packages
-3. Download at least one of the Ollama models, I provided a few to pick from.
+3. Download at least one of the Ollama models.
    Feel free to pick any other one.
 4. (Optional) use the `.env.template` file to provide your API key into `.env`
 
@@ -36,9 +36,14 @@ Depending on your usage, you may even find that paying for the API key could be 
 
 ![](/img/youtube-joe-llm.png)
 
-Joe will do a better job than I can, but I can demo you code today.
-
 <https://www.youtube.com/watch?v=owDd1CJ17uQ>
+
+## Also check the documentation
+
+- Chatlas: <https://posit-dev.github.io/chatlas/>
+- Ellmer: <https://ellmer.tidyverse.org/index.html>
+- Ragnar: <https://ragnar.tidyverse.org/articles/ragnar.html>
+- mcptools: <https://posit-dev.github.io/mcptools/>
 
 ## Poll: Experience with LLMs
 

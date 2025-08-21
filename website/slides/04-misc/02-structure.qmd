@@ -1,0 +1,16 @@
+---
+title: Structured Data
+
+format:
+  revealjs:
+    smaller: true
+    css: styles.css
+    slide-number: true
+
+    footer: >
+      The New York Data Science & AI Conference. 2025.
+      <https://github.com/chendaniely/nydsaic2025-llm>
+
+editor:
+  render-on-save: true
+---

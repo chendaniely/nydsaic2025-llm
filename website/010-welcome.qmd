@@ -1,9 +1,0 @@
----
-title: "Welcome"
----
-
-:::{.column-page-inset-right}
-
-{{< revealjs file="slides/010-welcome.html" height="500px" class="ratio ratio-16x9" >}}
-
-:::

@@ -5,7 +5,7 @@ project:
     watch-inputs: true
   render:
     - "./*.qmd"
-    - "slides/*.qmd"
+    - "slides/*/*.qmd"
   resources:
     - slides
 
@@ -43,3 +43,6 @@ editor:
 
 
 brand: _brand.yml
+
+filters:
+  - shinylive

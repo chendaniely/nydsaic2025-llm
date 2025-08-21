@@ -1,0 +1,10 @@
+---
+title: Model Context Protocol (MCP)
+toc: false
+---
+
+:::{.column-page-inset-right}
+
+{{< revealjs file="slides/04-misc/04-mcp.html" height="500px" class="ratio ratio-16x9" >}}
+
+:::

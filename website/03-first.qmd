@@ -1,0 +1,10 @@
+---
+title: Your first chat with an LLM
+toc: false
+---
+
+:::{.column-page-inset-right}
+
+{{< revealjs file="slides/01-intro/03-first.html" height="500px" class="ratio ratio-16x9" >}}
+
+:::

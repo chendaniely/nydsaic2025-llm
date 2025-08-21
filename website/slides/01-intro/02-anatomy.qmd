@@ -3,7 +3,6 @@ title: "Anatomy of a Conversation"
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >
@@ -141,7 +140,6 @@ Previous usage:
     "total_tokens": 21,
 ```
 
-
 ## Tokens
 
 - Fundamental units of information for LLMs
@@ -151,7 +149,6 @@ Previous usage:
   - Model input/output limits
   - API pricing is usually by token
     - <https://gptforwork.com/tools/openai-chatgpt-api-pricing-calculator>
-
 
 Try it yourself:
 

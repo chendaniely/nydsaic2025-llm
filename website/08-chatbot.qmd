@@ -1,0 +1,10 @@
+---
+title: "AI chat interfaces"
+toc: false
+---
+
+:::{.column-page-inset-right}
+
+{{< revealjs file="slides/03-shiny-llm/01-chatbot.html" height="500px" class="ratio ratio-16x9" >}}
+
+:::
