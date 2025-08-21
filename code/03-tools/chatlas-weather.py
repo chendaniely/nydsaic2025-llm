@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # Loads OPENAI_API_KEY from the .env file
 
+
 # Define a simple tool for getting the current weather
 def get_weather(latitude: float, longitude: float):
     """
