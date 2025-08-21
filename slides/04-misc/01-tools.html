@@ -279,36 +279,37 @@
 <span id="cb2-4"><a></a></span>
 <span id="cb2-5"><a></a>load_dotenv()  <span class="co"># Loads OPENAI_API_KEY from the .env file</span></span>
 <span id="cb2-6"><a></a></span>
-<span id="cb2-7"><a></a><span class="co"># Define a simple tool for getting the current weather</span></span>
-<span id="cb2-8"><a></a><span class="kw">def</span> get_weather(latitude: <span class="bu">float</span>, longitude: <span class="bu">float</span>):</span>
-<span id="cb2-9"><a></a>    <span class="co">"""</span></span>
-<span id="cb2-10"><a></a><span class="co">    Get the current weather for a location using latitude and longitude.</span></span>
-<span id="cb2-11"><a></a><span class="co">    """</span></span>
-<span id="cb2-12"><a></a>    base_url <span class="op">=</span> <span class="st">"https://api.open-meteo.com/v1/forecast"</span></span>
-<span id="cb2-13"><a></a>    params <span class="op">=</span> {</span>
-<span id="cb2-14"><a></a>        <span class="st">"latitude"</span>: latitude,</span>
-<span id="cb2-15"><a></a>        <span class="st">"longitude"</span>: longitude,</span>
-<span id="cb2-16"><a></a>        <span class="st">"current"</span>: <span class="st">"temperature_2m,wind_speed_10m,relative_humidity_2m"</span>,</span>
-<span id="cb2-17"><a></a>    }</span>
-<span id="cb2-18"><a></a></span>
-<span id="cb2-19"><a></a>    <span class="cf">try</span>:</span>
-<span id="cb2-20"><a></a>        response <span class="op">=</span> requests.get(base_url, params<span class="op">=</span>params)</span>
-<span id="cb2-21"><a></a>        response.raise_for_status()  <span class="co"># Raise an exception for bad status codes</span></span>
-<span id="cb2-22"><a></a>        <span class="cf">return</span> response.text</span>
-<span id="cb2-23"><a></a>    <span class="cf">except</span> requests.RequestException <span class="im">as</span> e:</span>
-<span id="cb2-24"><a></a>        <span class="cf">return</span> <span class="ss">f"Error fetching weather data: </span><span class="sc">{</span><span class="bu">str</span>(e)<span class="sc">}</span><span class="ss">"</span></span>
-<span id="cb2-25"><a></a></span>
+<span id="cb2-7"><a></a></span>
+<span id="cb2-8"><a></a><span class="co"># Define a simple tool for getting the current weather</span></span>
+<span id="cb2-9"><a></a><span class="kw">def</span> get_weather(latitude: <span class="bu">float</span>, longitude: <span class="bu">float</span>):</span>
+<span id="cb2-10"><a></a>    <span class="co">"""</span></span>
+<span id="cb2-11"><a></a><span class="co">    Get the current weather for a location using latitude and longitude.</span></span>
+<span id="cb2-12"><a></a><span class="co">    """</span></span>
+<span id="cb2-13"><a></a>    base_url <span class="op">=</span> <span class="st">"https://api.open-meteo.com/v1/forecast"</span></span>
+<span id="cb2-14"><a></a>    params <span class="op">=</span> {</span>
+<span id="cb2-15"><a></a>        <span class="st">"latitude"</span>: latitude,</span>
+<span id="cb2-16"><a></a>        <span class="st">"longitude"</span>: longitude,</span>
+<span id="cb2-17"><a></a>        <span class="st">"current"</span>: <span class="st">"temperature_2m,wind_speed_10m,relative_humidity_2m"</span>,</span>
+<span id="cb2-18"><a></a>    }</span>
+<span id="cb2-19"><a></a></span>
+<span id="cb2-20"><a></a>    <span class="cf">try</span>:</span>
+<span id="cb2-21"><a></a>        response <span class="op">=</span> requests.get(base_url, params<span class="op">=</span>params)</span>
+<span id="cb2-22"><a></a>        response.raise_for_status()  <span class="co"># Raise an exception for bad status codes</span></span>
+<span id="cb2-23"><a></a>        <span class="cf">return</span> response.text</span>
+<span id="cb2-24"><a></a>    <span class="cf">except</span> requests.RequestException <span class="im">as</span> e:</span>
+<span id="cb2-25"><a></a>        <span class="cf">return</span> <span class="ss">f"Error fetching weather data: </span><span class="sc">{</span><span class="bu">str</span>(e)<span class="sc">}</span><span class="ss">"</span></span>
 <span id="cb2-26"><a></a></span>
-<span id="cb2-27"><a></a>chat <span class="op">=</span> ChatAnthropic(</span>
-<span id="cb2-28"><a></a>    model<span class="op">=</span><span class="st">"claude-3-5-sonnet-latest"</span>,</span>
-<span id="cb2-29"><a></a>    system_prompt<span class="op">=</span>(</span>
-<span id="cb2-30"><a></a>        <span class="st">"You are a helpful assistant that can check the weather. "</span></span>
-<span id="cb2-31"><a></a>        <span class="st">"Report results in imperial units."</span></span>
-<span id="cb2-32"><a></a>    ),</span>
-<span id="cb2-33"><a></a>)</span>
-<span id="cb2-34"><a></a></span>
-<span id="cb2-35"><a></a>chat.register_tool(get_weather)</span>
-<span id="cb2-36"><a></a>chat.chat(<span class="st">"What is the weather in Seattle?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-27"><a></a></span>
+<span id="cb2-28"><a></a>chat <span class="op">=</span> ChatAnthropic(</span>
+<span id="cb2-29"><a></a>    model<span class="op">=</span><span class="st">"claude-3-5-sonnet-latest"</span>,</span>
+<span id="cb2-30"><a></a>    system_prompt<span class="op">=</span>(</span>
+<span id="cb2-31"><a></a>        <span class="st">"You are a helpful assistant that can check the weather. "</span></span>
+<span id="cb2-32"><a></a>        <span class="st">"Report results in imperial units."</span></span>
+<span id="cb2-33"><a></a>    ),</span>
+<span id="cb2-34"><a></a>)</span>
+<span id="cb2-35"><a></a></span>
+<span id="cb2-36"><a></a>chat.register_tool(get_weather)</span>
+<span id="cb2-37"><a></a>chat.chat(<span class="st">"What is the weather in Seattle?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
