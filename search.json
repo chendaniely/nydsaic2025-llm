@@ -1,38 +1,612 @@
 [
   {
-    "objectID": "slides/03-shiny-llm/02-querychat.html#chatting-with-your-data",
-    "href": "slides/03-shiny-llm/02-querychat.html#chatting-with-your-data",
-    "title": "Chat with your data: Querychat",
-    "section": "Chatting with your data",
-    "text": "Chatting with your data\n\nInteract with your data(frame) with SQL\nhttps://github.com/posit-dev/querychat"
+    "objectID": "slides/04-misc/01-tools.html#what-is-tool-calling",
+    "href": "slides/04-misc/01-tools.html#what-is-tool-calling",
+    "title": "Tool Calling",
+    "section": "What is Tool Calling?",
+    "text": "What is Tool Calling?\n\nAllows LLMs to interact with other systems\nSupported by most of the newest LLMs, but not all\nSounds complicated? Scary? It’s not too bad, actually…\n\nReference: https://jcheng5.github.io/llm-quickstart/quickstart.html#/how-it-works"
   },
   {
-    "objectID": "slides/03-shiny-llm/02-querychat.html#demo-querychat-r",
-    "href": "slides/03-shiny-llm/02-querychat.html#demo-querychat-r",
-    "title": "Chat with your data: Querychat",
-    "section": "Demo: querychat R",
-    "text": "Demo: querychat R\nlibrary(dotenv)\nlibrary(shiny)\nlibrary(bslib)\nlibrary(querychat)\n\n# 1. Configure querychat. This is where you specify the dataset and can also\n#    override options like the greeting message, system prompt, model, etc.\nquerychat_config &lt;- querychat_init(mtcars)\n\nui &lt;- page_sidebar(\n  # 2. Use querychat_sidebar(id) in a bslib::page_sidebar.\n  #    Alternatively, use querychat_ui(id) elsewhere if you don't want your\n  #    chat interface to live in a sidebar.\n  sidebar = querychat_sidebar(\"chat\"),\n  DT::DTOutput(\"dt\")\n)\n\nserver &lt;- function(input, output, session) {\n\n  # 3. Create a querychat object using the config from step 1.\n  querychat &lt;- querychat_server(\"chat\", querychat_config)\n\n  output$dt &lt;- DT::renderDT({\n    # 4. Use the filtered/sorted data frame anywhere you wish, via the\n    #    querychat$df() reactive.\n    DT::datatable(querychat$df())\n  })\n}\n\nshinyApp(ui, server)"
+    "objectID": "slides/04-misc/01-tools.html#how-it-does-not-work",
+    "href": "slides/04-misc/01-tools.html#how-it-does-not-work",
+    "title": "Tool Calling",
+    "section": "How it does NOT work",
+    "text": "How it does NOT work"
   },
   {
-    "objectID": "slides/03-shiny-llm/02-querychat.html#demo-querychat-python",
-    "href": "slides/03-shiny-llm/02-querychat.html#demo-querychat-python",
-    "title": "Chat with your data: Querychat",
-    "section": "Demo: querychat Python",
-    "text": "Demo: querychat Python\nimport querychat\nfrom chatlas import ChatAnthropic\nfrom seaborn import load_dataset\nfrom shiny.express import render\n\n# data -----\ntitanic = load_dataset(\"titanic\")\n\n# chatbot setup -----\ndef create_chat_callback(system_prompt):\n    return ChatAnthropic(system_prompt=system_prompt)\n\n\nquerychat_config = querychat.init(\n    titanic,\n    \"titanic\",\n    greeting=\"\"\"Hello! I'm here to help you explore the Titanic dataset.\"\"\",\n    create_chat_callback=create_chat_callback,\n)\n\nchat = querychat.server(\"chat\", querychat_config)\n\n# shiny application -----\n\n# querychat UI\nquerychat.sidebar(\"chat\")\n\n# querychat filtered dataframe\n@render.data_frame\ndef data_table():\n    return chat[\"df\"]()"
+    "objectID": "slides/04-misc/01-tools.html#how-it-does-work",
+    "href": "slides/04-misc/01-tools.html#how-it-does-work",
+    "title": "Tool Calling",
+    "section": "How it DOES work",
+    "text": "How it DOES work"
   },
   {
-    "objectID": "slides/03-shiny-llm/02-querychat.html#your-turn-change-querrychat-llm",
-    "href": "slides/03-shiny-llm/02-querychat.html#your-turn-change-querrychat-llm",
-    "title": "Chat with your data: Querychat",
-    "section": "Your turn: Change querrychat LLM",
-    "text": "Your turn: Change querrychat LLM\n\nModify one of the querychat examples and swap it with another model\nTry using one of the local Ollama models and compare with your neighbor\n\n\n  \n    −\n    +\n \n 10:00"
+    "objectID": "slides/04-misc/01-tools.html#demo-weather-r",
+    "href": "slides/04-misc/01-tools.html#demo-weather-r",
+    "title": "Tool Calling",
+    "section": "Demo: Weather R",
+    "text": "Demo: Weather R\nlibrary(httr)\nlibrary(ellmer)\nlibrary(dotenv)\n\n# Load environment variables\nload_dot_env()\n\n# Define weather function\nget_weather &lt;- function(latitude, longitude) {\n  base_url &lt;- \"https://api.open-meteo.com/v1/forecast\"\n\n  tryCatch(\n    {\n      response &lt;- GET(\n        base_url,\n        query = list(\n          latitude = latitude,\n          longitude = longitude,\n          current = \"temperature_2m,wind_speed_10m,relative_humidity_2m\"\n        )\n      )\n      rawToChar(response$content)\n    },\n    error = function(e) {\n      paste(\"Error fetching weather data:\", e$message)\n    }\n  )\n}\n\n# Create chat instance\nchat &lt;- chat_openai(\n  model = \"gpt-4.1\",\n  system_prompt = \"You are a helpful assistant that can check the weather. Report results in imperial units.\"\n)\n\n# Register the weather tool\n#\n# Created using `ellmer::create_tool_def(get_weather)`\nchat$register_tool(tool(\n  get_weather,\n  \"Fetches weather information for a specified location given by latitude and\nlongitude.\",\n  latitude = type_number(\n    \"The latitude of the location for which weather information is requested.\"\n  ),\n  longitude = type_number(\n    \"The longitude of the location for which weather information is requested.\"\n  )\n))\n\n# Test the chat\nchat$chat(\"What is the weather in Seattle?\")"
   },
   {
-    "objectID": "slides/03-shiny-llm/02-querychat.html#extending-querychat---sidebot",
-    "href": "slides/03-shiny-llm/02-querychat.html#extending-querychat---sidebot",
+    "objectID": "slides/04-misc/01-tools.html#demo-weather-python",
+    "href": "slides/04-misc/01-tools.html#demo-weather-python",
+    "title": "Tool Calling",
+    "section": "Demo: Weather Python",
+    "text": "Demo: Weather Python\nimport requests\nfrom chatlas import ChatAnthropic\nfrom dotenv import load_dotenv\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\n\n# Define a simple tool for getting the current weather\ndef get_weather(latitude: float, longitude: float):\n    \"\"\"\n    Get the current weather for a location using latitude and longitude.\n    \"\"\"\n    base_url = \"https://api.open-meteo.com/v1/forecast\"\n    params = {\n        \"latitude\": latitude,\n        \"longitude\": longitude,\n        \"current\": \"temperature_2m,wind_speed_10m,relative_humidity_2m\",\n    }\n\n    try:\n        response = requests.get(base_url, params=params)\n        response.raise_for_status()  # Raise an exception for bad status codes\n        return response.text\n    except requests.RequestException as e:\n        return f\"Error fetching weather data: {str(e)}\"\n\n\nchat = ChatAnthropic(\n    model=\"claude-3-5-sonnet-latest\",\n    system_prompt=(\n        \"You are a helpful assistant that can check the weather. \"\n        \"Report results in imperial units.\"\n    ),\n)\n\nchat.register_tool(get_weather)\nchat.chat(\"What is the weather in Seattle?\")"
+  },
+  {
+    "objectID": "slides/03-shiny-llm/01-chatbot.html#shiny-rpython",
+    "href": "slides/03-shiny-llm/01-chatbot.html#shiny-rpython",
+    "title": "Chatbot User Interfaces",
+    "section": "Shiny (R/Python)",
+    "text": "Shiny (R/Python)\n\nR: https://posit-dev.github.io/shinychat/r/\nPython: https://posit-dev.github.io/shinychat/py/"
+  },
+  {
+    "objectID": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-r",
+    "href": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-r",
+    "title": "Chatbot User Interfaces",
+    "section": "Demo: shinychat R",
+    "text": "Demo: shinychat R\nlibrary(dotenv)\nlibrary(shiny)\nlibrary(shinychat)\n\nui &lt;- bslib::page_fluid(\n  chat_ui(\"chat\")\n)\n\nserver &lt;- function(input, output, session) {\n  chat &lt;- ellmer::chat_openai(system_prompt = \"You're a trickster who answers in riddles\")\n\n  observeEvent(input$chat_user_input, {\n    stream &lt;- chat$stream_async(input$chat_user_input)\n    chat_append(\"chat\", stream)\n  })\n}\n\nshinyApp(ui, server)"
+  },
+  {
+    "objectID": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-python",
+    "href": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-python",
+    "title": "Chatbot User Interfaces",
+    "section": "Demo: shinychat Python",
+    "text": "Demo: shinychat Python\nfrom shiny.express import render, ui\nfrom shinychat.express import Chat\n\n# Set some Shiny page options\nui.page_opts(title=\"Hello Chat\")\n\n# Create a chat instance, with an initial message\nchat = Chat(\n    id=\"chat\",\n    messages=[\n        {\"content\": \"Hello! How can I help you today?\", \"role\": \"assistant\"},\n    ],\n)\n\n# Display the chat\nchat.ui()\n\n# Define a callback to run when the user submits a message\n@chat.on_user_submit\nasync def handle_user_input(user_input: str):\n    await chat.append_message(f\"You said: {user_input}\")\n\n\"Message state:\"\n\n@render.code\ndef message_state():\n    return str(chat.messages())"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#a-conversation",
+    "href": "slides/01-intro/04-prompt.html#a-conversation",
+    "title": "Prompting",
+    "section": "A conversation",
+    "text": "A conversation\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $OPENAI_API_KEY\" \\\n  -d '{\n    \"model\": \"gpt-4.1\",\n    \"messages\": [\n      {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n      {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n      {\"role\": \"assistant\", \"content\": \"The moon does not have a capital. It is not inhabited or governed.\"},\n      {\"role\": \"user\", \"content\": \"Are you sure?\"}\n    ]\n}'\n\nModel: model used\nSystem prompt: behind-the-scenes instructions and information for the model\nUser prompt: a question or statement for the model to respond to"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#english",
+    "href": "slides/01-intro/04-prompt.html#english",
+    "title": "Prompting",
+    "section": "English",
+    "text": "English\n\n“The hottest new programming language is English” Andrej Karpathy\n\nhttps://x.com/karpathy/status/1617979122625712128?lang=en"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#system-prompt",
+    "href": "slides/01-intro/04-prompt.html#system-prompt",
+    "title": "Prompting",
+    "section": "System Prompt",
+    "text": "System Prompt\nPython\nfrom chatlas import ChatOpenAI\n\nchat = ChatOpenAI()\nchat.system_prompt = \"I want you to act like Yoda.\"\nchat.chat(\"I need your help.\")\nR\nlibrary(ellmer)\n\nchat &lt;- chat_anthropic()\nchat$set_system_prompt(\"I want you to act like Yoda\")\nchat$chat(\"I need your help.\")\n\n  \n    −\n    +\n \n 02:00"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#prompt-templates",
+    "href": "slides/01-intro/04-prompt.html#prompt-templates",
+    "title": "Prompting",
+    "section": "Prompt templates",
+    "text": "Prompt templates\nPython\nprompt.md\nI want you to act like {{ role }}\nPython\nfrom chatlas import ChatOpenAI, interpolate_file\n\nchat = ChatOpenAI()\nchat.system_prompt = interpolate_file(\n  \"prompt.md\",\n  variables={\"role\": \"Yoda\"}\n)\nchat.system_prompt\nR\nlibrary(ellmer)\n\nchat &lt;- chat_anthropic()\nchat$set_system_prompt(\n  interpolate_file(\"prompt.md\", role = \"Yoda\")\n)\nchat$get_system_prompt()\n\n  \n    −\n    +\n \n 02:00"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#guides-on-prompt-writing",
+    "href": "slides/01-intro/04-prompt.html#guides-on-prompt-writing",
+    "title": "Prompting",
+    "section": "Guides on prompt writing",
+    "text": "Guides on prompt writing\n\nAnthropic prompt library\n\nAnthorpic prompt generator\nAnthropic prompt improver\nAnthropic prompt engineering overview\n\nOpenAI Prompt guide\nGoogle Prompt design stragegies"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#writing-a-good-prompt-rodes",
+    "href": "slides/01-intro/04-prompt.html#writing-a-good-prompt-rodes",
+    "title": "Prompting",
+    "section": "Writing a good prompt: RODES",
+    "text": "Writing a good prompt: RODES\n\nRole: Set the scene\nObjective: Define a purpose\nDetail: Influence behaviour, provide missing information, follow up information\nExample: Use specific examples, outline tasks,\nStyle:"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-role",
+    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-role",
+    "title": "Prompting",
+    "section": "Example: Instagram cooking reel (Role)",
+    "text": "Example: Instagram cooking reel (Role)\nYou are a useful and understanding chef trying to help me create a recipe book."
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-objective",
+    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-objective",
+    "title": "Prompting",
+    "section": "Example: Instagram cooking reel (Objective)",
+    "text": "Example: Instagram cooking reel (Objective)\nI will be giving you cooking instructions and I need you you format the content into a recipe card. The recipe card will provide a shopping list, list of ingredients, and then a set of instructions on how to cook the ingredients."
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-detail",
+    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-detail",
+    "title": "Prompting",
+    "section": "Example: Instagram cooking reel (Detail)",
+    "text": "Example: Instagram cooking reel (Detail)\nPlease provide all units and measurements in both metric and imperial measurements. If you are unsure about a measurement or instruction, I would rather you tell me to look into the original source, than try to make it up.\nSort the shopping list by grocery store aisle. Provide the output in the following order: shopping list, ingredient list, cooking instructions.\nThe text may be in different languages. Translate any non English text into English and return all the results in English.\nBelow are the video and text instructions."
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-example",
+    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-example",
+    "title": "Prompting",
+    "section": "Example: Instagram cooking reel (Example)",
+    "text": "Example: Instagram cooking reel (Example)\nNone."
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-style",
+    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-style",
+    "title": "Prompting",
+    "section": "Example: Instagram cooking reel (Style)",
+    "text": "Example: Instagram cooking reel (Style)\nKeep the output text around 80 characters per line."
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-output",
+    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-output",
+    "title": "Prompting",
+    "section": "Example Instagram cooking reel (Output)",
+    "text": "Example Instagram cooking reel (Output)\nCrispy Rice Salmon Cucumber Salad with Creamy Asian Dressing\n\n────────────────────────────────────────────────────────────────────────────────\nShopping List\n\nProduce Aisle:\n\n • 5 Persian cucumbers (or 1 large English cucumber)\n • 1 avocado\n • 1 bunch green onions (about 3/4 cup)\n\nFrozen Aisle:\n\n • 1 cup shelled edamame\n\nMeat & Seafood:\n\n • 8 oz (227 g) salmon\n\nGrains & Rice:\n\n • 2 cups cooked jasmine rice\n\nCondiments:\n\n • Soy sauce\n • Chili crisp/crunch\n • Sesame oil\n • Olive oil\n • Toasted sesame oil\n • Rice vinegar\n • Honey\n\nSpices:\n\n • Garlic powder\n • Ground ginger\n • Kosher salt\n • Black pepper\n\n────────────────────────────────────────────────────────────────────────────────\nIngredients\n\nCrispy Rice:\n\n • 2 cups cooked jasmine rice (450 g), cooled\n • 2 tsp soy sauce (10 ml)\n • 2 tbsp chili crisp/crunch (30 g)\n • 1 tbsp sesame oil (15 ml)\n\nSalmon:\n\n • 8 oz (227 g) salmon\n • Pinch of garlic powder\n • Salt and pepper to taste\n\nSalad:\n\n • 5 Persian cucumbers, thinly sliced (or 1 large English cucumber)\n • 1 cup shelled edamame (150 g)\n • 1 bunch green onions, thinly sliced (approximately 3/4 cup)\n • 1 avocado, diced\n\nCreamy Asian Dressing:\n\n • 1/4 cup olive oil (60 ml)\n • 1/4 cup toasted sesame oil (60 ml)\n • 3 tbsp soy sauce (45 ml) or coconut aminos\n • 3 tbsp rice vinegar (45 ml)\n • 2 tbsp honey (30 g)\n • 1 1/2 tsp ground ginger (7 g)\n • 1/2 tsp kosher salt (3 g)\n\n────────────────────────────────────────────────────────────────────────────────\nCooking Instructions\n\n  1 Preheat the oven to 400°F (200°C). Line a baking sheet with parchment paper.\n  2 Spread the cooked and cooled jasmine rice on the baking sheet.\n  3 Toss the rice with soy sauce, chili crisp, and sesame oil. Bake for 30-35\n    minutes, stirring halfway to ensure it doesn’t burn.\n  4 While the rice bakes, season the salmon with garlic powder, salt, and\n    pepper. Place on another baking sheet.\n  5 Add the salmon to the oven with the rice and bake for 13-14 minutes, or\n    until desired doneness.\n  6 Once done, remove the crispy rice from the oven and set it aside.\n  7 Shred the salmon into smaller pieces and set aside.\n  8 In a large bowl, combine the sliced cucumbers, shelled edamame, thinly\n    sliced green onions, and diced avocado.\n  9 Top the salad with the shredded salmon and crispy rice.\n 10 For the dressing, whisk together olive oil, toasted sesame oil, soy sauce,\n    rice vinegar, honey, ground ginger, and kosher salt.\n 11 Taste the dressing and adjust seasonings as needed. Pour it over the salad\n    and toss everything gently to combine.\n 12 Enjoy your delicious Crispy Rice Salmon Cucumber Salad!\n\n────────────────────────────────────────────────────────────────────────────────\nFeel free to follow these steps for a refreshing and textured salad experience!"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#llm-conversations-are-http-requests",
+    "href": "slides/01-intro/02-anatomy.html#llm-conversations-are-http-requests",
+    "title": "Anatomy of a Conversation",
+    "section": "LLM Conversations are HTTP Requests",
+    "text": "LLM Conversations are HTTP Requests\n\nEach interaction is a separate HTTP API request\nThe API server is entirely stateless (despite conversations being inherently stateful!)"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#example-conversation",
+    "href": "slides/01-intro/02-anatomy.html#example-conversation",
+    "title": "Anatomy of a Conversation",
+    "section": "Example Conversation",
+    "text": "Example Conversation\n\n“What’s the capital of the moon?”\n\n\n\"There isn't one.\"\n\n\n\n“Are you sure?”\n\n\n\n\"Yes, I am sure.\""
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#example-request",
+    "href": "slides/01-intro/02-anatomy.html#example-request",
+    "title": "Anatomy of a Conversation",
+    "section": "Example Request",
+    "text": "Example Request\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $OPENAI_API_KEY\" \\\n  -d '{\n    \"model\": \"gpt-4.1\",\n    \"messages\": [\n        {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n        {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"}\n    ]\n}'\n\nModel: model used\nSystem prompt: behind-the-scenes instructions and information for the model\nUser prompt: a question or statement for the model to respond to"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#example-response",
+    "href": "slides/01-intro/02-anatomy.html#example-response",
+    "title": "Anatomy of a Conversation",
+    "section": "Example Response",
+    "text": "Example Response\nAbridged response:\n{\n  \"choices\": [{\n    \"message\": {\n      \"role\": \"assistant\",\n      \"content\": \"The moon does not have a capital. It is not inhabited or governed.\",\n    },\n    \"finish_reason\": \"stop\"\n  }],\n  \"usage\": {\n    \"prompt_tokens\": 9,\n    \"completion_tokens\": 12,\n    \"total_tokens\": 21,\n    \"completion_tokens_details\": {\n      \"reasoning_tokens\": 0\n    }\n  }\n}\n\nAssistant: Response from model\nWhy did the model stop responding\nTokens: “words” used in the input and output"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#example-followup-request",
+    "href": "slides/01-intro/02-anatomy.html#example-followup-request",
+    "title": "Anatomy of a Conversation",
+    "section": "Example Followup Request",
+    "text": "Example Followup Request\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $OPENAI_API_KEY\" \\\n  -d '{\n    \"model\": \"gpt-4.1\",\n    \"messages\": [\n      {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n      {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n      {\"role\": \"assistant\", \"content\": \"The moon does not have a capital. It is not inhabited or governed.\"},\n      {\"role\": \"user\", \"content\": \"Are you sure?\"}\n    ]\n}'\n\nThe entire history is re-passed into the request"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#example-followup-response",
+    "href": "slides/01-intro/02-anatomy.html#example-followup-response",
+    "title": "Anatomy of a Conversation",
+    "section": "Example Followup Response",
+    "text": "Example Followup Response\nAbridged Response:\n{\n  \"choices\": [{\n    \"message\": {\n      \"role\": \"assistant\",\n      \"content\": \"Yes, I am sure. The moon has no capital or formal governance.\"\n    },\n    \"finish_reason\": \"stop\"\n  }],\n  \"usage\": {\n    \"prompt_tokens\": 52,\n    \"completion_tokens\": 15,\n    \"total_tokens\": 67,\n    \"completion_tokens_details\": {\n      \"reasoning_tokens\": 0\n    }\n  }\n}\n\nPrevious usage:\n  \"usage\": {\n    \"prompt_tokens\": 9,\n    \"completion_tokens\": 12,\n    \"total_tokens\": 21,"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#tokens",
+    "href": "slides/01-intro/02-anatomy.html#tokens",
+    "title": "Anatomy of a Conversation",
+    "section": "Tokens",
+    "text": "Tokens\n\nFundamental units of information for LLMs\nWords, parts of words, or individual characters\nImportant for:\n\nModel input/output limits\nAPI pricing is usually by token\n\nhttps://gptforwork.com/tools/openai-chatgpt-api-pricing-calculator\n\n\n\nTry it yourself:\n\nhttps://tiktokenizer.vercel.app/\nhttps://platform.openai.com/tokenizer"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#token-example",
+    "href": "slides/01-intro/02-anatomy.html#token-example",
+    "title": "Anatomy of a Conversation",
+    "section": "Token example",
+    "text": "Token example\nCommon words represented with a single number:\n\nWhat is the capital of the moon?\n4827, 382, 290, 9029, 328, 290, 28479, 30\n8 tokens total (including punctuation)\n\n\nOther words may require multiple numbers\n\ncounterrevolutionary\ncounter, re, volution, ary\n32128, 264, 9477, 815\n4 tokens total"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#token-pricing-anthropic",
+    "href": "slides/01-intro/02-anatomy.html#token-pricing-anthropic",
+    "title": "Anatomy of a Conversation",
+    "section": "Token pricing (Anthropic)",
+    "text": "Token pricing (Anthropic)\nhttps://www.anthropic.com/pricing -&gt; API tab\n\n\n\n\nClaude Sonnet 4\n\nInput: $3 / million tokens\nOutput: $15 / million tokens\nContext window: 200k"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#context-window",
+    "href": "slides/01-intro/02-anatomy.html#context-window",
+    "title": "Anatomy of a Conversation",
+    "section": "Context window",
+    "text": "Context window\n\nDetermines how much input can be incorporated into each output\nHow much of the current history the agent has in the response\n\nFor Claude Sonnet:\n\n200k token context window\n150,000 words / 300 - 600 pages / 1.5 - 2 novels\n“Gödel, Escher, Bach” ~ 67,755 words"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#context-window---chat-history",
+    "href": "slides/01-intro/02-anatomy.html#context-window---chat-history",
+    "title": "Anatomy of a Conversation",
+    "section": "Context window - chat history",
+    "text": "Context window - chat history\n200k tokens seems like a lot of context…\n\n… but the entire chat is passed along each chat iteration\n{\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n{\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n{\"role\": \"assistant\", \"content\": \"The moon does not have a capital. It is not inhabited or governed.\"},\n{\"role\": \"user\", \"content\": \"Are you sure?\"},\n{\"role\": \"assistant\", \"content\": \"Yes, I am sure. The moon has no capital or formal governance.\"}"
+  },
+  {
+    "objectID": "slides/01-intro/02-anatomy.html#summary",
+    "href": "slides/01-intro/02-anatomy.html#summary",
+    "title": "Anatomy of a Conversation",
+    "section": "Summary",
+    "text": "Summary\n\nA message is an object with:\n\nrole (e.g., “system”, “user”, “assistant”)\ncontent string\n\nA chat conversation is a growing list of messages\nThe OpenAI chat API is a stateless HTTP endpoint: takes a list of messages as input, returns a new message as output"
+  },
+  {
+    "objectID": "workshop.html",
+    "href": "workshop.html",
+    "title": "Workshop",
+    "section": "",
+    "text": "Time\nActivity\n\n\n\n\n09:15\nSettling in, Setup instructions, and introductions\n\n\n09:30\nWelcome! Introduction and overview\n\n\n09:45\nAnatomy of a conversation\n\n\n10:20\nbreak\n\n\n10:30\nDemo: 20 Questions by Winston Chang\n\n\n10:35\nYour first chat with an LLM\n\n\n10:35\nPrompting / Dan’s AI Hackathon Demo\n\n\n10:35\nModels\n\n\n11:20\nbreak\n\n\n13:00\nIntroduction to Shiny\n\n\n14:30\nYour first Shiny application\n\n\n14:30\nShiny’s reactivity programming model\n\n\n13:30\nAI Chat Interfaces\n\n\n13:30\nChat with your data: Querychat\n\n\n13:50\nbreak\n\n\n14:00\nTool Calling\n\n\n14:00\nStructured Data\n\n\n14:50\nbreak\n\n\n15:00\nRetrieval-augmented generation (RAG)\n\n\n15:00\nModel Context Protocol (MCP)\n\n\n15:50\nbreak\n\n\n16:30\nResources / Wrap up / End"
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Setup",
+    "section": "",
+    "text": "Clone this repository: https://github.com/chendaniely/nydsaic2025-llm\n\ngit clone https://github.com/chendaniely/nydsaic2025-llm.git\ngit clone git@github.com:chendaniely/nydsaic2025-llm.git\n\nUse the provided requirements.txt and renv.lock file to create the virtual environments\n\nR: you can use the setup-r Makefile target\nPython: if you have uv installed (https://docs.astral.sh/uv/) you can also use the setup-python target\nThere is a convenience make setup target that combines both for you\n\n\nmake setup"
+  },
+  {
+    "objectID": "setup.html#r-python",
+    "href": "setup.html#r-python",
+    "title": "Setup",
+    "section": "",
+    "text": "Clone this repository: https://github.com/chendaniely/nydsaic2025-llm\n\ngit clone https://github.com/chendaniely/nydsaic2025-llm.git\ngit clone git@github.com:chendaniely/nydsaic2025-llm.git\n\nUse the provided requirements.txt and renv.lock file to create the virtual environments\n\nR: you can use the setup-r Makefile target\nPython: if you have uv installed (https://docs.astral.sh/uv/) you can also use the setup-python target\nThere is a convenience make setup target that combines both for you\n\n\nmake setup"
+  },
+  {
+    "objectID": "setup.html#ide",
+    "href": "setup.html#ide",
+    "title": "Setup",
+    "section": "IDE",
+    "text": "IDE\nI’m using Positron: https://positron.posit.co/, but feel free to use VS Code and/or RStudio"
+  },
+  {
+    "objectID": "setup.html#github-models",
+    "href": "setup.html#github-models",
+    "title": "Setup",
+    "section": "GitHub Models",
+    "text": "GitHub Models\nYou will need to create a GitHub Personal Access Token (PAT). It does not need any context (e.g., repo, workflow, etc).\nGeneral instructions from the GitHub docs on creating a PAT: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic\nInstructions from the GitHub Models docs: https://github.com/Azure-Samples/python-ai-agent-frameworks-demos/tree/main?tab=readme-ov-file#configuring-github-models"
+  },
+  {
+    "objectID": "setup.html#local-llm-ollama",
+    "href": "setup.html#local-llm-ollama",
+    "title": "Setup",
+    "section": "Local LLM: Ollama",
+    "text": "Local LLM: Ollama\n\nDownload Ollama: https://ollama.com/\nPick one of the many llama models on their model page from: https://ollama.com/search.\n\nPick any random model that will fit on your computer\nYou can pick multiple models if you’d like, we will compare results during workshop.\nHere are a few example models with their download sizes you can try:\n\n\n\n\n\nModel\nDownload Size\nURL\nInstall Command\n\n\n\n\ngpt-oss:20b\n14GB\nhttps://gpt-oss.com/\nollama run gpt-oss:20b\n\n\ngpt-oss:120b\n65GB\n-\nollama run gpt-oss:120b\n\n\nqwen3:0.6b\n523MB\nhttps://ollama.com/library/qwen3\nollama run qwen3:0.6b\n\n\nqwen\n5.2GB\n-\nollama run qwen3\n\n\nPhi 4 mini\n3.2GB\nhttps://ollama.com/library/phi4-reasoning\nollama run phi4-mini-reasoning\n\n\ndevstral\n14GB\nhttps://ollama.com/library/devstral\nollama run devstral\n\n\nllama4\n67GB\nhttps://ollama.com/library/llama4\nollama run llama4\n\n\nllama4:128x17b\n245GB\n-\nollama run llama4:128x17b"
+  },
+  {
+    "objectID": "setup.html#optional-chat-provider-with-api",
+    "href": "setup.html#optional-chat-provider-with-api",
+    "title": "Setup",
+    "section": "(Optional): Chat provider with API",
+    "text": "(Optional): Chat provider with API\nIf you pay for Claude, OpenAI, etc access with their web/desktop application, this is a separate purchase for the API key. Depending on your usage, you may even find that paying for the API key could be cheaper!\n\nAnthropic Claude\n\nSign up at https://console.anthropic.com.\nLoad up enough credit so you won’t be sad if something goes wrong.\nCreate a key at https://console.anthropic.com/settings/keys\n\n\n\nGoogle Gemini\n\nLog in to https://aistudio.google.com with a google account\nClick create API key & copy it to the clipboard.\n\n\n\nOpenAI ChatGPT\n\nLog into https://platform.openai.com/.\nCreate a key at https://platform.openai.com/settings/organization/api-keys"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Intro to LLMs",
+    "section": "",
+    "text": "Hello! I’m Daniel.\nHere are my workshop and talk materials for The New York Data Science and AI Conference.\nThis site won’t be ready until the Conference Aug 25 - Aug 27, 2025."
+  },
+  {
+    "objectID": "index.html#workshop-introduction-of-llmsai",
+    "href": "index.html#workshop-introduction-of-llmsai",
+    "title": "Intro to LLMs",
+    "section": "Workshop: Introduction of LLMs/AI",
+    "text": "Workshop: Introduction of LLMs/AI\nThere’s a lot of hype around AI around all their use cases and the amazing things they can do. This workshop aims to demystify how LLMs work and give you a practical understanding of how they work and how to use them beyond the desktop application.\nWe will code with LLMs using an API and introduce two packages, chatlas (python) and ellmer (r), that make it easier to interact with LLMs programitaclly. We’ll also see how we can use LLMs in Shiny dashboards to create a user interface with your own chat bots. We’ll then expand on these basics to learn about RAG (retrieval augmented generation) and tool calling to give our bots more context and abilities to work as “agents”. Finally, we’ll see how we can use LLMs to help us work with our data science projects."
+  },
+  {
+    "objectID": "index.html#talk-llms-chatbots-and-dashboards-visualize-your-data-with-natural-language",
+    "href": "index.html#talk-llms-chatbots-and-dashboards-visualize-your-data-with-natural-language",
+    "title": "Intro to LLMs",
+    "section": "Talk: LLMs, Chatbots, and Dashboards: Visualize Your Data with Natural Language",
+    "text": "Talk: LLMs, Chatbots, and Dashboards: Visualize Your Data with Natural Language\nLLMs have a lot of hype around them these days. Let’s demystify how they work and see how we can put them in context for data science use. As data scientists, we want to make sure our results are inspectable, reliable, reproducible, and replicable. We already have many tools to help us in this front. However, LLMs provide a new challenge; we may not always be given the same results back from a query. This means trying to work out areas where LLMs excel in, and use those behaviors in our data science artifacts. This talk will introduce you to LLms, the Ellmer, and Chatlas packages for R and Python, and how they can be integrated into a Shiny to create an AI-powered dashboard. We’ll see how we can leverage the tasks LLMs are good at to better our data science products."
+  },
+  {
+    "objectID": "14-mcp.html",
+    "href": "14-mcp.html",
+    "title": "Model Context Protocol (MCP)",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "12-structure.html",
+    "href": "12-structure.html",
+    "title": "Structured Data",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "10-querychat.html",
+    "href": "10-querychat.html",
     "title": "Chat with your data: Querychat",
-    "section": "Extending querychat -> sidebot",
-    "text": "Extending querychat -&gt; sidebot\n\nSide bot extends querychat into a fullblown dashboard\nDemo: https://shiny.posit.co/py/templates/sidebot/\nuse natural language to drill down into a dataset\n\nPython template example code:\nshiny create --mode core --github jcheng5/py-databot"
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "08-reactivity.html",
+    "href": "08-reactivity.html",
+    "title": "Shiny Reactivity",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "06-shiny.html",
+    "href": "06-shiny.html",
+    "title": "Shiny",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "04-prompt.html",
+    "href": "04-prompt.html",
+    "title": "Prompting",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "02-anatomy.html",
+    "href": "02-anatomy.html",
+    "title": "Anatomy of a conversation",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "01-welcome.html",
+    "href": "01-welcome.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "03-first.html",
+    "href": "03-first.html",
+    "title": "Your first chat with an LLM",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "05-models.html",
+    "href": "05-models.html",
+    "title": "Choosing a model",
+    "section": "",
+    "text": "Provider\nModel\nDescription\nNotes\nTakeaway\n\n\n\n\nOpenAI\nGPT-4.1\nGood general-purpose model\n1 million token context length\nGood models for general-purpose use\n\n\nOpenAI\nGPT-4.1-mini\nFaster, cheaper, and dumber version of GPT-4.1\n\n\n\n\nOpenAI\nGPT-4.1-nano\nEven faster, cheaper, and dumber\n\n\n\n\nOpenAI\no3\nBetter at complex math and coding\nSlower and more expensive\n\n\n\nOpenAI\no4-mini\nReasoning model, not as strong as o3\nCheaper than GPT-4.1\n\n\n\nOpenAI\nAPI\nAccess via OpenAI or Azure\nOpenAI, Azure\n\n\n\nAnthropic\nClaude 3.7 Sonnet\nGood general-purpose model\nBest for code generation\nBest model for code generation\n\n\nAnthropic\nClaude 3.5 Sonnet v2\nOlder but still excellent\nSome prefer it to 3.7\n\n\n\nAnthropic\nClaude 3.5 Haiku\nFaster, cheaper, and dumber\n\n\n\n\nAnthropic\nAPI\nAccess via Anthropic or AWS Bedrock\nAnthropic, AWS Bedrock\n\n\n\nGoogle\nGemini 2.0 Flash\nVery fast\n1 million token context length\nLargest context length — good for big input\n\n\nGoogle\nGemini 2.0 Pro\nSmarter than Flash\n2 million token context length\n\n\n\nLLaMA\nLLaMA 3.1 405b\nText-only\n229GB, not as smart as best closed models\nGood for on-premise/local use\n\n\nLLaMA\nLLaMA 3.2 90b\nText + vision\n55GB\n\n\n\nLLaMA\nLLaMA 3.2 11b\nText + vision\n7.9GB, can run on a MacBook\n\n\n\nLLaMA\nOpen weights + API access\nCan run locally\nVia Ollama, OpenRouter, Groq, AWS Bedrock\n\n\n\nDeepSeek\nDeepSeek R1 671b\nUses chain of thought\n404GB, claimed similar performance to OpenAI o1\n\n\n\nDeepSeek\nDeepSeek R1 32b\nSmaller variant\n20GB, not actually DeepSeek architecture, significantly worse\n\n\n\nDeepSeek\nDeepSeek R1 70b\nMid-size variant\n43GB, not actually DeepSeek architecture\n\n\n\nDeepSeek\nOpen weights + API access\nCan run locally\nVia DeepSeek, OpenRouter\n\n\n\n\n\nTable values taken from Joe Cheng’s LLM Quickstart and converted into a table using ChatGPT."
+  },
+  {
+    "objectID": "09-chatbot.html",
+    "href": "09-chatbot.html",
+    "title": "AI chat interfaces",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "11-tools.html",
+    "href": "11-tools.html",
+    "title": "Tool calling",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "13-rag.html",
+    "href": "13-rag.html",
+    "title": "Retrieval Augmented Generation (RAG)",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "90-more.html",
+    "href": "90-more.html",
+    "title": "More resources",
+    "section": "",
+    "text": "Hadley Wickham’s LLM hackathon slides:  https://github.com/hadley/workshop-llm-hackathon\nJoe Cheng’s LLM Quickstart Hackathon slides:  https://github.com/jcheng5/llm-quickstart\nStephen Turner’s overview of all of the AI tools in R:  https://blog.stephenturner.us/p/r-production-ai\nChatlas articles (e.g., RAG):  https://posit-dev.github.io/chatlas/rag.html\nShiny for Python GenAI concepts:  https://shiny.posit.co/py/docs/genai-inspiration.html\nLarge Language Model tools for R book:  https://luisdva.github.io/llmsr-book/\n\nA few more on the References page."
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Aden-Buie, Garrick. 2024. “Level Up with Shiny for R.” https://github.com/posit-conf-2024/level-up-shiny.\n\n\nChen, Daniel. 2025. “PyCon 2025 Booth Demos.” https://github.com/posit-dev/pycon2025.\n\n\nCheng, Joe. 2025a. “Harnessing LLMs for Data Analysis.” YouTube. https://www.youtube.com/watch?v=owDd1CJ17uQ.\n\n\n———. 2025b. “LLM Quickstart.” https://github.com/jcheng5/llm-quickstart.\n\n\nShiny. 2025. Shiny for Python Generative AI Documentation. https://shiny.posit.co/py/docs/genai-inspiration.html.\n\n\nTurner, Stephen. 2025. “The Modern r Stack for Production Ai.” The Modern R Stack for Production AI - by Stephen Turner. Paired Ends. https://blog.stephenturner.us/p/r-production-ai.\n\n\nWickham, Hadley. 2025. “Workshop LLM Hackathon.” https://github.com/hadley/workshop-llm-hackathon."
+  },
+  {
+    "objectID": "talk.html",
+    "href": "talk.html",
+    "title": "Talk",
+    "section": "",
+    "text": "View slides in full screen"
+  },
+  {
+    "objectID": "slides/01-intro/01-welcome.html#install-setup",
+    "href": "slides/01-intro/01-welcome.html#install-setup",
+    "title": "Welcome",
+    "section": "Install + Setup",
+    "text": "Install + Setup\nTake a look at the workshop website and go through the setup instructions: https://github.com/chendaniely/nydsaic2025-llm\nUrl is at the bottom of all the slides.\n\nClone this repo\nInstall your R + Python packages\nDownload at least one of the Ollama models. Feel free to pick any other one.\n(Optional) use the .env.template file to provide your API key into .env\n\n\n\n\n\n\n\nNote\n\n\nIf you pay for Claude, OpenAI, etc access with their web/desktop application, this is a separate purchase for the API key. Depending on your usage, you may even find that paying for the API key could be cheaper!"
+  },
+  {
+    "objectID": "slides/01-intro/01-welcome.html#passing-along-what-i-learned",
+    "href": "slides/01-intro/01-welcome.html#passing-along-what-i-learned",
+    "title": "Welcome",
+    "section": "Passing along what I learned",
+    "text": "Passing along what I learned\n\nhttps://www.youtube.com/watch?v=owDd1CJ17uQ"
+  },
+  {
+    "objectID": "slides/01-intro/01-welcome.html#also-check-the-documentation",
+    "href": "slides/01-intro/01-welcome.html#also-check-the-documentation",
+    "title": "Welcome",
+    "section": "Also check the documentation",
+    "text": "Also check the documentation\n\nChatlas: https://posit-dev.github.io/chatlas/\nEllmer: https://ellmer.tidyverse.org/index.html\nRagnar: https://ragnar.tidyverse.org/articles/ragnar.html\nmcptools: https://posit-dev.github.io/mcptools/"
+  },
+  {
+    "objectID": "slides/01-intro/01-welcome.html#poll-experience-with-llms",
+    "href": "slides/01-intro/01-welcome.html#poll-experience-with-llms",
+    "title": "Welcome",
+    "section": "Poll: Experience with LLMs",
+    "text": "Poll: Experience with LLMs\n\nUsed an LLM before (ChatGPT/Claude/Ollama desktop/web application)?\nUsed it for a homework assignment?\nTasks outside of school work?\nSkeptical about LLMs/AI (1-2 out of 5)? Why?\nNeutral about LLMs/AI (3 out of 5)? Why?\nEnthusiastic about LLMs/AI (4-5 out of 5)? Why?"
+  },
+  {
+    "objectID": "slides/01-intro/01-welcome.html#today",
+    "href": "slides/01-intro/01-welcome.html#today",
+    "title": "Welcome",
+    "section": "Today",
+    "text": "Today\n\nToday, we will treat LLMs as black boxes\nPractical introduction\nGet some hands on practice to demystify using them"
+  },
+  {
+    "objectID": "slides/01-intro/01-welcome.html#goal",
+    "href": "slides/01-intro/01-welcome.html#goal",
+    "title": "Welcome",
+    "section": "Goal",
+    "text": "Goal\nQuick Start course on LLMs. You will leave having used a Chat API."
+  },
+  {
+    "objectID": "slides/01-intro/01-welcome.html#security",
+    "href": "slides/01-intro/01-welcome.html#security",
+    "title": "Welcome",
+    "section": "Security",
+    "text": "Security\n\nDO NOT send proprietary code or data to any LLM, unless you are sure IT policies allow it\nLocal models (e.g., Ollama) typically perform worse than frontier models"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#working-with-an-llm",
+    "href": "slides/01-intro/03-first.html#working-with-an-llm",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Working with an LLM",
+    "text": "Working with an LLM\nMany different chat providers\n\nOpenAI ChatGPT\nAnthropic Claude\nGoogle Gemini\nxAI Grok\nMeta Llama\n\netc…"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#demo-openai-chatgpt",
+    "href": "slides/01-intro/03-first.html#demo-openai-chatgpt",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Demo: OpenAI ChatGPT",
+    "text": "Demo: OpenAI ChatGPT\nfrom pprint import pprint\n\nfrom dotenv import load_dotenv\nfrom openai import OpenAI\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\n# Creates an OpenAI client, which can be used to access any OpenAI service\n# (including Whisper and DALL-E, not just chat models). It's totally stateless.\nclient = OpenAI()\n\n# The initial set of messages we'll start the conversation with: a system\n# prompt and a user prompt.\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n    {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n]\n\n# Call out to the OpenAI API to generate a response. (This is a blocking call,\n# but there are ways to do async, streaming, and async streaming as well.)\nresponse = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n)\n\n# Print the response we just received.\nprint(response.choices[0].message.content)\n# If you want to inspect the full response, you can do so by uncommenting the\n# following line. The .dict() is helpful in getting more readable output.\n# pprint(response.dict())\n\n# The client.chat.completions.create() call is stateless. In order to carry on a\n# multi-turn conversation, we need to keep track of the messages we've sent and\n# received.\nmessages.append(response.choices[0].message)\n\n# Ask a followup question.\nmessages.append({\"role\": \"user\", \"content\": \"Are you sure?\"})\nresponse2 = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n    stream=True,\n)\n\nfor chunk in response2:\n    print(chunk.choices[0].delta.content or \"\", end=\"\", flush=True)\nprint()"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#github-models",
+    "href": "slides/01-intro/03-first.html#github-models",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "GitHub Models",
+    "text": "GitHub Models\nGitHub Models: https://github.com/marketplace/models\n\n\n\n\n\nFree tiers of all the latest models\nPlayground to tinker with them\n\n\nhttps://docs.github.com/en/github-models/use-github-models/prototyping-with-ai-models#rate-limits"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#your-turn-openai-github",
+    "href": "slides/01-intro/03-first.html#your-turn-openai-github",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Your turn: OpenAI / GitHub",
+    "text": "Your turn: OpenAI / GitHub\n\n  \n    −\n    +\n \n 05:00\n \n\n\n\n\n\n\nNote\n\n\nMake sure you have created a GitHub PAT (you do not need any specific context)\n\n\n\nimport os\nfrom pprint import pprint\n\nfrom dotenv import load_dotenv\nfrom openai import OpenAI\n\nload_dotenv()\n\n# arguments passed switch to using GitHub models\nclient = OpenAI(\n  api_key=os.environ[\"GITHUB_TOKEN\"],\n  base_url=\"https://models.inference.ai.azure.com\"\n)\n\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n    {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n]\n\nresponse = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n)\nprint(response.choices[0].message.content)\n\nmessages.append(response.choices[0].message)\n\nmessages.append({\"role\": \"user\", \"content\": \"Are you sure?\"})\nresponse2 = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n    stream=True,\n)\n\nfor chunk in response2:\n    print(chunk.choices[0].delta.content or \"\", end=\"\", flush=True)\nprint()"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#educator-developer-blog",
+    "href": "slides/01-intro/03-first.html#educator-developer-blog",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Educator Developer Blog",
+    "text": "Educator Developer Blog\nHow to use any Python AI agent framework with free GitHub Models"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#demo-langchain",
+    "href": "slides/01-intro/03-first.html#demo-langchain",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Demo: Langchain",
+    "text": "Demo: Langchain\nfrom dotenv import load_dotenv\nfrom langchain_core.chat_history import InMemoryChatMessageHistory\nfrom langchain_core.messages import HumanMessage, SystemMessage\nfrom langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder\nfrom langchain_core.runnables.history import RunnableWithMessageHistory\nfrom langchain_openai import ChatOpenAI\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\n# Create an OpenAI chat model, with conversation history.\n# See https://python.langchain.com/docs/tutorials/chatbot/ for more information.\n\n# The underlying chat model. It doesn't manage any state, so we need to wrap it.\nmodel = ChatOpenAI(model=\"gpt-4.1\")\n\n# This is how you provide a system message in Langchain. Surprisingly\n# complicated, isn't it?\nprompt = ChatPromptTemplate.from_messages(\n    [\n        SystemMessage(\"You are a terse assistant.\"),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n\n# Wrap the model and prompt up with some history.\nhistory = InMemoryChatMessageHistory()\nclient = RunnableWithMessageHistory(prompt | model, lambda: history)\n\n# We're ready to chat with the model now. For this example we'll make a blocking\n# call, but there are ways to do async, streaming, and async streaming as well.\nresponse = client.invoke(\"What is the capital of the moon?\")\nprint(response.content)\n\n# The input of invoke() can be a message object as well, or a list of messages.\nresponse2 = client.invoke(HumanMessage(\"Are you sure?\"))\nprint(response2.content)"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#different-chat-apis",
+    "href": "slides/01-intro/03-first.html#different-chat-apis",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Different chat APIs",
+    "text": "Different chat APIs\nEach Chat API can have a different JSON payload, functions, ways to construct the chat history, etc…"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#chatlas-ellmer",
+    "href": "slides/01-intro/03-first.html#chatlas-ellmer",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Chatlas + Ellmer",
+    "text": "Chatlas + Ellmer\nUnify the prompt creation process and steps\n\n\nPython\n\nhttps://posit-dev.github.io/chatlas/\n\nR\n\nhttps://ellmer.tidyverse.org/"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#demo-chatlas-ellmer-openai",
+    "href": "slides/01-intro/03-first.html#demo-chatlas-ellmer-openai",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Demo: Chatlas + Ellmer (OpenAI)",
+    "text": "Demo: Chatlas + Ellmer (OpenAI)\nPython Chatlas\nfrom chatlas import ChatOpenAI\nfrom dotenv import load_dotenv\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\nchat = ChatOpenAI(model=\"gpt-4.1\", system_prompt=\"You are a terse assistant.\")\n\nchat.chat(\"What is the capital of the moon?\")\n\nchat.chat(\"Are you sure?\")\nR Ellmer\nlibrary(dotenv) # Will read OPENAI_API_KEY from .env file\nlibrary(ellmer)\n\nchat &lt;- chat_openai(\n  model = \"gpt-4.1\",\n  system_prompt = \"You are a terse assistant.\",\n)\nchat$chat(\"What is the capital of the moon?\")\n\n# The `chat` object is stateful, so this continues the existing conversation\nchat$chat(\"Are you sure about that?\")"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#demo-chatlas-ellmer-claude",
+    "href": "slides/01-intro/03-first.html#demo-chatlas-ellmer-claude",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Demo: Chatlas + Ellmer (Claude)",
+    "text": "Demo: Chatlas + Ellmer (Claude)\nPython Chatlas\nfrom chatlas import ChatAnthropic\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\nchat = ChatAnthropic(model=\"claude-3-7-sonnet-latest\", system_prompt=\"You are a terse assistant.\")\n\nchat.chat(\"What is the capital of the moon?\")\n\nchat.chat(\"Are you sure?\")\nR Ellmer\nlibrary(dotenv)\nlibrary(ellmer)\n\nchat &lt;- chat_openai(\n  model = \"claude-sonnet-4-20250514\",\n  system_prompt = \"You are a terse assistant.\",\n)\nchat$chat(\"What is the capital of the moon?\")\n\nchat$chat(\"Are you sure about that?\")"
+  },
+  {
+    "objectID": "slides/01-intro/03-first.html#your-turn-chatlas-ellmer-github",
+    "href": "slides/01-intro/03-first.html#your-turn-chatlas-ellmer-github",
+    "title": "Your first chat with an LLM 🗣️🤖",
+    "section": "Your turn: Chatlas Ellmer GitHub",
+    "text": "Your turn: Chatlas Ellmer GitHub\n\n  \n    −\n    +\n \n 10:00\n \nPython Chatlas\nimport os\n\nfrom chatlas import ChatGithub\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\nchat = ChatGithub(\n    model=\"gpt-4.1\",\n    system_prompt=\"You are a terse assistant.\",\n    api_key=os.getenv(\"GITHUB_PAT\"),\n)\n\nchat.chat(\"What is the capital of the moon?\")\nchat.chat(\"Are you sure?\")\nR Ellmer\nlibrary(dotenv)\nlibrary(ellmer)\n\nchat &lt;- chat_github(\n  model = \"gpt-4.1\",\n  system_prompt = \"You are a terse assistant.\",\n)\nchat$chat(\"What is the capital of the moon?\")\nchat$chat(\"Are you sure about that?\")"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app",
+    "href": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app",
+    "title": "Introduction to Shiny",
+    "section": "What is a Shiny app?",
+    "text": "What is a Shiny app?\nEach Shiny app involves:\n\nA web page\nA computer that watches the web page and responds to user events on that page"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-1",
+    "href": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-1",
+    "title": "Introduction to Shiny",
+    "section": "What is a Shiny app?",
+    "text": "What is a Shiny app?\nEach Shiny app involves:\n\nA web page\nA computer that watches the web page and responds to user events on that page"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-2",
+    "href": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-2",
+    "title": "Introduction to Shiny",
+    "section": "What is a Shiny app?",
+    "text": "What is a Shiny app?\nEach Shiny app involves:\n\nA web page\nA computer that watches the web page and responds to user events on that page"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#components",
+    "href": "slides/02-shiny/01-shiny.html#components",
+    "title": "Introduction to Shiny",
+    "section": "Components",
+    "text": "Components\n\n\nEach Shiny app consists of:\n\nInputs"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#components-1",
+    "href": "slides/02-shiny/01-shiny.html#components-1",
+    "title": "Introduction to Shiny",
+    "section": "Components",
+    "text": "Components\n\n\nEach Shiny app consists of:\n\nInputs\nOutputs"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#components-2",
+    "href": "slides/02-shiny/01-shiny.html#components-2",
+    "title": "Introduction to Shiny",
+    "section": "Components",
+    "text": "Components\n\n\nEach Shiny app consists of:\n\nInputs\nOutputs\nInstructions on how to build outputs from inputs"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#reactivity",
+    "href": "slides/02-shiny/01-shiny.html#reactivity",
+    "title": "Introduction to Shiny",
+    "section": "Reactivity",
+    "text": "Reactivity\n\n\nWhen an input changes, Shiny reacts by rebuilding the outputs that depend on it, and only those outputs."
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#spreadsheet-analogy",
+    "href": "slides/02-shiny/01-shiny.html#spreadsheet-analogy",
+    "title": "Introduction to Shiny",
+    "section": "Spreadsheet Analogy",
+    "text": "Spreadsheet Analogy\n\n\n\n\n\n\nInputs\nOutputs\nInstructions on how to build outputs from inputs"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#spreadsheet-analogy-1",
+    "href": "slides/02-shiny/01-shiny.html#spreadsheet-analogy-1",
+    "title": "Introduction to Shiny",
+    "section": "Spreadsheet Analogy",
+    "text": "Spreadsheet Analogy\n\n\n\n\n\nUpdates:\n\nWhen an input changes\nOnly the parts of the app that depend on the input"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#key-features-of-reactivity",
+    "href": "slides/02-shiny/01-shiny.html#key-features-of-reactivity",
+    "title": "Introduction to Shiny",
+    "section": "Key features of reactivity",
+    "text": "Key features of reactivity\n\nEasy enough to use for prototypes\nEfficient enough to handle complexity\nScales to build production quality apps"
+  },
+  {
+    "objectID": "slides/02-shiny/01-shiny.html#why-shiny",
+    "href": "slides/02-shiny/01-shiny.html#why-shiny",
+    "title": "Introduction to Shiny",
+    "section": "Why Shiny?",
+    "text": "Why Shiny?\nShiny lets you quickly create reactive web apps without worrying about:\n\ncache\nstate\ncallbacks\n…or even HTML, CSS, and JavaScript\n\nAnd, these apps can scale from prototype to production-ready."
   },
   {
     "objectID": "slides/02-shiny/03-reactivity.html#previous-pydata-shiny-talks",
@@ -245,605 +819,38 @@
     "text": "Get Filter reactive calc\n\n\n\n\n\n\n\nflowchart TD\n  D[Dates] --&gt; Sa{{Sample}}\n  S[Sample Size] --&gt; Sa\n  A[Account] --&gt; F\n  Sa --&gt; F{{Filtered}}\n  F --&gt; P2((Model Scores))\n  F --&gt; P1((API Response))\n\n  classDef changed fill:#f96\n\n\n\n\n\n\n\n\nRectangle: Reactive input\nHexagon: Reactive expression\nCircle: Reactive output"
   },
   {
-    "objectID": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app",
-    "href": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app",
-    "title": "Introduction to Shiny",
-    "section": "What is a Shiny app?",
-    "text": "What is a Shiny app?\nEach Shiny app involves:\n\nA web page\nA computer that watches the web page and responds to user events on that page"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-1",
-    "href": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-1",
-    "title": "Introduction to Shiny",
-    "section": "What is a Shiny app?",
-    "text": "What is a Shiny app?\nEach Shiny app involves:\n\nA web page\nA computer that watches the web page and responds to user events on that page"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-2",
-    "href": "slides/02-shiny/01-shiny.html#what-is-a-shiny-app-2",
-    "title": "Introduction to Shiny",
-    "section": "What is a Shiny app?",
-    "text": "What is a Shiny app?\nEach Shiny app involves:\n\nA web page\nA computer that watches the web page and responds to user events on that page"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#components",
-    "href": "slides/02-shiny/01-shiny.html#components",
-    "title": "Introduction to Shiny",
-    "section": "Components",
-    "text": "Components\n\n\nEach Shiny app consists of:\n\nInputs"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#components-1",
-    "href": "slides/02-shiny/01-shiny.html#components-1",
-    "title": "Introduction to Shiny",
-    "section": "Components",
-    "text": "Components\n\n\nEach Shiny app consists of:\n\nInputs\nOutputs"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#components-2",
-    "href": "slides/02-shiny/01-shiny.html#components-2",
-    "title": "Introduction to Shiny",
-    "section": "Components",
-    "text": "Components\n\n\nEach Shiny app consists of:\n\nInputs\nOutputs\nInstructions on how to build outputs from inputs"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#reactivity",
-    "href": "slides/02-shiny/01-shiny.html#reactivity",
-    "title": "Introduction to Shiny",
-    "section": "Reactivity",
-    "text": "Reactivity\n\n\nWhen an input changes, Shiny reacts by rebuilding the outputs that depend on it, and only those outputs."
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#spreadsheet-analogy",
-    "href": "slides/02-shiny/01-shiny.html#spreadsheet-analogy",
-    "title": "Introduction to Shiny",
-    "section": "Spreadsheet Analogy",
-    "text": "Spreadsheet Analogy\n\n\n\n\n\n\nInputs\nOutputs\nInstructions on how to build outputs from inputs"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#spreadsheet-analogy-1",
-    "href": "slides/02-shiny/01-shiny.html#spreadsheet-analogy-1",
-    "title": "Introduction to Shiny",
-    "section": "Spreadsheet Analogy",
-    "text": "Spreadsheet Analogy\n\n\n\n\n\nUpdates:\n\nWhen an input changes\nOnly the parts of the app that depend on the input"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#key-features-of-reactivity",
-    "href": "slides/02-shiny/01-shiny.html#key-features-of-reactivity",
-    "title": "Introduction to Shiny",
-    "section": "Key features of reactivity",
-    "text": "Key features of reactivity\n\nEasy enough to use for prototypes\nEfficient enough to handle complexity\nScales to build production quality apps"
-  },
-  {
-    "objectID": "slides/02-shiny/01-shiny.html#why-shiny",
-    "href": "slides/02-shiny/01-shiny.html#why-shiny",
-    "title": "Introduction to Shiny",
-    "section": "Why Shiny?",
-    "text": "Why Shiny?\nShiny lets you quickly create reactive web apps without worrying about:\n\ncache\nstate\ncallbacks\n…or even HTML, CSS, and JavaScript\n\nAnd, these apps can scale from prototype to production-ready."
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#working-with-an-llm",
-    "href": "slides/01-intro/03-first.html#working-with-an-llm",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Working with an LLM",
-    "text": "Working with an LLM\nMany different chat providers\n\nOpenAI ChatGPT\nAnthropic Claude\nGoogle Gemini\nxAI Grok\nMeta Llama\n\netc…"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#demo-openai-chatgpt",
-    "href": "slides/01-intro/03-first.html#demo-openai-chatgpt",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Demo: OpenAI ChatGPT",
-    "text": "Demo: OpenAI ChatGPT\nfrom pprint import pprint\n\nfrom dotenv import load_dotenv\nfrom openai import OpenAI\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\n# Creates an OpenAI client, which can be used to access any OpenAI service\n# (including Whisper and DALL-E, not just chat models). It's totally stateless.\nclient = OpenAI()\n\n# The initial set of messages we'll start the conversation with: a system\n# prompt and a user prompt.\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n    {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n]\n\n# Call out to the OpenAI API to generate a response. (This is a blocking call,\n# but there are ways to do async, streaming, and async streaming as well.)\nresponse = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n)\n\n# Print the response we just received.\nprint(response.choices[0].message.content)\n# If you want to inspect the full response, you can do so by uncommenting the\n# following line. The .dict() is helpful in getting more readable output.\n# pprint(response.dict())\n\n# The client.chat.completions.create() call is stateless. In order to carry on a\n# multi-turn conversation, we need to keep track of the messages we've sent and\n# received.\nmessages.append(response.choices[0].message)\n\n# Ask a followup question.\nmessages.append({\"role\": \"user\", \"content\": \"Are you sure?\"})\nresponse2 = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n    stream=True,\n)\n\nfor chunk in response2:\n    print(chunk.choices[0].delta.content or \"\", end=\"\", flush=True)\nprint()"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#github-models",
-    "href": "slides/01-intro/03-first.html#github-models",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "GitHub Models",
-    "text": "GitHub Models\nGitHub Models: https://github.com/marketplace/models\n\n\n\n\n\nFree tiers of all the latest models\nPlayground to tinker with them\n\n\nhttps://docs.github.com/en/github-models/use-github-models/prototyping-with-ai-models#rate-limits"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#your-turn-openai-github",
-    "href": "slides/01-intro/03-first.html#your-turn-openai-github",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Your turn: OpenAI / GitHub",
-    "text": "Your turn: OpenAI / GitHub\n\n  \n    −\n    +\n \n 05:00\n \n\n\n\n\n\n\nNote\n\n\nMake sure you have created a GitHub PAT (you do not need any specific context)\n\n\n\nimport os\nfrom pprint import pprint\n\nfrom dotenv import load_dotenv\nfrom openai import OpenAI\n\nload_dotenv()\n\n# arguments passed switch to using GitHub models\nclient = OpenAI(\n  api_key=os.environ[\"GITHUB_TOKEN\"],\n  base_url=\"https://models.inference.ai.azure.com\"\n)\n\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n    {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n]\n\nresponse = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n)\nprint(response.choices[0].message.content)\n\nmessages.append(response.choices[0].message)\n\nmessages.append({\"role\": \"user\", \"content\": \"Are you sure?\"})\nresponse2 = client.chat.completions.create(\n    model=\"gpt-4.1\",\n    messages=messages,\n    stream=True,\n)\n\nfor chunk in response2:\n    print(chunk.choices[0].delta.content or \"\", end=\"\", flush=True)\nprint()"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#educator-developer-blog",
-    "href": "slides/01-intro/03-first.html#educator-developer-blog",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Educator Developer Blog",
-    "text": "Educator Developer Blog\nHow to use any Python AI agent framework with free GitHub Models"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#demo-langchain",
-    "href": "slides/01-intro/03-first.html#demo-langchain",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Demo: Langchain",
-    "text": "Demo: Langchain\nfrom dotenv import load_dotenv\nfrom langchain_core.chat_history import InMemoryChatMessageHistory\nfrom langchain_core.messages import HumanMessage, SystemMessage\nfrom langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder\nfrom langchain_core.runnables.history import RunnableWithMessageHistory\nfrom langchain_openai import ChatOpenAI\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\n# Create an OpenAI chat model, with conversation history.\n# See https://python.langchain.com/docs/tutorials/chatbot/ for more information.\n\n# The underlying chat model. It doesn't manage any state, so we need to wrap it.\nmodel = ChatOpenAI(model=\"gpt-4.1\")\n\n# This is how you provide a system message in Langchain. Surprisingly\n# complicated, isn't it?\nprompt = ChatPromptTemplate.from_messages(\n    [\n        SystemMessage(\"You are a terse assistant.\"),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n\n# Wrap the model and prompt up with some history.\nhistory = InMemoryChatMessageHistory()\nclient = RunnableWithMessageHistory(prompt | model, lambda: history)\n\n# We're ready to chat with the model now. For this example we'll make a blocking\n# call, but there are ways to do async, streaming, and async streaming as well.\nresponse = client.invoke(\"What is the capital of the moon?\")\nprint(response.content)\n\n# The input of invoke() can be a message object as well, or a list of messages.\nresponse2 = client.invoke(HumanMessage(\"Are you sure?\"))\nprint(response2.content)"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#different-chat-apis",
-    "href": "slides/01-intro/03-first.html#different-chat-apis",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Different chat APIs",
-    "text": "Different chat APIs\nEach Chat API can have a different JSON payload, functions, ways to construct the chat history, etc…"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#chatlas-ellmer",
-    "href": "slides/01-intro/03-first.html#chatlas-ellmer",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Chatlas + Ellmer",
-    "text": "Chatlas + Ellmer\nUnify the prompt creation process and steps\n\n\nPython\n\nhttps://posit-dev.github.io/chatlas/\n\nR\n\nhttps://ellmer.tidyverse.org/"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#demo-chatlas-ellmer-openai",
-    "href": "slides/01-intro/03-first.html#demo-chatlas-ellmer-openai",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Demo: Chatlas + Ellmer (OpenAI)",
-    "text": "Demo: Chatlas + Ellmer (OpenAI)\nPython Chatlas\nfrom chatlas import ChatOpenAI\nfrom dotenv import load_dotenv\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\nchat = ChatOpenAI(model=\"gpt-4.1\", system_prompt=\"You are a terse assistant.\")\n\nchat.chat(\"What is the capital of the moon?\")\n\nchat.chat(\"Are you sure?\")\nR Ellmer\nlibrary(dotenv) # Will read OPENAI_API_KEY from .env file\nlibrary(ellmer)\n\nchat &lt;- chat_openai(\n  model = \"gpt-4.1\",\n  system_prompt = \"You are a terse assistant.\",\n)\nchat$chat(\"What is the capital of the moon?\")\n\n# The `chat` object is stateful, so this continues the existing conversation\nchat$chat(\"Are you sure about that?\")"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#demo-chatlas-ellmer-claude",
-    "href": "slides/01-intro/03-first.html#demo-chatlas-ellmer-claude",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Demo: Chatlas + Ellmer (Claude)",
-    "text": "Demo: Chatlas + Ellmer (Claude)\nPython Chatlas\nfrom chatlas import ChatAnthropic\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\nchat = ChatAnthropic(model=\"claude-3-7-sonnet-latest\", system_prompt=\"You are a terse assistant.\")\n\nchat.chat(\"What is the capital of the moon?\")\n\nchat.chat(\"Are you sure?\")\nR Ellmer\nlibrary(dotenv)\nlibrary(ellmer)\n\nchat &lt;- chat_openai(\n  model = \"claude-sonnet-4-20250514\",\n  system_prompt = \"You are a terse assistant.\",\n)\nchat$chat(\"What is the capital of the moon?\")\n\nchat$chat(\"Are you sure about that?\")"
-  },
-  {
-    "objectID": "slides/01-intro/03-first.html#your-turn-chatlas-ellmer-github",
-    "href": "slides/01-intro/03-first.html#your-turn-chatlas-ellmer-github",
-    "title": "Your first chat with an LLM 🗣️🤖",
-    "section": "Your turn: Chatlas Ellmer GitHub",
-    "text": "Your turn: Chatlas Ellmer GitHub\n\n  \n    −\n    +\n \n 10:00\n \nPython Chatlas\nimport os\n\nfrom chatlas import ChatGithub\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\nchat = ChatGithub(\n    model=\"gpt-4.1\",\n    system_prompt=\"You are a terse assistant.\",\n    api_key=os.getenv(\"GITHUB_PAT\"),\n)\n\nchat.chat(\"What is the capital of the moon?\")\nchat.chat(\"Are you sure?\")\nR Ellmer\nlibrary(dotenv)\nlibrary(ellmer)\n\nchat &lt;- chat_github(\n  model = \"gpt-4.1\",\n  system_prompt = \"You are a terse assistant.\",\n)\nchat$chat(\"What is the capital of the moon?\")\nchat$chat(\"Are you sure about that?\")"
-  },
-  {
-    "objectID": "slides/01-intro/01-welcome.html#install-setup",
-    "href": "slides/01-intro/01-welcome.html#install-setup",
-    "title": "Welcome",
-    "section": "Install + Setup",
-    "text": "Install + Setup\nTake a look at the workshop website and go through the setup instructions: https://github.com/chendaniely/nydsaic2025-llm\nUrl is at the bottom of all the slides.\n\nClone this repo\nInstall your R + Python packages\nDownload at least one of the Ollama models. Feel free to pick any other one.\n(Optional) use the .env.template file to provide your API key into .env\n\n\n\n\n\n\n\nNote\n\n\nIf you pay for Claude, OpenAI, etc access with their web/desktop application, this is a separate purchase for the API key. Depending on your usage, you may even find that paying for the API key could be cheaper!"
-  },
-  {
-    "objectID": "slides/01-intro/01-welcome.html#passing-along-what-i-learned",
-    "href": "slides/01-intro/01-welcome.html#passing-along-what-i-learned",
-    "title": "Welcome",
-    "section": "Passing along what I learned",
-    "text": "Passing along what I learned\n\nhttps://www.youtube.com/watch?v=owDd1CJ17uQ"
-  },
-  {
-    "objectID": "slides/01-intro/01-welcome.html#also-check-the-documentation",
-    "href": "slides/01-intro/01-welcome.html#also-check-the-documentation",
-    "title": "Welcome",
-    "section": "Also check the documentation",
-    "text": "Also check the documentation\n\nChatlas: https://posit-dev.github.io/chatlas/\nEllmer: https://ellmer.tidyverse.org/index.html\nRagnar: https://ragnar.tidyverse.org/articles/ragnar.html\nmcptools: https://posit-dev.github.io/mcptools/"
-  },
-  {
-    "objectID": "slides/01-intro/01-welcome.html#poll-experience-with-llms",
-    "href": "slides/01-intro/01-welcome.html#poll-experience-with-llms",
-    "title": "Welcome",
-    "section": "Poll: Experience with LLMs",
-    "text": "Poll: Experience with LLMs\n\nUsed an LLM before (ChatGPT/Claude/Ollama desktop/web application)?\nUsed it for a homework assignment?\nTasks outside of school work?\nSkeptical about LLMs/AI (1-2 out of 5)? Why?\nNeutral about LLMs/AI (3 out of 5)? Why?\nEnthusiastic about LLMs/AI (4-5 out of 5)? Why?"
-  },
-  {
-    "objectID": "slides/01-intro/01-welcome.html#today",
-    "href": "slides/01-intro/01-welcome.html#today",
-    "title": "Welcome",
-    "section": "Today",
-    "text": "Today\n\nToday, we will treat LLMs as black boxes\nPractical introduction\nGet some hands on practice to demystify using them"
-  },
-  {
-    "objectID": "slides/01-intro/01-welcome.html#goal",
-    "href": "slides/01-intro/01-welcome.html#goal",
-    "title": "Welcome",
-    "section": "Goal",
-    "text": "Goal\nQuick Start course on LLMs. You will leave having used a Chat API."
-  },
-  {
-    "objectID": "slides/01-intro/01-welcome.html#security",
-    "href": "slides/01-intro/01-welcome.html#security",
-    "title": "Welcome",
-    "section": "Security",
-    "text": "Security\n\nDO NOT send proprietary code or data to any LLM, unless you are sure IT policies allow it\nLocal models (e.g., Ollama) typically perform worse than frontier models"
-  },
-  {
-    "objectID": "setup.html",
-    "href": "setup.html",
-    "title": "Setup",
-    "section": "",
-    "text": "Clone this repository: https://github.com/chendaniely/nydsaic2025-llm\n\ngit clone https://github.com/chendaniely/nydsaic2025-llm.git\ngit clone git@github.com:chendaniely/nydsaic2025-llm.git\n\nUse the provided requirements.txt and renv.lock file to create the virtual environments\n\nR: you can use the setup-r Makefile target\nPython: if you have uv installed (https://docs.astral.sh/uv/) you can also use the setup-python target\nThere is a convenience make setup target that combines both for you\n\n\nmake setup"
-  },
-  {
-    "objectID": "setup.html#r-python",
-    "href": "setup.html#r-python",
-    "title": "Setup",
-    "section": "",
-    "text": "Clone this repository: https://github.com/chendaniely/nydsaic2025-llm\n\ngit clone https://github.com/chendaniely/nydsaic2025-llm.git\ngit clone git@github.com:chendaniely/nydsaic2025-llm.git\n\nUse the provided requirements.txt and renv.lock file to create the virtual environments\n\nR: you can use the setup-r Makefile target\nPython: if you have uv installed (https://docs.astral.sh/uv/) you can also use the setup-python target\nThere is a convenience make setup target that combines both for you\n\n\nmake setup"
-  },
-  {
-    "objectID": "setup.html#ide",
-    "href": "setup.html#ide",
-    "title": "Setup",
-    "section": "IDE",
-    "text": "IDE\nI’m using Positron: https://positron.posit.co/, but feel free to use VS Code and/or RStudio"
-  },
-  {
-    "objectID": "setup.html#github-models",
-    "href": "setup.html#github-models",
-    "title": "Setup",
-    "section": "GitHub Models",
-    "text": "GitHub Models\nYou will need to create a GitHub Personal Access Token (PAT). It does not need any context (e.g., repo, workflow, etc).\nGeneral instructions from the GitHub docs on creating a PAT: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic\nInstructions from the GitHub Models docs: https://github.com/Azure-Samples/python-ai-agent-frameworks-demos/tree/main?tab=readme-ov-file#configuring-github-models"
-  },
-  {
-    "objectID": "setup.html#local-llm-ollama",
-    "href": "setup.html#local-llm-ollama",
-    "title": "Setup",
-    "section": "Local LLM: Ollama",
-    "text": "Local LLM: Ollama\n\nDownload Ollama: https://ollama.com/\nPick one of the many llama models on their model page from: https://ollama.com/search.\n\nPick any random model that will fit on your computer\nYou can pick multiple models if you’d like, we will compare results during workshop.\nHere are a few example models with their download sizes you can try:\n\n\n\n\n\nModel\nDownload Size\nURL\nInstall Command\n\n\n\n\ngpt-oss:20b\n14GB\nhttps://gpt-oss.com/\nollama run gpt-oss:20b\n\n\ngpt-oss:120b\n65GB\n-\nollama run gpt-oss:120b\n\n\nqwen3:0.6b\n523MB\nhttps://ollama.com/library/qwen3\nollama run qwen3:0.6b\n\n\nqwen\n5.2GB\n-\nollama run qwen3\n\n\nPhi 4 mini\n3.2GB\nhttps://ollama.com/library/phi4-reasoning\nollama run phi4-mini-reasoning\n\n\ndevstral\n14GB\nhttps://ollama.com/library/devstral\nollama run devstral\n\n\nllama4\n67GB\nhttps://ollama.com/library/llama4\nollama run llama4\n\n\nllama4:128x17b\n245GB\n-\nollama run llama4:128x17b"
-  },
-  {
-    "objectID": "setup.html#optional-chat-provider-with-api",
-    "href": "setup.html#optional-chat-provider-with-api",
-    "title": "Setup",
-    "section": "(Optional): Chat provider with API",
-    "text": "(Optional): Chat provider with API\nIf you pay for Claude, OpenAI, etc access with their web/desktop application, this is a separate purchase for the API key. Depending on your usage, you may even find that paying for the API key could be cheaper!\n\nAnthropic Claude\n\nSign up at https://console.anthropic.com.\nLoad up enough credit so you won’t be sad if something goes wrong.\nCreate a key at https://console.anthropic.com/settings/keys\n\n\n\nGoogle Gemini\n\nLog in to https://aistudio.google.com with a google account\nClick create API key & copy it to the clipboard.\n\n\n\nOpenAI ChatGPT\n\nLog into https://platform.openai.com/.\nCreate a key at https://platform.openai.com/settings/organization/api-keys"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Intro to LLMs",
-    "section": "",
-    "text": "Hello! I’m Daniel.\nHere are my workshop and talk materials for The New York Data Science and AI Conference.\nThis site won’t be ready until the Conference Aug 25 - Aug 27, 2025."
-  },
-  {
-    "objectID": "index.html#workshop-introduction-of-llmsai",
-    "href": "index.html#workshop-introduction-of-llmsai",
-    "title": "Intro to LLMs",
-    "section": "Workshop: Introduction of LLMs/AI",
-    "text": "Workshop: Introduction of LLMs/AI\nThere’s a lot of hype around AI around all their use cases and the amazing things they can do. This workshop aims to demystify how LLMs work and give you a practical understanding of how they work and how to use them beyond the desktop application.\nWe will code with LLMs using an API and introduce two packages, chatlas (python) and ellmer (r), that make it easier to interact with LLMs programitaclly. We’ll also see how we can use LLMs in Shiny dashboards to create a user interface with your own chat bots. We’ll then expand on these basics to learn about RAG (retrieval augmented generation) and tool calling to give our bots more context and abilities to work as “agents”. Finally, we’ll see how we can use LLMs to help us work with our data science projects."
-  },
-  {
-    "objectID": "index.html#talk-llms-chatbots-and-dashboards-visualize-your-data-with-natural-language",
-    "href": "index.html#talk-llms-chatbots-and-dashboards-visualize-your-data-with-natural-language",
-    "title": "Intro to LLMs",
-    "section": "Talk: LLMs, Chatbots, and Dashboards: Visualize Your Data with Natural Language",
-    "text": "Talk: LLMs, Chatbots, and Dashboards: Visualize Your Data with Natural Language\nLLMs have a lot of hype around them these days. Let’s demystify how they work and see how we can put them in context for data science use. As data scientists, we want to make sure our results are inspectable, reliable, reproducible, and replicable. We already have many tools to help us in this front. However, LLMs provide a new challenge; we may not always be given the same results back from a query. This means trying to work out areas where LLMs excel in, and use those behaviors in our data science artifacts. This talk will introduce you to LLms, the Ellmer, and Chatlas packages for R and Python, and how they can be integrated into a Shiny to create an AI-powered dashboard. We’ll see how we can leverage the tasks LLMs are good at to better our data science products."
-  },
-  {
-    "objectID": "14-mcp.html",
-    "href": "14-mcp.html",
-    "title": "Model Context Protocol (MCP)",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "12-structure.html",
-    "href": "12-structure.html",
-    "title": "Structured Data",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "10-querychat.html",
-    "href": "10-querychat.html",
+    "objectID": "slides/03-shiny-llm/02-querychat.html#chatting-with-your-data",
+    "href": "slides/03-shiny-llm/02-querychat.html#chatting-with-your-data",
     "title": "Chat with your data: Querychat",
-    "section": "",
-    "text": "View slides in full screen"
+    "section": "Chatting with your data",
+    "text": "Chatting with your data\n\nInteract with your data(frame) with SQL\nhttps://github.com/posit-dev/querychat"
   },
   {
-    "objectID": "08-chatbot.html",
-    "href": "08-chatbot.html",
-    "title": "AI chat interfaces",
-    "section": "",
-    "text": "View slides in full screen"
+    "objectID": "slides/03-shiny-llm/02-querychat.html#demo-querychat-r",
+    "href": "slides/03-shiny-llm/02-querychat.html#demo-querychat-r",
+    "title": "Chat with your data: Querychat",
+    "section": "Demo: querychat R",
+    "text": "Demo: querychat R\nlibrary(dotenv)\nlibrary(shiny)\nlibrary(bslib)\nlibrary(querychat)\n\n# 1. Configure querychat. This is where you specify the dataset and can also\n#    override options like the greeting message, system prompt, model, etc.\nquerychat_config &lt;- querychat_init(mtcars)\n\nui &lt;- page_sidebar(\n  # 2. Use querychat_sidebar(id) in a bslib::page_sidebar.\n  #    Alternatively, use querychat_ui(id) elsewhere if you don't want your\n  #    chat interface to live in a sidebar.\n  sidebar = querychat_sidebar(\"chat\"),\n  DT::DTOutput(\"dt\")\n)\n\nserver &lt;- function(input, output, session) {\n\n  # 3. Create a querychat object using the config from step 1.\n  querychat &lt;- querychat_server(\"chat\", querychat_config)\n\n  output$dt &lt;- DT::renderDT({\n    # 4. Use the filtered/sorted data frame anywhere you wish, via the\n    #    querychat$df() reactive.\n    DT::datatable(querychat$df())\n  })\n}\n\nshinyApp(ui, server)"
   },
   {
-    "objectID": "06-shiny.html",
-    "href": "06-shiny.html",
-    "title": "Shiny",
-    "section": "",
-    "text": "View slides in full screen"
+    "objectID": "slides/03-shiny-llm/02-querychat.html#demo-querychat-python",
+    "href": "slides/03-shiny-llm/02-querychat.html#demo-querychat-python",
+    "title": "Chat with your data: Querychat",
+    "section": "Demo: querychat Python",
+    "text": "Demo: querychat Python\nimport querychat\nfrom chatlas import ChatAnthropic\nfrom seaborn import load_dataset\nfrom shiny.express import render\n\n# data -----\ntitanic = load_dataset(\"titanic\")\n\n# chatbot setup -----\ndef create_chat_callback(system_prompt):\n    return ChatAnthropic(system_prompt=system_prompt)\n\n\nquerychat_config = querychat.init(\n    titanic,\n    \"titanic\",\n    greeting=\"\"\"Hello! I'm here to help you explore the Titanic dataset.\"\"\",\n    create_chat_callback=create_chat_callback,\n)\n\nchat = querychat.server(\"chat\", querychat_config)\n\n# shiny application -----\n\n# querychat UI\nquerychat.sidebar(\"chat\")\n\n# querychat filtered dataframe\n@render.data_frame\ndef data_table():\n    return chat[\"df\"]()"
   },
   {
-    "objectID": "04-prompt.html",
-    "href": "04-prompt.html",
-    "title": "Prompting",
-    "section": "",
-    "text": "View slides in full screen"
+    "objectID": "slides/03-shiny-llm/02-querychat.html#your-turn-change-querrychat-llm",
+    "href": "slides/03-shiny-llm/02-querychat.html#your-turn-change-querrychat-llm",
+    "title": "Chat with your data: Querychat",
+    "section": "Your turn: Change querrychat LLM",
+    "text": "Your turn: Change querrychat LLM\n\nModify one of the querychat examples and swap it with another model\nTry using one of the local Ollama models and compare with your neighbor\n\n\n  \n    −\n    +\n \n 10:00"
   },
   {
-    "objectID": "02-anatomy.html",
-    "href": "02-anatomy.html",
-    "title": "Anatomy of a conversation",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "01-welcome.html",
-    "href": "01-welcome.html",
-    "title": "Welcome",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "03-first.html",
-    "href": "03-first.html",
-    "title": "Your first chat with an LLM",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "05-models.html",
-    "href": "05-models.html",
-    "title": "Choosing a model",
-    "section": "",
-    "text": "Provider\nModel\nDescription\nNotes\nTakeaway\n\n\n\n\nOpenAI\nGPT-4.1\nGood general-purpose model\n1 million token context length\nGood models for general-purpose use\n\n\nOpenAI\nGPT-4.1-mini\nFaster, cheaper, and dumber version of GPT-4.1\n\n\n\n\nOpenAI\nGPT-4.1-nano\nEven faster, cheaper, and dumber\n\n\n\n\nOpenAI\no3\nBetter at complex math and coding\nSlower and more expensive\n\n\n\nOpenAI\no4-mini\nReasoning model, not as strong as o3\nCheaper than GPT-4.1\n\n\n\nOpenAI\nAPI\nAccess via OpenAI or Azure\nOpenAI, Azure\n\n\n\nAnthropic\nClaude 3.7 Sonnet\nGood general-purpose model\nBest for code generation\nBest model for code generation\n\n\nAnthropic\nClaude 3.5 Sonnet v2\nOlder but still excellent\nSome prefer it to 3.7\n\n\n\nAnthropic\nClaude 3.5 Haiku\nFaster, cheaper, and dumber\n\n\n\n\nAnthropic\nAPI\nAccess via Anthropic or AWS Bedrock\nAnthropic, AWS Bedrock\n\n\n\nGoogle\nGemini 2.0 Flash\nVery fast\n1 million token context length\nLargest context length — good for big input\n\n\nGoogle\nGemini 2.0 Pro\nSmarter than Flash\n2 million token context length\n\n\n\nLLaMA\nLLaMA 3.1 405b\nText-only\n229GB, not as smart as best closed models\nGood for on-premise/local use\n\n\nLLaMA\nLLaMA 3.2 90b\nText + vision\n55GB\n\n\n\nLLaMA\nLLaMA 3.2 11b\nText + vision\n7.9GB, can run on a MacBook\n\n\n\nLLaMA\nOpen weights + API access\nCan run locally\nVia Ollama, OpenRouter, Groq, AWS Bedrock\n\n\n\nDeepSeek\nDeepSeek R1 671b\nUses chain of thought\n404GB, claimed similar performance to OpenAI o1\n\n\n\nDeepSeek\nDeepSeek R1 32b\nSmaller variant\n20GB, not actually DeepSeek architecture, significantly worse\n\n\n\nDeepSeek\nDeepSeek R1 70b\nMid-size variant\n43GB, not actually DeepSeek architecture\n\n\n\nDeepSeek\nOpen weights + API access\nCan run locally\nVia DeepSeek, OpenRouter\n\n\n\n\n\nTable values taken from Joe Cheng’s LLM Quickstart and converted into a table using ChatGPT."
-  },
-  {
-    "objectID": "09-reactivity.html",
-    "href": "09-reactivity.html",
-    "title": "Shiny Reactivity",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "11-tools.html",
-    "href": "11-tools.html",
-    "title": "Tool calling",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "13-rag.html",
-    "href": "13-rag.html",
-    "title": "Retrieval Augmented Generation (RAG)",
-    "section": "",
-    "text": "View slides in full screen"
-  },
-  {
-    "objectID": "90-more.html",
-    "href": "90-more.html",
-    "title": "More resources",
-    "section": "",
-    "text": "Hadley Wickham’s LLM hackathon slides:  https://github.com/hadley/workshop-llm-hackathon\nJoe Cheng’s LLM Quickstart Hackathon slides:  https://github.com/jcheng5/llm-quickstart\nStephen Turner’s overview of all of the AI tools in R:  https://blog.stephenturner.us/p/r-production-ai\nChatlas articles (e.g., RAG):  https://posit-dev.github.io/chatlas/rag.html\nShiny for Python GenAI concepts:  https://shiny.posit.co/py/docs/genai-inspiration.html\nLarge Language Model tools for R book:  https://luisdva.github.io/llmsr-book/\n\nA few more on the References page."
-  },
-  {
-    "objectID": "references.html",
-    "href": "references.html",
-    "title": "References",
-    "section": "",
-    "text": "Aden-Buie, Garrick. 2024. “Level Up with Shiny for R.” https://github.com/posit-conf-2024/level-up-shiny.\n\n\nChen, Daniel. 2025. “PyCon 2025 Booth Demos.” https://github.com/posit-dev/pycon2025.\n\n\nCheng, Joe. 2025a. “Harnessing LLMs for Data Analysis.” YouTube. https://www.youtube.com/watch?v=owDd1CJ17uQ.\n\n\n———. 2025b. “LLM Quickstart.” https://github.com/jcheng5/llm-quickstart.\n\n\nShiny. 2025. Shiny for Python Generative AI Documentation. https://shiny.posit.co/py/docs/genai-inspiration.html.\n\n\nTurner, Stephen. 2025. “The Modern r Stack for Production Ai.” The Modern R Stack for Production AI - by Stephen Turner. Paired Ends. https://blog.stephenturner.us/p/r-production-ai.\n\n\nWickham, Hadley. 2025. “Workshop LLM Hackathon.” https://github.com/hadley/workshop-llm-hackathon."
-  },
-  {
-    "objectID": "workshop.html",
-    "href": "workshop.html",
-    "title": "Workshop",
-    "section": "",
-    "text": "Time\nActivity\n\n\n\n\n09:15\nSettling in, Setup instructions, and introductions\n\n\n09:30\nWelcome! Introduction and overview\n\n\n09:45\nAnatomy of a conversation\n\n\n10:20\nbreak\n\n\n10:30\nDemo: 20 Questions by Winston Chang\n\n\n10:35\nYour first chat with an LLM\n\n\n10:35\nPrompting / Dan’s AI Hackathon Demo\n\n\n10:35\nModels\n\n\n11:20\nbreak\n\n\n13:00\nIntroduction to Shiny\n\n\n14:30\nYour first Shiny application\n\n\n14:30\nShiny’s reactivity programming model\n\n\n13:30\nAI Chat Interfaces\n\n\n13:30\nChat with your data: Querychat\n\n\n13:50\nbreak\n\n\n14:00\nTool Calling\n\n\n14:00\nStructured Data\n\n\n14:50\nbreak\n\n\n15:00\nRetrieval-augmented generation (RAG)\n\n\n15:00\nModel Context Protocol (MCP)\n\n\n15:50\nbreak\n\n\n16:30\nResources / Wrap up / End"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#llm-conversations-are-http-requests",
-    "href": "slides/01-intro/02-anatomy.html#llm-conversations-are-http-requests",
-    "title": "Anatomy of a Conversation",
-    "section": "LLM Conversations are HTTP Requests",
-    "text": "LLM Conversations are HTTP Requests\n\nEach interaction is a separate HTTP API request\nThe API server is entirely stateless (despite conversations being inherently stateful!)"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#example-conversation",
-    "href": "slides/01-intro/02-anatomy.html#example-conversation",
-    "title": "Anatomy of a Conversation",
-    "section": "Example Conversation",
-    "text": "Example Conversation\n\n“What’s the capital of the moon?”\n\n\n\"There isn't one.\"\n\n\n\n“Are you sure?”\n\n\n\n\"Yes, I am sure.\""
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#example-request",
-    "href": "slides/01-intro/02-anatomy.html#example-request",
-    "title": "Anatomy of a Conversation",
-    "section": "Example Request",
-    "text": "Example Request\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $OPENAI_API_KEY\" \\\n  -d '{\n    \"model\": \"gpt-4.1\",\n    \"messages\": [\n        {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n        {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"}\n    ]\n}'\n\nModel: model used\nSystem prompt: behind-the-scenes instructions and information for the model\nUser prompt: a question or statement for the model to respond to"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#example-response",
-    "href": "slides/01-intro/02-anatomy.html#example-response",
-    "title": "Anatomy of a Conversation",
-    "section": "Example Response",
-    "text": "Example Response\nAbridged response:\n{\n  \"choices\": [{\n    \"message\": {\n      \"role\": \"assistant\",\n      \"content\": \"The moon does not have a capital. It is not inhabited or governed.\",\n    },\n    \"finish_reason\": \"stop\"\n  }],\n  \"usage\": {\n    \"prompt_tokens\": 9,\n    \"completion_tokens\": 12,\n    \"total_tokens\": 21,\n    \"completion_tokens_details\": {\n      \"reasoning_tokens\": 0\n    }\n  }\n}\n\nAssistant: Response from model\nWhy did the model stop responding\nTokens: “words” used in the input and output"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#example-followup-request",
-    "href": "slides/01-intro/02-anatomy.html#example-followup-request",
-    "title": "Anatomy of a Conversation",
-    "section": "Example Followup Request",
-    "text": "Example Followup Request\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $OPENAI_API_KEY\" \\\n  -d '{\n    \"model\": \"gpt-4.1\",\n    \"messages\": [\n      {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n      {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n      {\"role\": \"assistant\", \"content\": \"The moon does not have a capital. It is not inhabited or governed.\"},\n      {\"role\": \"user\", \"content\": \"Are you sure?\"}\n    ]\n}'\n\nThe entire history is re-passed into the request"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#example-followup-response",
-    "href": "slides/01-intro/02-anatomy.html#example-followup-response",
-    "title": "Anatomy of a Conversation",
-    "section": "Example Followup Response",
-    "text": "Example Followup Response\nAbridged Response:\n{\n  \"choices\": [{\n    \"message\": {\n      \"role\": \"assistant\",\n      \"content\": \"Yes, I am sure. The moon has no capital or formal governance.\"\n    },\n    \"finish_reason\": \"stop\"\n  }],\n  \"usage\": {\n    \"prompt_tokens\": 52,\n    \"completion_tokens\": 15,\n    \"total_tokens\": 67,\n    \"completion_tokens_details\": {\n      \"reasoning_tokens\": 0\n    }\n  }\n}\n\nPrevious usage:\n  \"usage\": {\n    \"prompt_tokens\": 9,\n    \"completion_tokens\": 12,\n    \"total_tokens\": 21,"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#tokens",
-    "href": "slides/01-intro/02-anatomy.html#tokens",
-    "title": "Anatomy of a Conversation",
-    "section": "Tokens",
-    "text": "Tokens\n\nFundamental units of information for LLMs\nWords, parts of words, or individual characters\nImportant for:\n\nModel input/output limits\nAPI pricing is usually by token\n\nhttps://gptforwork.com/tools/openai-chatgpt-api-pricing-calculator\n\n\n\nTry it yourself:\n\nhttps://tiktokenizer.vercel.app/\nhttps://platform.openai.com/tokenizer"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#token-example",
-    "href": "slides/01-intro/02-anatomy.html#token-example",
-    "title": "Anatomy of a Conversation",
-    "section": "Token example",
-    "text": "Token example\nCommon words represented with a single number:\n\nWhat is the capital of the moon?\n4827, 382, 290, 9029, 328, 290, 28479, 30\n8 tokens total (including punctuation)\n\n\nOther words may require multiple numbers\n\ncounterrevolutionary\ncounter, re, volution, ary\n32128, 264, 9477, 815\n4 tokens total"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#token-pricing-anthropic",
-    "href": "slides/01-intro/02-anatomy.html#token-pricing-anthropic",
-    "title": "Anatomy of a Conversation",
-    "section": "Token pricing (Anthropic)",
-    "text": "Token pricing (Anthropic)\nhttps://www.anthropic.com/pricing -&gt; API tab\n\n\n\n\nClaude Sonnet 4\n\nInput: $3 / million tokens\nOutput: $15 / million tokens\nContext window: 200k"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#context-window",
-    "href": "slides/01-intro/02-anatomy.html#context-window",
-    "title": "Anatomy of a Conversation",
-    "section": "Context window",
-    "text": "Context window\n\nDetermines how much input can be incorporated into each output\nHow much of the current history the agent has in the response\n\nFor Claude Sonnet:\n\n200k token context window\n150,000 words / 300 - 600 pages / 1.5 - 2 novels\n“Gödel, Escher, Bach” ~ 67,755 words"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#context-window---chat-history",
-    "href": "slides/01-intro/02-anatomy.html#context-window---chat-history",
-    "title": "Anatomy of a Conversation",
-    "section": "Context window - chat history",
-    "text": "Context window - chat history\n200k tokens seems like a lot of context…\n\n… but the entire chat is passed along each chat iteration\n{\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n{\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n{\"role\": \"assistant\", \"content\": \"The moon does not have a capital. It is not inhabited or governed.\"},\n{\"role\": \"user\", \"content\": \"Are you sure?\"},\n{\"role\": \"assistant\", \"content\": \"Yes, I am sure. The moon has no capital or formal governance.\"}"
-  },
-  {
-    "objectID": "slides/01-intro/02-anatomy.html#summary",
-    "href": "slides/01-intro/02-anatomy.html#summary",
-    "title": "Anatomy of a Conversation",
-    "section": "Summary",
-    "text": "Summary\n\nA message is an object with:\n\nrole (e.g., “system”, “user”, “assistant”)\ncontent string\n\nA chat conversation is a growing list of messages\nThe OpenAI chat API is a stateless HTTP endpoint: takes a list of messages as input, returns a new message as output"
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#a-conversation",
-    "href": "slides/01-intro/04-prompt.html#a-conversation",
-    "title": "Prompting",
-    "section": "A conversation",
-    "text": "A conversation\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $OPENAI_API_KEY\" \\\n  -d '{\n    \"model\": \"gpt-4.1\",\n    \"messages\": [\n      {\"role\": \"system\", \"content\": \"You are a terse assistant.\"},\n      {\"role\": \"user\", \"content\": \"What is the capital of the moon?\"},\n      {\"role\": \"assistant\", \"content\": \"The moon does not have a capital. It is not inhabited or governed.\"},\n      {\"role\": \"user\", \"content\": \"Are you sure?\"}\n    ]\n}'\n\nModel: model used\nSystem prompt: behind-the-scenes instructions and information for the model\nUser prompt: a question or statement for the model to respond to"
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#english",
-    "href": "slides/01-intro/04-prompt.html#english",
-    "title": "Prompting",
-    "section": "English",
-    "text": "English\n\n“The hottest new programming language is English” Andrej Karpathy\n\nhttps://x.com/karpathy/status/1617979122625712128?lang=en"
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#system-prompt",
-    "href": "slides/01-intro/04-prompt.html#system-prompt",
-    "title": "Prompting",
-    "section": "System Prompt",
-    "text": "System Prompt\nPython\nfrom chatlas import ChatOpenAI\n\nchat = ChatOpenAI()\nchat.system_prompt = \"I want you to act like Yoda.\"\nchat.chat(\"I need your help.\")\nR\nlibrary(ellmer)\n\nchat &lt;- chat_anthropic()\nchat$set_system_prompt(\"I want you to act like Yoda\")\nchat$chat(\"I need your help.\")\n\n  \n    −\n    +\n \n 02:00"
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#prompt-templates",
-    "href": "slides/01-intro/04-prompt.html#prompt-templates",
-    "title": "Prompting",
-    "section": "Prompt templates",
-    "text": "Prompt templates\nPython\nprompt.md\nI want you to act like {{ role }}\nPython\nfrom chatlas import ChatOpenAI, interpolate_file\n\nchat = ChatOpenAI()\nchat.system_prompt = interpolate_file(\n  \"prompt.md\",\n  variables={\"role\": \"Yoda\"}\n)\nchat.system_prompt\nR\nlibrary(ellmer)\n\nchat &lt;- chat_anthropic()\nchat$set_system_prompt(\n  interpolate_file(\"prompt.md\", role = \"Yoda\")\n)\nchat$get_system_prompt()\n\n  \n    −\n    +\n \n 02:00"
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#guides-on-prompt-writing",
-    "href": "slides/01-intro/04-prompt.html#guides-on-prompt-writing",
-    "title": "Prompting",
-    "section": "Guides on prompt writing",
-    "text": "Guides on prompt writing\n\nAnthropic prompt library\n\nAnthorpic prompt generator\nAnthropic prompt improver\nAnthropic prompt engineering overview\n\nOpenAI Prompt guide\nGoogle Prompt design stragegies"
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#writing-a-good-prompt-rodes",
-    "href": "slides/01-intro/04-prompt.html#writing-a-good-prompt-rodes",
-    "title": "Prompting",
-    "section": "Writing a good prompt: RODES",
-    "text": "Writing a good prompt: RODES\n\nRole: Set the scene\nObjective: Define a purpose\nDetail: Influence behaviour, provide missing information, follow up information\nExample: Use specific examples, outline tasks,\nStyle:"
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-role",
-    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-role",
-    "title": "Prompting",
-    "section": "Example: Instagram cooking reel (Role)",
-    "text": "Example: Instagram cooking reel (Role)\nYou are a useful and understanding chef trying to help me create a recipe book."
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-objective",
-    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-objective",
-    "title": "Prompting",
-    "section": "Example: Instagram cooking reel (Objective)",
-    "text": "Example: Instagram cooking reel (Objective)\nI will be giving you cooking instructions and I need you you format the content into a recipe card. The recipe card will provide a shopping list, list of ingredients, and then a set of instructions on how to cook the ingredients."
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-detail",
-    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-detail",
-    "title": "Prompting",
-    "section": "Example: Instagram cooking reel (Detail)",
-    "text": "Example: Instagram cooking reel (Detail)\nPlease provide all units and measurements in both metric and imperial measurements. If you are unsure about a measurement or instruction, I would rather you tell me to look into the original source, than try to make it up.\nSort the shopping list by grocery store aisle. Provide the output in the following order: shopping list, ingredient list, cooking instructions.\nThe text may be in different languages. Translate any non English text into English and return all the results in English.\nBelow are the video and text instructions."
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-example",
-    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-example",
-    "title": "Prompting",
-    "section": "Example: Instagram cooking reel (Example)",
-    "text": "Example: Instagram cooking reel (Example)\nNone."
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-style",
-    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-style",
-    "title": "Prompting",
-    "section": "Example: Instagram cooking reel (Style)",
-    "text": "Example: Instagram cooking reel (Style)\nKeep the output text around 80 characters per line."
-  },
-  {
-    "objectID": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-output",
-    "href": "slides/01-intro/04-prompt.html#example-instagram-cooking-reel-output",
-    "title": "Prompting",
-    "section": "Example Instagram cooking reel (Output)",
-    "text": "Example Instagram cooking reel (Output)\nCrispy Rice Salmon Cucumber Salad with Creamy Asian Dressing\n\n────────────────────────────────────────────────────────────────────────────────\nShopping List\n\nProduce Aisle:\n\n • 5 Persian cucumbers (or 1 large English cucumber)\n • 1 avocado\n • 1 bunch green onions (about 3/4 cup)\n\nFrozen Aisle:\n\n • 1 cup shelled edamame\n\nMeat & Seafood:\n\n • 8 oz (227 g) salmon\n\nGrains & Rice:\n\n • 2 cups cooked jasmine rice\n\nCondiments:\n\n • Soy sauce\n • Chili crisp/crunch\n • Sesame oil\n • Olive oil\n • Toasted sesame oil\n • Rice vinegar\n • Honey\n\nSpices:\n\n • Garlic powder\n • Ground ginger\n • Kosher salt\n • Black pepper\n\n────────────────────────────────────────────────────────────────────────────────\nIngredients\n\nCrispy Rice:\n\n • 2 cups cooked jasmine rice (450 g), cooled\n • 2 tsp soy sauce (10 ml)\n • 2 tbsp chili crisp/crunch (30 g)\n • 1 tbsp sesame oil (15 ml)\n\nSalmon:\n\n • 8 oz (227 g) salmon\n • Pinch of garlic powder\n • Salt and pepper to taste\n\nSalad:\n\n • 5 Persian cucumbers, thinly sliced (or 1 large English cucumber)\n • 1 cup shelled edamame (150 g)\n • 1 bunch green onions, thinly sliced (approximately 3/4 cup)\n • 1 avocado, diced\n\nCreamy Asian Dressing:\n\n • 1/4 cup olive oil (60 ml)\n • 1/4 cup toasted sesame oil (60 ml)\n • 3 tbsp soy sauce (45 ml) or coconut aminos\n • 3 tbsp rice vinegar (45 ml)\n • 2 tbsp honey (30 g)\n • 1 1/2 tsp ground ginger (7 g)\n • 1/2 tsp kosher salt (3 g)\n\n────────────────────────────────────────────────────────────────────────────────\nCooking Instructions\n\n  1 Preheat the oven to 400°F (200°C). Line a baking sheet with parchment paper.\n  2 Spread the cooked and cooled jasmine rice on the baking sheet.\n  3 Toss the rice with soy sauce, chili crisp, and sesame oil. Bake for 30-35\n    minutes, stirring halfway to ensure it doesn’t burn.\n  4 While the rice bakes, season the salmon with garlic powder, salt, and\n    pepper. Place on another baking sheet.\n  5 Add the salmon to the oven with the rice and bake for 13-14 minutes, or\n    until desired doneness.\n  6 Once done, remove the crispy rice from the oven and set it aside.\n  7 Shred the salmon into smaller pieces and set aside.\n  8 In a large bowl, combine the sliced cucumbers, shelled edamame, thinly\n    sliced green onions, and diced avocado.\n  9 Top the salad with the shredded salmon and crispy rice.\n 10 For the dressing, whisk together olive oil, toasted sesame oil, soy sauce,\n    rice vinegar, honey, ground ginger, and kosher salt.\n 11 Taste the dressing and adjust seasonings as needed. Pour it over the salad\n    and toss everything gently to combine.\n 12 Enjoy your delicious Crispy Rice Salmon Cucumber Salad!\n\n────────────────────────────────────────────────────────────────────────────────\nFeel free to follow these steps for a refreshing and textured salad experience!"
-  },
-  {
-    "objectID": "slides/03-shiny-llm/01-chatbot.html#shiny-rpython",
-    "href": "slides/03-shiny-llm/01-chatbot.html#shiny-rpython",
-    "title": "Chatbot User Interfaces",
-    "section": "Shiny (R/Python)",
-    "text": "Shiny (R/Python)\n\nR: https://posit-dev.github.io/shinychat/r/\nPython: https://posit-dev.github.io/shinychat/py/"
-  },
-  {
-    "objectID": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-r",
-    "href": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-r",
-    "title": "Chatbot User Interfaces",
-    "section": "Demo: shinychat R",
-    "text": "Demo: shinychat R\nlibrary(dotenv)\nlibrary(shiny)\nlibrary(shinychat)\n\nui &lt;- bslib::page_fluid(\n  chat_ui(\"chat\")\n)\n\nserver &lt;- function(input, output, session) {\n  chat &lt;- ellmer::chat_openai(system_prompt = \"You're a trickster who answers in riddles\")\n\n  observeEvent(input$chat_user_input, {\n    stream &lt;- chat$stream_async(input$chat_user_input)\n    chat_append(\"chat\", stream)\n  })\n}\n\nshinyApp(ui, server)"
-  },
-  {
-    "objectID": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-python",
-    "href": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-python",
-    "title": "Chatbot User Interfaces",
-    "section": "Demo: shinychat Python",
-    "text": "Demo: shinychat Python\nfrom shiny.express import render, ui\nfrom shinychat.express import Chat\n\n# Set some Shiny page options\nui.page_opts(title=\"Hello Chat\")\n\n# Create a chat instance, with an initial message\nchat = Chat(\n    id=\"chat\",\n    messages=[\n        {\"content\": \"Hello! How can I help you today?\", \"role\": \"assistant\"},\n    ],\n)\n\n# Display the chat\nchat.ui()\n\n# Define a callback to run when the user submits a message\n@chat.on_user_submit\nasync def handle_user_input(user_input: str):\n    await chat.append_message(f\"You said: {user_input}\")\n\n\"Message state:\"\n\n@render.code\ndef message_state():\n    return str(chat.messages())"
-  },
-  {
-    "objectID": "slides/04-misc/01-tools.html#what-is-tool-calling",
-    "href": "slides/04-misc/01-tools.html#what-is-tool-calling",
-    "title": "Tool Calling",
-    "section": "What is Tool Calling?",
-    "text": "What is Tool Calling?\n\nAllows LLMs to interact with other systems\nSupported by most of the newest LLMs, but not all\nSounds complicated? Scary? It’s not too bad, actually…\n\nReference: https://jcheng5.github.io/llm-quickstart/quickstart.html#/how-it-works"
-  },
-  {
-    "objectID": "slides/04-misc/01-tools.html#how-it-does-not-work",
-    "href": "slides/04-misc/01-tools.html#how-it-does-not-work",
-    "title": "Tool Calling",
-    "section": "How it does NOT work",
-    "text": "How it does NOT work"
-  },
-  {
-    "objectID": "slides/04-misc/01-tools.html#how-it-does-work",
-    "href": "slides/04-misc/01-tools.html#how-it-does-work",
-    "title": "Tool Calling",
-    "section": "How it DOES work",
-    "text": "How it DOES work"
-  },
-  {
-    "objectID": "slides/04-misc/01-tools.html#demo-weather-r",
-    "href": "slides/04-misc/01-tools.html#demo-weather-r",
-    "title": "Tool Calling",
-    "section": "Demo: Weather R",
-    "text": "Demo: Weather R\nlibrary(httr)\nlibrary(ellmer)\nlibrary(dotenv)\n\n# Load environment variables\nload_dot_env()\n\n# Define weather function\nget_weather &lt;- function(latitude, longitude) {\n  base_url &lt;- \"https://api.open-meteo.com/v1/forecast\"\n\n  tryCatch(\n    {\n      response &lt;- GET(\n        base_url,\n        query = list(\n          latitude = latitude,\n          longitude = longitude,\n          current = \"temperature_2m,wind_speed_10m,relative_humidity_2m\"\n        )\n      )\n      rawToChar(response$content)\n    },\n    error = function(e) {\n      paste(\"Error fetching weather data:\", e$message)\n    }\n  )\n}\n\n# Create chat instance\nchat &lt;- chat_openai(\n  model = \"gpt-4.1\",\n  system_prompt = \"You are a helpful assistant that can check the weather. Report results in imperial units.\"\n)\n\n# Register the weather tool\n#\n# Created using `ellmer::create_tool_def(get_weather)`\nchat$register_tool(tool(\n  get_weather,\n  \"Fetches weather information for a specified location given by latitude and\nlongitude.\",\n  latitude = type_number(\n    \"The latitude of the location for which weather information is requested.\"\n  ),\n  longitude = type_number(\n    \"The longitude of the location for which weather information is requested.\"\n  )\n))\n\n# Test the chat\nchat$chat(\"What is the weather in Seattle?\")"
-  },
-  {
-    "objectID": "slides/04-misc/01-tools.html#demo-weather-python",
-    "href": "slides/04-misc/01-tools.html#demo-weather-python",
-    "title": "Tool Calling",
-    "section": "Demo: Weather Python",
-    "text": "Demo: Weather Python\nimport requests\nfrom chatlas import ChatAnthropic\nfrom dotenv import load_dotenv\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\n\n# Define a simple tool for getting the current weather\ndef get_weather(latitude: float, longitude: float):\n    \"\"\"\n    Get the current weather for a location using latitude and longitude.\n    \"\"\"\n    base_url = \"https://api.open-meteo.com/v1/forecast\"\n    params = {\n        \"latitude\": latitude,\n        \"longitude\": longitude,\n        \"current\": \"temperature_2m,wind_speed_10m,relative_humidity_2m\",\n    }\n\n    try:\n        response = requests.get(base_url, params=params)\n        response.raise_for_status()  # Raise an exception for bad status codes\n        return response.text\n    except requests.RequestException as e:\n        return f\"Error fetching weather data: {str(e)}\"\n\n\nchat = ChatAnthropic(\n    model=\"claude-3-5-sonnet-latest\",\n    system_prompt=(\n        \"You are a helpful assistant that can check the weather. \"\n        \"Report results in imperial units.\"\n    ),\n)\n\nchat.register_tool(get_weather)\nchat.chat(\"What is the weather in Seattle?\")"
+    "objectID": "slides/03-shiny-llm/02-querychat.html#extending-querychat---sidebot",
+    "href": "slides/03-shiny-llm/02-querychat.html#extending-querychat---sidebot",
+    "title": "Chat with your data: Querychat",
+    "section": "Extending querychat -> sidebot",
+    "text": "Extending querychat -&gt; sidebot\n\nSide bot extends querychat into a fullblown dashboard\nDemo: https://shiny.posit.co/py/templates/sidebot/\nuse natural language to drill down into a dataset\n\nPython template example code:\nshiny create --mode core --github jcheng5/py-databot"
   }
 ]
