@@ -32,6 +32,98 @@ Reference: <https://jcheng5.github.io/llm-quickstart/quickstart.html#/how-it-wor
 
 ![](/img/toolcalling-yes.png)
 
+## A tool is a function
+
+- A tool call is a function that the LLM can use
+- It can either infer what the function does by the function name, docstring, and/or parameter names
+- You can also provide it the context you want
+
+## Example: Weather Tool
+
+To ask the LLM about the weather in the current location we need to write a function that does a few things:
+
+1. Geocode a location to a latitude and longitude (this can also be an API)
+2. Use the latitude and longitude in an API that can look up the weather
+
+## Example Weather tool - Geocode
+
+```{python}
+import requests
+from typing import Dict
+
+
+def get_coordinates(location: str) -> Dict[str, float]:
+    base_url: str = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": location,
+        "format": "json",
+        "limit": 1,  # only return the top result
+        "addressdetails": 1,  # include detailed address info
+    }
+
+    headers = {"User-Agent": "example_weather/1.0 (daniel.chen@posit.co)"}
+    response = requests.get(
+        base_url,
+        params=params,
+        headers=headers,
+    )
+
+    data = response.json()
+
+    lat = float(data[0]["lat"])
+    lon = float(data[0]["lon"])
+
+    return {"lat": lat, "lon": lon}
+
+```
+
+## Example Weather tool - Geocode
+
+```{python}
+get_coordinates("New York City")
+```
+
+## Example Weather tool - Weather
+
+```{python}
+import requests
+
+
+def get_weather(lat: float, lon: float):
+    base_url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "current_weather": True,
+    }
+
+    response = requests.get(
+        base_url,
+        params=params,
+    )
+
+    data = response.json()
+
+    return {k: v for k, v in data.items()}
+```
+
+## Example Weather tool - Weather
+
+```{python}
+get_weather(40.7127281, -74.0060152)
+```
+
+## Example Weather tool - Register
+
+```python
+from chatlas import ChatAnthropic
+
+chat = ChatAnthropic()
+
+chat.register_tool(get_coordinates)
+chat.register_tool(get_weather)
+```
+
 ## Demo: Weather R
 
 ```r
@@ -42,4 +134,32 @@ Reference: <https://jcheng5.github.io/llm-quickstart/quickstart.html#/how-it-wor
 
 ```python
 {{< include /../code/03-tools/chatlas-weather.py >}}
+```
+
+## Demo: Shiny Application
+
+```python
+{{< include /../code/03-tools/app.py >}}
+```
+
+## You try: register a tool
+
+- Functions: <https://github.com/chendaniely/nydsaic2025-llm/tree/main/helper>
+- App: <https://github.com/chendaniely/nydsaic2025-llm/blob/main/code/03-tools/app.py>
+
+## Asking for permission (CLI only)
+
+- When you want to explicitly pause and have user input to make a tool call.
+
+```python
+from chatlas import Tool RejectError
+
+def get_weather_check(lat: float, lon: float):
+    allow = input_approval(
+        "Would you like me to run the weather check function?"
+    )
+    if allow:
+        return get_weather(lat, lon)
+    raise ToolRejectError("The user has chosen to disallow the tool call.")
+
 ```
