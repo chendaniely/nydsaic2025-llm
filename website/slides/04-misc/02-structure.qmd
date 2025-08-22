@@ -14,3 +14,41 @@ format:
 editor:
   render-on-save: true
 ---
+
+## Find structure in data
+
+From the [chatlas docs](https://posit-dev.github.io/chatlas/get-started/structured-data.html):
+
+1. Article summaries: Extract key points from lengthy reports or articles to create concise summaries for decision-makers.
+2. Entity recognition: Identify and extract entities such as names, dates, and locations from unstructured text to create structured datasets.
+3. Sentiment analysis: Extract sentiment scores and associated entities from customer reviews or social media posts to gain insights into public opinion.
+4. Classification: Classify text into predefined categories, such as spam detection or topic classification.
+5. Image/PDF input: Extract data from images or PDFs, such as tables or forms, to automate data entry processes.
+
+## Components
+
+- `chatlas`: `Chat.extract_data()` method
+- `pydantic`: data model from `BaseModel`, with optional `Field` descriptions
+
+## Simple example:
+
+```python
+import chatlas as ctl
+from pydantic import BaseModel
+
+class Person(BaseModel):
+    name: str
+    age: int
+
+chat = ctl.ChatOpenAI()
+chat.extract_data(
+  "My name is Susan and I'm 13 years old",
+  data_model=Person,
+)
+```
+
+output:
+
+```
+{"name": "Susan", "age": 13}
+```
