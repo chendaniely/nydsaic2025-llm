@@ -1,0 +1,10 @@
+---
+title: Shiny
+toc: false
+---
+
+:::{.column-page-inset-right}
+
+{{< revealjs file="slides/02-shiny/02-app.html" height="500px" class="ratio ratio-16x9" >}}
+
+:::
