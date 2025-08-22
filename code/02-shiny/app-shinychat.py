@@ -1,27 +1,14 @@
-from shiny.express import render, ui
-from shinychat.express import Chat
+from chatlas import ChatAnthropic
+from shiny.express import ui
 
-# Set some Shiny page options
-ui.page_opts(title="Hello Chat")
+# Might instead be ChatAnthropic, ChatOpenAI, or some other provider
+chat_client = ChatAnthropic()
 
-# Create a chat instance, with an initial message
-chat = Chat(
-    id="chat",
-    messages=[
-        {"content": "Hello! How can I help you today?", "role": "assistant"},
-    ],
-)
-
-# Display the chat
+chat = ui.Chat(id="my_chat")
 chat.ui()
 
-# Define a callback to run when the user submits a message
+
 @chat.on_user_submit
 async def handle_user_input(user_input: str):
-    await chat.append_message(f"You said: {user_input}")
-
-"Message state:"
-
-@render.code
-def message_state():
-    return str(chat.messages())
+    response = await chat_client.stream_async(user_input)
+    await chat.append_message_stream(response)
