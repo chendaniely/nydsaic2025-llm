@@ -4,7 +4,6 @@ title: "Build a Shiny application"
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >
@@ -260,7 +259,7 @@ def plot():
 #| layout: horizontal
 #| viewerHeight: 500
 
-{{< include /../code/01-intro/app.py >}}
+{{< include /../code/02-shiny/app.py >}}
 ```
 
 {{< countdown "5:00">}}

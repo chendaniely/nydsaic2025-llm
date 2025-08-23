@@ -5,7 +5,11 @@ toc: false
 
 Hello! I'm Daniel.
 
-Here are my workshop and talk materials for
+Here are my
+[workshop](workshop.qmd)
+and
+[talk](talk.qmd)
+materials for
 [The New York Data Science and AI Conference](https://rstats.ai/nyc).
 
 This site won't be ready until the Conference Aug 25 - Aug 27, 2025.

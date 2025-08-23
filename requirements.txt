@@ -1,6 +1,8 @@
 anthropic[bedrock]
 boto3
 chatlas
+jupyter
+nbformat
 langchain
 langchain-anthropic
 langchain-openai
@@ -9,10 +11,13 @@ llama-index
 mcp
 mcp[cli]
 openai
+palmerpenguins
 pillow
+plotnine
 python-dotenv
 requests
 shiny
+shinylive
 tokenizers
 shinychat
 querychat @ git+https://github.com/posit-dev/querychat

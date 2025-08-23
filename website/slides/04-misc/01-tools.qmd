@@ -4,7 +4,6 @@ title: Tool Calling
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >
