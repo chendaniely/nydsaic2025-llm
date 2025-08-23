@@ -4,7 +4,6 @@ title: "Chat with your data: Querychat"
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >

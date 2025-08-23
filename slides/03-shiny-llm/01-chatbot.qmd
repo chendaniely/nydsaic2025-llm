@@ -4,7 +4,6 @@ title: Chatbot User Interfaces
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >

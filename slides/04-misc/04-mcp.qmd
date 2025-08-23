@@ -4,7 +4,6 @@ title: Model Context Protocol (MCP)
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >
@@ -14,3 +13,47 @@ format:
 editor:
   render-on-save: true
 ---
+
+## What is Model Context Protocol (MCP)?
+
+- An open standard for connecting LLMs to external tools and data
+- Defines how a model can **discover**, **call**, and **interact** with tools
+- Makes tool use interoperable across different apps and providers
+
+---
+
+## Why MCP?
+
+- Without MCP: each app or provider defines its own tool API format
+- With MCP: one protocol → tools can work with any LLM that supports MCP
+- Reduces friction for developers (no custom glue code for every integration)
+
+---
+
+## MCP vs RAG
+
+- **RAG**: retrieval pipeline (vector DB, search, unstructured docs)
+- **MCP**: standard way to connect to *any tool* (databases, APIs, search engines, etc.)
+- Together: RAG retrieval itself could be exposed as a tool via MCP
+
+---
+
+## Benefits of MCP
+
+- Portable: one tool, many LLM hosts
+- Extensible: supports structured inputs/outputs
+- Secure: standardizes permissions and auditing
+- Future-proof: ecosystem of reusable MCP tools
+
+---
+
+## Example MCP Use Case
+
+- LLM is asked: *“What’s the latest issue assigned to me in GitHub?”*
+- Model calls the **GitHub MCP tool**
+- Tool fetches trusted data via API
+- Model responds with the result — no custom integration required
+
+## Demo: Run python
+
+<https://github.com/chendaniely/nydsaic2025-llm/tree/main/code/07-mcp>

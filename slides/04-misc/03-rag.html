@@ -27,9 +27,74 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-d25e68c9ad75043bc9785404553ea3be.css">
-  <link rel="stylesheet" href="styles.css">
   <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -133,8 +198,115 @@
 </div>
 
 </section>
-<section class="slide level2">
-
+<section id="what-is-rag" class="slide level2">
+<h2>What is RAG?</h2>
+<p>Retrieval Augmented Generation</p>
+<ul>
+<li><p>Give additional context to the LLM by providing trusted content</p></li>
+<li><p>Inserts a information retrieval step to find relevant information from a knowledge store</p></li>
+<li><p>Retrieved information is then provided to the model’s context for LLM response</p></li>
+<li><p>Can help with hallucinations</p></li>
+<li><p>Not always predictable which queries will retrieve which knowledge stores</p></li>
+</ul>
+</section>
+<section id="do-you-need-rag" class="slide level2">
+<h2>Do you need RAG?</h2>
+<ul>
+<li>Can you provide the relevant context into the system prompt?</li>
+<li>Can you register a tool to look up content</li>
+<li>Need to manage the index and possibly more complex RAG pipeline</li>
+</ul>
+</section>
+<section id="can-you-use-a-tool-instead" class="slide level2">
+<h2>Can you use a tool instead?</h2>
+<ul>
+<li>Data lives in an API, database, structured source</li>
+<li>Use look ups on demand (RAG process happens on each query)</li>
+</ul>
+</section>
+<section id="when-is-rag-more-useful" class="slide level2">
+<h2>When is RAG more useful?</h2>
+<ul>
+<li>Lots of unstructured data (PDFs, documents, notes, etc)</li>
+</ul>
+<p>…</p>
+<p>But can you add structure to it?</p>
+</section>
+<section id="create-a-vector-store" class="slide level2">
+<h2>Create a vector store</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> llama_index.core <span class="im">import</span> SimpleDirectoryReader, VectorStoreIndex</span>
+<span id="cb1-2"><a></a></span>
+<span id="cb1-3"><a></a>docs <span class="op">=</span> SimpleDirectoryReader(<span class="st">"data"</span>).load_data()</span>
+<span id="cb1-4"><a></a>index <span class="op">=</span> VectorStoreIndex.from_documents(docs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="optional-save-vector-store" class="slide level2">
+<h2>Optional: save vector store</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>index.storage_context.persist(persist_dir<span class="op">=</span><span class="st">"./storage"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="retrieve-concent" class="slide level2">
+<h2>Retrieve concent</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> llama_index.core <span class="im">import</span> StorageContext, load_index_from_storage</span>
+<span id="cb3-2"><a></a></span>
+<span id="cb3-3"><a></a><span class="co"># Load the knowledge store (index) from disk</span></span>
+<span id="cb3-4"><a></a>storage_context <span class="op">=</span> StorageContext.from_defaults(persist_dir<span class="op">=</span><span class="st">"./storage"</span>)</span>
+<span id="cb3-5"><a></a>index <span class="op">=</span> load_index_from_storage(storage_context)</span>
+<span id="cb3-6"><a></a></span>
+<span id="cb3-7"><a></a><span class="kw">def</span> retrieve_trusted_content(query):</span>
+<span id="cb3-8"><a></a>    retriever <span class="op">=</span> index.as_retriever(similarity_top_k<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb3-9"><a></a>    nodes <span class="op">=</span> retriever.retrieve(query)</span>
+<span id="cb3-10"><a></a>    <span class="cf">return</span> [<span class="ss">f"&lt;excerpt&gt;</span><span class="sc">{</span>x<span class="sc">.</span>text<span class="sc">}</span><span class="ss">&lt;/excerpt&gt;"</span> <span class="cf">for</span> x <span class="kw">in</span> nodes]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="dynamic-retrieval" class="slide level2">
+<h2>Dynamic retrieval</h2>
+<ul>
+<li>Makes the retrieval step a tool for the LLM</li>
+</ul>
+<p>…</p>
+<ul>
+<li>More flexible and robust</li>
+</ul>
+</section>
+<section id="dynamic-retrieval-function" class="slide level2">
+<h2>Dynamic retrieval: Function</h2>
+<p>Create a function</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> chatlas <span class="im">import</span> ChatOpenAI</span>
+<span id="cb4-2"><a></a><span class="im">from</span> llama_index.core <span class="im">import</span> StorageContext, load_index_from_storage</span>
+<span id="cb4-3"><a></a></span>
+<span id="cb4-4"><a></a><span class="co"># Load the knowledge store (index) from disk</span></span>
+<span id="cb4-5"><a></a>storage_context <span class="op">=</span> StorageContext.from_defaults(persist_dir<span class="op">=</span><span class="st">"./storage"</span>)</span>
+<span id="cb4-6"><a></a>index <span class="op">=</span> load_index_from_storage(storage_context)</span>
+<span id="cb4-7"><a></a></span>
+<span id="cb4-8"><a></a><span class="kw">def</span> retrieve_trusted_content(query: <span class="bu">str</span>, top_k: <span class="bu">int</span> <span class="op">=</span> <span class="dv">5</span>):</span>
+<span id="cb4-9"><a></a>    <span class="co">"""</span></span>
+<span id="cb4-10"><a></a><span class="co">    Retrieve relevant content from the knowledge store.</span></span>
+<span id="cb4-11"><a></a></span>
+<span id="cb4-12"><a></a><span class="co">    Parameters</span></span>
+<span id="cb4-13"><a></a><span class="co">    ----------</span></span>
+<span id="cb4-14"><a></a><span class="co">    query</span></span>
+<span id="cb4-15"><a></a><span class="co">        The query used to semantically search the knowledge store.</span></span>
+<span id="cb4-16"><a></a><span class="co">    top_k</span></span>
+<span id="cb4-17"><a></a><span class="co">        The number of results to retrieve from the knowledge store.</span></span>
+<span id="cb4-18"><a></a><span class="co">    """</span></span>
+<span id="cb4-19"><a></a>    retriever <span class="op">=</span> index.as_retriever(similarity_top_k<span class="op">=</span>top_k)</span>
+<span id="cb4-20"><a></a>    nodes <span class="op">=</span> retriever.retrieve(query)</span>
+<span id="cb4-21"><a></a>    <span class="cf">return</span> [<span class="ss">f"&lt;excerpt&gt;</span><span class="sc">{</span>x<span class="sc">.</span>text<span class="sc">}</span><span class="ss">&lt;/excerpt&gt;"</span> <span class="cf">for</span> x <span class="kw">in</span> nodes]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="dynamic-retrieval-register-tool" class="slide level2">
+<h2>Dynamic retrieval: Register tool</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>chat <span class="op">=</span> ChatOpenAI(</span>
+<span id="cb5-2"><a></a>    system_prompt<span class="op">=</span><span class="st">"You are a helpful, but terse, assistant. "</span></span>
+<span id="cb5-3"><a></a>    <span class="st">"If you can't answer the question based on the trusted content, say so."</span></span>
+<span id="cb5-4"><a></a>)</span>
+<span id="cb5-5"><a></a></span>
+<span id="cb5-6"><a></a>chat.register_tool(retrieve_trusted_content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="dynamic-retrieval-chat" class="slide level2">
+<h2>Dynamic retrieval: Chat</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>chat.chat(<span class="st">"Who created the unicorn programming language?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="demo-local-rag-example" class="slide level2">
+<h2>Demo: Local RAG example</h2>
+<p><a href="https://github.com/chendaniely/nydsaic2025-llm/tree/main/code/06-rag" class="uri">https://github.com/chendaniely/nydsaic2025-llm/tree/main/code/06-rag</a></p>
 
 
 </section>

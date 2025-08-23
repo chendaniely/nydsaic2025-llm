@@ -4,7 +4,6 @@ title: Retrival Augmented Generation (RAG)
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >
@@ -14,3 +13,118 @@ format:
 editor:
   render-on-save: true
 ---
+
+## What is RAG?
+
+Retrieval Augmented Generation
+
+- Give additional context to the LLM by providing trusted content
+- Inserts a information retrieval step to find relevant information from a knowledge store
+- Retrieved information is then provided to the model's context for LLM response
+
+- Can help with hallucinations
+- Not always predictable which queries will retrieve which knowledge stores
+
+## Do you need RAG?
+
+- Can you provide the relevant context into the system prompt?
+- Can you register a tool to look up content
+- Need to manage the index and possibly more complex RAG pipeline
+
+## Can you use a tool instead?
+
+- Data lives in an API, database, structured source
+- Use look ups on demand (RAG process happens on each query)
+
+## When is RAG more useful?
+
+- Lots of unstructured data (PDFs, documents, notes, etc)
+
+...
+
+But can you add structure to it?
+
+## Create a vector store
+
+```python
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
+
+docs = SimpleDirectoryReader("data").load_data()
+index = VectorStoreIndex.from_documents(docs)
+```
+
+## Optional: save vector store
+
+```python
+index.storage_context.persist(persist_dir="./storage")
+```
+
+## Retrieve concent
+
+```python
+from llama_index.core import StorageContext, load_index_from_storage
+
+# Load the knowledge store (index) from disk
+storage_context = StorageContext.from_defaults(persist_dir="./storage")
+index = load_index_from_storage(storage_context)
+
+def retrieve_trusted_content(query):
+    retriever = index.as_retriever(similarity_top_k=5)
+    nodes = retriever.retrieve(query)
+    return [f"<excerpt>{x.text}</excerpt>" for x in nodes]
+```
+
+## Dynamic retrieval
+
+- Makes the retrieval step a tool for the LLM
+
+...
+
+- More flexible and robust
+
+## Dynamic retrieval: Function
+
+Create a function
+
+```python
+from chatlas import ChatOpenAI
+from llama_index.core import StorageContext, load_index_from_storage
+
+# Load the knowledge store (index) from disk
+storage_context = StorageContext.from_defaults(persist_dir="./storage")
+index = load_index_from_storage(storage_context)
+
+def retrieve_trusted_content(query: str, top_k: int = 5):
+    """
+    Retrieve relevant content from the knowledge store.
+
+    Parameters
+    ----------
+    query
+        The query used to semantically search the knowledge store.
+    top_k
+        The number of results to retrieve from the knowledge store.
+    """
+    retriever = index.as_retriever(similarity_top_k=top_k)
+    nodes = retriever.retrieve(query)
+    return [f"<excerpt>{x.text}</excerpt>" for x in nodes]
+```
+## Dynamic retrieval: Register tool
+
+```python
+chat = ChatOpenAI(
+    system_prompt="You are a helpful, but terse, assistant. "
+    "If you can't answer the question based on the trusted content, say so."
+)
+
+chat.register_tool(retrieve_trusted_content)
+```
+## Dynamic retrieval: Chat
+
+```python
+chat.chat("Who created the unicorn programming language?")
+```
+
+## Demo: Local RAG example
+
+<https://github.com/chendaniely/nydsaic2025-llm/tree/main/code/06-rag>

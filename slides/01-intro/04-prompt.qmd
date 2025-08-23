@@ -4,7 +4,6 @@ title: "Prompting"
 format:
   revealjs:
     smaller: true
-    css: styles.css
     slide-number: true
 
     footer: >
@@ -46,7 +45,7 @@ curl https://api.openai.com/v1/chat/completions \
 
 https://x.com/karpathy/status/1617979122625712128?lang=en
 
-## System Prompt
+## System Prompt {footer=false}
 
 Python
 
@@ -70,7 +69,7 @@ chat$chat("I need your help.")
 
 {{< countdown "2:00" play_sound="true">}}
 
-## Prompt templates
+## Prompt templates {footer=false}
 
 Python
 
@@ -87,7 +86,7 @@ from chatlas import ChatOpenAI, interpolate_file
 chat = ChatOpenAI()
 chat.system_prompt = interpolate_file(
   "prompt.md",
-  variables={"role": "Yoda"}
+  variables={"role": "Yoda"},
 )
 chat.system_prompt
 ```
@@ -263,3 +262,16 @@ Cooking Instructions
 Feel free to follow these steps for a refreshing and textured salad experience!
 
 ```
+
+## Demo: Instagram cooking reel
+
+<https://github.com/chendaniely/ai-hackathon-2024>
+
+## You Try
+
+- Change your system prompt
+- Change your model
+
+See the Models page for some example models
+
+{{< countdown "5:00" play_sound="true">}}

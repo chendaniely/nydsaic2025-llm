@@ -29,7 +29,6 @@
     }
   </style>
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-d25e68c9ad75043bc9785404553ea3be.css">
-  <link rel="stylesheet" href="styles.css">
   <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -133,8 +132,51 @@
 </div>
 
 </section>
-<section class="slide level2">
-
+<section id="what-is-model-context-protocol-mcp" class="slide level2">
+<h2>What is Model Context Protocol (MCP)?</h2>
+<ul>
+<li>An open standard for connecting LLMs to external tools and data</li>
+<li>Defines how a model can <strong>discover</strong>, <strong>call</strong>, and <strong>interact</strong> with tools</li>
+<li>Makes tool use interoperable across different apps and providers</li>
+</ul>
+</section>
+<section id="why-mcp" class="slide level2">
+<h2>Why MCP?</h2>
+<ul>
+<li>Without MCP: each app or provider defines its own tool API format</li>
+<li>With MCP: one protocol → tools can work with any LLM that supports MCP</li>
+<li>Reduces friction for developers (no custom glue code for every integration)</li>
+</ul>
+</section>
+<section id="mcp-vs-rag" class="slide level2">
+<h2>MCP vs RAG</h2>
+<ul>
+<li><strong>RAG</strong>: retrieval pipeline (vector DB, search, unstructured docs)</li>
+<li><strong>MCP</strong>: standard way to connect to <em>any tool</em> (databases, APIs, search engines, etc.)</li>
+<li>Together: RAG retrieval itself could be exposed as a tool via MCP</li>
+</ul>
+</section>
+<section id="benefits-of-mcp" class="slide level2">
+<h2>Benefits of MCP</h2>
+<ul>
+<li>Portable: one tool, many LLM hosts</li>
+<li>Extensible: supports structured inputs/outputs</li>
+<li>Secure: standardizes permissions and auditing</li>
+<li>Future-proof: ecosystem of reusable MCP tools</li>
+</ul>
+</section>
+<section id="example-mcp-use-case" class="slide level2">
+<h2>Example MCP Use Case</h2>
+<ul>
+<li>LLM is asked: <em>“What’s the latest issue assigned to me in GitHub?”</em></li>
+<li>Model calls the <strong>GitHub MCP tool</strong></li>
+<li>Tool fetches trusted data via API</li>
+<li>Model responds with the result — no custom integration required</li>
+</ul>
+</section>
+<section id="demo-run-python" class="slide level2">
+<h2>Demo: Run python</h2>
+<p><a href="https://github.com/chendaniely/nydsaic2025-llm/tree/main/code/07-mcp" class="uri">https://github.com/chendaniely/nydsaic2025-llm/tree/main/code/07-mcp</a></p>
 
 
 </section>

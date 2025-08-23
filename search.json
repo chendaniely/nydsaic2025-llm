@@ -1,5 +1,89 @@
 [
   {
+    "objectID": "slides/04-misc/03-rag.html#what-is-rag",
+    "href": "slides/04-misc/03-rag.html#what-is-rag",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "What is RAG?",
+    "text": "What is RAG?\nRetrieval Augmented Generation\n\nGive additional context to the LLM by providing trusted content\nInserts a information retrieval step to find relevant information from a knowledge store\nRetrieved information is then provided to the model’s context for LLM response\nCan help with hallucinations\nNot always predictable which queries will retrieve which knowledge stores"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#do-you-need-rag",
+    "href": "slides/04-misc/03-rag.html#do-you-need-rag",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Do you need RAG?",
+    "text": "Do you need RAG?\n\nCan you provide the relevant context into the system prompt?\nCan you register a tool to look up content\nNeed to manage the index and possibly more complex RAG pipeline"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#can-you-use-a-tool-instead",
+    "href": "slides/04-misc/03-rag.html#can-you-use-a-tool-instead",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Can you use a tool instead?",
+    "text": "Can you use a tool instead?\n\nData lives in an API, database, structured source\nUse look ups on demand (RAG process happens on each query)"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#when-is-rag-more-useful",
+    "href": "slides/04-misc/03-rag.html#when-is-rag-more-useful",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "When is RAG more useful?",
+    "text": "When is RAG more useful?\n\nLots of unstructured data (PDFs, documents, notes, etc)\n\n…\nBut can you add structure to it?"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#create-a-vector-store",
+    "href": "slides/04-misc/03-rag.html#create-a-vector-store",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Create a vector store",
+    "text": "Create a vector store\nfrom llama_index.core import SimpleDirectoryReader, VectorStoreIndex\n\ndocs = SimpleDirectoryReader(\"data\").load_data()\nindex = VectorStoreIndex.from_documents(docs)"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#optional-save-vector-store",
+    "href": "slides/04-misc/03-rag.html#optional-save-vector-store",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Optional: save vector store",
+    "text": "Optional: save vector store\nindex.storage_context.persist(persist_dir=\"./storage\")"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#retrieve-concent",
+    "href": "slides/04-misc/03-rag.html#retrieve-concent",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Retrieve concent",
+    "text": "Retrieve concent\nfrom llama_index.core import StorageContext, load_index_from_storage\n\n# Load the knowledge store (index) from disk\nstorage_context = StorageContext.from_defaults(persist_dir=\"./storage\")\nindex = load_index_from_storage(storage_context)\n\ndef retrieve_trusted_content(query):\n    retriever = index.as_retriever(similarity_top_k=5)\n    nodes = retriever.retrieve(query)\n    return [f\"&lt;excerpt&gt;{x.text}&lt;/excerpt&gt;\" for x in nodes]"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#dynamic-retrieval",
+    "href": "slides/04-misc/03-rag.html#dynamic-retrieval",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Dynamic retrieval",
+    "text": "Dynamic retrieval\n\nMakes the retrieval step a tool for the LLM\n\n…\n\nMore flexible and robust"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#dynamic-retrieval-function",
+    "href": "slides/04-misc/03-rag.html#dynamic-retrieval-function",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Dynamic retrieval: Function",
+    "text": "Dynamic retrieval: Function\nCreate a function\nfrom chatlas import ChatOpenAI\nfrom llama_index.core import StorageContext, load_index_from_storage\n\n# Load the knowledge store (index) from disk\nstorage_context = StorageContext.from_defaults(persist_dir=\"./storage\")\nindex = load_index_from_storage(storage_context)\n\ndef retrieve_trusted_content(query: str, top_k: int = 5):\n    \"\"\"\n    Retrieve relevant content from the knowledge store.\n\n    Parameters\n    ----------\n    query\n        The query used to semantically search the knowledge store.\n    top_k\n        The number of results to retrieve from the knowledge store.\n    \"\"\"\n    retriever = index.as_retriever(similarity_top_k=top_k)\n    nodes = retriever.retrieve(query)\n    return [f\"&lt;excerpt&gt;{x.text}&lt;/excerpt&gt;\" for x in nodes]"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#dynamic-retrieval-register-tool",
+    "href": "slides/04-misc/03-rag.html#dynamic-retrieval-register-tool",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Dynamic retrieval: Register tool",
+    "text": "Dynamic retrieval: Register tool\nchat = ChatOpenAI(\n    system_prompt=\"You are a helpful, but terse, assistant. \"\n    \"If you can't answer the question based on the trusted content, say so.\"\n)\n\nchat.register_tool(retrieve_trusted_content)"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#dynamic-retrieval-chat",
+    "href": "slides/04-misc/03-rag.html#dynamic-retrieval-chat",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Dynamic retrieval: Chat",
+    "text": "Dynamic retrieval: Chat\nchat.chat(\"Who created the unicorn programming language?\")"
+  },
+  {
+    "objectID": "slides/04-misc/03-rag.html#demo-local-rag-example",
+    "href": "slides/04-misc/03-rag.html#demo-local-rag-example",
+    "title": "Retrival Augmented Generation (RAG)",
+    "section": "Demo: Local RAG example",
+    "text": "Demo: Local RAG example\nhttps://github.com/chendaniely/nydsaic2025-llm/tree/main/code/06-rag"
+  },
+  {
     "objectID": "slides/04-misc/01-tools.html#what-is-tool-calling",
     "href": "slides/04-misc/01-tools.html#what-is-tool-calling",
     "title": "Tool Calling",
@@ -21,6 +105,55 @@
     "text": "How it DOES work"
   },
   {
+    "objectID": "slides/04-misc/01-tools.html#a-tool-is-a-function",
+    "href": "slides/04-misc/01-tools.html#a-tool-is-a-function",
+    "title": "Tool Calling",
+    "section": "A tool is a function",
+    "text": "A tool is a function\n\nA tool call is a function that the LLM can use\nIt can either infer what the function does by the function name, docstring, and/or parameter names\nYou can also provide it the context you want"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#example-weather-tool",
+    "href": "slides/04-misc/01-tools.html#example-weather-tool",
+    "title": "Tool Calling",
+    "section": "Example: Weather Tool",
+    "text": "Example: Weather Tool\nTo ask the LLM about the weather in the current location we need to write a function that does a few things:\n\nGeocode a location to a latitude and longitude (this can also be an API)\nUse the latitude and longitude in an API that can look up the weather"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#example-weather-tool---geocode",
+    "href": "slides/04-misc/01-tools.html#example-weather-tool---geocode",
+    "title": "Tool Calling",
+    "section": "Example Weather tool - Geocode",
+    "text": "Example Weather tool - Geocode"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#example-weather-tool---geocode-1",
+    "href": "slides/04-misc/01-tools.html#example-weather-tool---geocode-1",
+    "title": "Tool Calling",
+    "section": "Example Weather tool - Geocode",
+    "text": "Example Weather tool - Geocode\n\n\n{'lat': 40.7127281, 'lon': -74.0060152}"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#example-weather-tool---weather",
+    "href": "slides/04-misc/01-tools.html#example-weather-tool---weather",
+    "title": "Tool Calling",
+    "section": "Example Weather tool - Weather",
+    "text": "Example Weather tool - Weather"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#example-weather-tool---weather-1",
+    "href": "slides/04-misc/01-tools.html#example-weather-tool---weather-1",
+    "title": "Tool Calling",
+    "section": "Example Weather tool - Weather",
+    "text": "Example Weather tool - Weather\n\n\n{'latitude': 40.710335,\n 'longitude': -73.99309,\n 'generationtime_ms': 0.06771087646484375,\n 'utc_offset_seconds': 0,\n 'timezone': 'GMT',\n 'timezone_abbreviation': 'GMT',\n 'elevation': 32.0,\n 'current_weather_units': {'time': 'iso8601',\n  'interval': 'seconds',\n  'temperature': '°C',\n  'windspeed': 'km/h',\n  'winddirection': '°',\n  'is_day': '',\n  'weathercode': 'wmo code'},\n 'current_weather': {'time': '2025-08-23T03:00',\n  'interval': 900,\n  'temperature': 21.1,\n  'windspeed': 10.5,\n  'winddirection': 221,\n  'is_day': 0,\n  'weathercode': 0}}"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#example-weather-tool---register",
+    "href": "slides/04-misc/01-tools.html#example-weather-tool---register",
+    "title": "Tool Calling",
+    "section": "Example Weather tool - Register",
+    "text": "Example Weather tool - Register\nfrom chatlas import ChatAnthropic\n\nchat = ChatAnthropic()\n\nchat.register_tool(get_coordinates)\nchat.register_tool(get_weather)"
+  },
+  {
     "objectID": "slides/04-misc/01-tools.html#demo-weather-r",
     "href": "slides/04-misc/01-tools.html#demo-weather-r",
     "title": "Tool Calling",
@@ -33,6 +166,27 @@
     "title": "Tool Calling",
     "section": "Demo: Weather Python",
     "text": "Demo: Weather Python\nimport requests\nfrom chatlas import ChatAnthropic\nfrom dotenv import load_dotenv\n\nload_dotenv()  # Loads OPENAI_API_KEY from the .env file\n\n\n# Define a simple tool for getting the current weather\ndef get_weather(latitude: float, longitude: float):\n    \"\"\"\n    Get the current weather for a location using latitude and longitude.\n    \"\"\"\n    base_url = \"https://api.open-meteo.com/v1/forecast\"\n    params = {\n        \"latitude\": latitude,\n        \"longitude\": longitude,\n        \"current\": \"temperature_2m,wind_speed_10m,relative_humidity_2m\",\n    }\n\n    try:\n        response = requests.get(base_url, params=params)\n        response.raise_for_status()  # Raise an exception for bad status codes\n        return response.text\n    except requests.RequestException as e:\n        return f\"Error fetching weather data: {str(e)}\"\n\n\nchat = ChatAnthropic(\n    model=\"claude-3-5-sonnet-latest\",\n    system_prompt=(\n        \"You are a helpful assistant that can check the weather. \"\n        \"Report results in imperial units.\"\n    ),\n)\n\nchat.register_tool(get_weather)\nchat.chat(\"What is the weather in Seattle?\")"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#demo-shiny-application",
+    "href": "slides/04-misc/01-tools.html#demo-shiny-application",
+    "title": "Tool Calling",
+    "section": "Demo: Shiny Application",
+    "text": "Demo: Shiny Application\nfrom chatlas import ChatAnthropic\nfrom shiny.express import ui\n\nfrom code.get_coordinates import get_coordinates\nfrom code.get_weather import get_weather\n\nchat_client = ChatAnthropic()\n\nchat_client.register_tool(get_coordinates)\nchat_client.register_tool(get_weather)\n\nchat = ui.Chat(id=\"chat\")\nchat.ui(\n    messages=[\n        \"Hello! I am a weather bot! Where would you like to get the weather form?\"\n    ]\n)\n\n\n@chat.on_user_submit\nasync def _(user_input: str):\n    response = await chat_client.stream_async(user_input, content=\"all\")\n    await chat.append_message_stream(response)"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#you-try-register-a-tool",
+    "href": "slides/04-misc/01-tools.html#you-try-register-a-tool",
+    "title": "Tool Calling",
+    "section": "You try: register a tool",
+    "text": "You try: register a tool\n\nFunctions: https://github.com/chendaniely/nydsaic2025-llm/tree/main/helper\nApp: https://github.com/chendaniely/nydsaic2025-llm/blob/main/code/03-tools/app.py"
+  },
+  {
+    "objectID": "slides/04-misc/01-tools.html#asking-for-permission-cli-only",
+    "href": "slides/04-misc/01-tools.html#asking-for-permission-cli-only",
+    "title": "Tool Calling",
+    "section": "Asking for permission (CLI only)",
+    "text": "Asking for permission (CLI only)\n\nWhen you want to explicitly pause and have user input to make a tool call.\n\nfrom chatlas import Tool RejectError\n\ndef get_weather_check(lat: float, lon: float):\n    allow = input_approval(\n        \"Would you like me to run the weather check function?\"\n    )\n    if allow:\n        return get_weather(lat, lon)\n    raise ToolRejectError(\"The user has chosen to disallow the tool call.\")"
   },
   {
     "objectID": "slides/03-shiny-llm/01-chatbot.html#shiny-rpython",
@@ -53,7 +207,112 @@
     "href": "slides/03-shiny-llm/01-chatbot.html#demo-shinychat-python",
     "title": "Chatbot User Interfaces",
     "section": "Demo: shinychat Python",
-    "text": "Demo: shinychat Python\nfrom shiny.express import render, ui\nfrom shinychat.express import Chat\n\n# Set some Shiny page options\nui.page_opts(title=\"Hello Chat\")\n\n# Create a chat instance, with an initial message\nchat = Chat(\n    id=\"chat\",\n    messages=[\n        {\"content\": \"Hello! How can I help you today?\", \"role\": \"assistant\"},\n    ],\n)\n\n# Display the chat\nchat.ui()\n\n# Define a callback to run when the user submits a message\n@chat.on_user_submit\nasync def handle_user_input(user_input: str):\n    await chat.append_message(f\"You said: {user_input}\")\n\n\"Message state:\"\n\n@render.code\ndef message_state():\n    return str(chat.messages())"
+    "text": "Demo: shinychat Python\nfrom chatlas import ChatAnthropic\nfrom shiny.express import ui\n\n# Might instead be ChatAnthropic, ChatOpenAI, or some other provider\nchat_client = ChatAnthropic()\n\nchat = ui.Chat(id=\"my_chat\")\nchat.ui()\n\n\n@chat.on_user_submit\nasync def handle_user_input(user_input: str):\n    response = await chat_client.stream_async(user_input)\n    await chat.append_message_stream(response)"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#whirlwind-zero-to-application",
+    "href": "slides/02-shiny/02-app.html#whirlwind-zero-to-application",
+    "title": "Build a Shiny application",
+    "section": "Whirlwind Zero to Application",
+    "text": "Whirlwind Zero to Application\nFull tutorial from my Shiny for Python SciPy tutorial:\n\nRepo: https://github.com/chendaniely/scipy-2025-shiny\nVideo: https://www.youtube.com/watch?v=H4bbMfRlw88&t=2665s&ab_channel=SciPy"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#plan-out-your-application-data",
+    "href": "slides/02-shiny/02-app.html#plan-out-your-application-data",
+    "title": "Build a Shiny application",
+    "section": "Plan out your application data",
+    "text": "Plan out your application data\n\nStart off with the data you have an some kind of data artifact without the interactivity\nUse a placeholder variable to apply the interactivity manually"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#visualizing-penguin-data",
+    "href": "slides/02-shiny/02-app.html#visualizing-penguin-data",
+    "title": "Build a Shiny application",
+    "section": "Visualizing penguin data",
+    "text": "Visualizing penguin data"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#change-the-species",
+    "href": "slides/02-shiny/02-app.html#change-the-species",
+    "title": "Build a Shiny application",
+    "section": "Change the species",
+    "text": "Change the species"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#radio-buttons",
+    "href": "slides/02-shiny/02-app.html#radio-buttons",
+    "title": "Build a Shiny application",
+    "section": "Radio Buttons",
+    "text": "Radio Buttons\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n# | standalone: true\n# | components: [editor, viewer]\n# | layout: horizontal\nfrom shiny.express import ui\n\nui.input_radio_buttons(\n    id=\"species\",\n    label=\"Species\",\n    choices=[\"Adelie\", \"Gentoo\", \"Chinstrap\"],\n)"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#run-your-application",
+    "href": "slides/02-shiny/02-app.html#run-your-application",
+    "title": "Build a Shiny application",
+    "section": "Run your application",
+    "text": "Run your application\n\nPositron/VS Code + Shiny Extension\n\n\n\nCommand line:\n\nshiny run --reload app.py"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#radio-buttons-options",
+    "href": "slides/02-shiny/02-app.html#radio-buttons-options",
+    "title": "Build a Shiny application",
+    "section": "Radio Buttons: options",
+    "text": "Radio Buttons: options\nhttps://shiny.posit.co/py/api/express/express.ui.input_radio_buttons.html\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n# | standalone: true\n# | components: [editor, viewer]\n# | layout: horizontal\nfrom shiny.express import ui\n\nui.input_radio_buttons(\n    id=\"species\",\n    label=\"Species\",\n    choices=[\"Adelie\", \"Gentoo\", \"Chinstrap\"],\n    inline=True,\n)"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#add-in-the-figure",
+    "href": "slides/02-shiny/02-app.html#add-in-the-figure",
+    "title": "Build a Shiny application",
+    "section": "Add in the figure",
+    "text": "Add in the figure\nNow let’s add all that data and plotting code from earlier into our application.\nIf we just dump in our code, the application errors because it does not know what to do with the figure that’s trying to be printed."
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#output-will-error",
+    "href": "slides/02-shiny/02-app.html#output-will-error",
+    "title": "Build a Shiny application",
+    "section": "Output will error",
+    "text": "Output will error\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n# | standalone: true\n# | components: [editor, viewer]\n# | layout: horizontal\nfrom shiny.express import ui\n\nfrom palmerpenguins import load_penguins\nfrom plotnine import aes, geom_histogram, ggplot, theme_minimal\n\nui.input_radio_buttons(\n    id=\"species\",\n    label=\"Species\",\n    choices=[\"Adelie\", \"Gentoo\", \"Chinstrap\"],\n    inline=True,\n)\n\ndat = load_penguins()\nspecies = \"Adelie\"\nsel = dat.loc[dat.species == species]\n\n# this will cause a TypeError: Invalid tag item type\n(\n    ggplot(aes(x=\"bill_length_mm\"))\n    + geom_histogram(dat, fill=\"#C2C2C4\", binwidth=1)\n    + geom_histogram(sel, fill=\"#447099\", binwidth=1)\n    + theme_minimal()\n)"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#outputs",
+    "href": "slides/02-shiny/02-app.html#outputs",
+    "title": "Build a Shiny application",
+    "section": "Outputs",
+    "text": "Outputs\n\nEach output needs to be wrapped in it’s own function with the corresponding output decorator.\n\nhttps://shiny.posit.co/py/components/#outputs\n\nWe now need to use one of the built-in Shiny output components,\nSpecifically, one that can render a plotnine figure (which is based on matplotlib), plot output component.\nFor example, we want to return a plot, so we will need to wrap our plotnine code, and decorate it with the @render.plot decorator."
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#render-plot-output",
+    "href": "slides/02-shiny/02-app.html#render-plot-output",
+    "title": "Build a Shiny application",
+    "section": "Render plot output",
+    "text": "Render plot output\n@render.plot #&lt;&lt;\ndef plot(): #&lt;&lt;\n    return ( #&lt;&lt;\n        ggplot(aes(x=\"bill_length_mm\"))\n        + geom_histogram(dat, fill=\"#C2C2C4\", binwidth=1)\n        + geom_histogram(sel, fill=\"#447099\", binwidth=1)\n        + theme_minimal()\n    )\n\n\n\n\n\n\nReturn the output\n\n\nDon’t forget to return the object you want displayed in the function! Otherwise the output will not render."
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#render-plot-output-1",
+    "href": "slides/02-shiny/02-app.html#render-plot-output-1",
+    "title": "Build a Shiny application",
+    "section": "Render plot output",
+    "text": "Render plot output\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n# | standalone: true\n# | components: [editor, viewer]\n# | layout: horizontal\nfrom shiny.express import ui, render\n\nfrom palmerpenguins import load_penguins\nfrom plotnine import aes, geom_histogram, ggplot, theme_minimal\n\nui.input_radio_buttons(\n    id=\"species\",\n    label=\"Species\",\n    choices=[\"Adelie\", \"Gentoo\", \"Chinstrap\"],\n    inline=True,\n)\n\ndat = load_penguins()\nspecies = \"Adelie\"\nsel = dat.loc[dat.species == species]\n\n@render.plot #&lt;&lt;\ndef plot(): #&lt;&lt;\n    return ( #&lt;&lt;\n        ggplot(aes(x=\"bill_length_mm\"))\n        + geom_histogram(dat, fill=\"#C2C2C4\", binwidth=1)\n        + geom_histogram(sel, fill=\"#447099\", binwidth=1)\n        + theme_minimal()\n    )"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#reactivity",
+    "href": "slides/02-shiny/02-app.html#reactivity",
+    "title": "Build a Shiny application",
+    "section": "Reactivity",
+    "text": "Reactivity\n\nBut the radio buttons don’t change anything\nWe didn’t connect the input component to the output component\nReactivity is what makes Shiny unique"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#the-data-reacts-to-the-input",
+    "href": "slides/02-shiny/02-app.html#the-data-reacts-to-the-input",
+    "title": "Build a Shiny application",
+    "section": "The data reacts to the input",
+    "text": "The data reacts to the input\ndat = load_penguins()\n\n@render.plot\ndef plot():\n    species = input.species() #&lt;&lt;\n    sel = dat.loc[dat.species == species] #&lt;&lt;\n\n    return (\n        ggplot(aes(x=\"bill_length_mm\"))\n        + geom_histogram(dat, fill=\"#C2C2C4\", binwidth=1)\n        + geom_histogram(sel, fill=\"#447099\", binwidth=1)\n        + theme_minimal()\n    )"
+  },
+  {
+    "objectID": "slides/02-shiny/02-app.html#your-first-application",
+    "href": "slides/02-shiny/02-app.html#your-first-application",
+    "title": "Build a Shiny application",
+    "section": "Your first application",
+    "text": "Your first application\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n#| standalone: true\n#| components: [editor, viewer]\n#| layout: horizontal\n#| viewerHeight: 500\n\nfrom palmerpenguins import load_penguins\nfrom plotnine import aes, geom_histogram, ggplot, theme_minimal\nfrom shiny.express import input, render, ui\n\ndat = load_penguins()\nspecies = dat[\"species\"].unique().tolist()\n\nui.input_radio_buttons(\"species\", \"Species\", species, inline=True)\n\n\n@render.plot\ndef plot():\n    sel = dat[dat[\"species\"] == input.species()]\n    return (\n        ggplot(aes(x=\"bill_length_mm\"))\n        + geom_histogram(dat, fill=\"#C2C2C4\", binwidth=1)\n        + geom_histogram(sel, fill=\"#447099\", binwidth=1)\n        + theme_minimal()\n    )\n\n  \n    −\n    +\n \n 05:00"
   },
   {
     "objectID": "slides/01-intro/04-prompt.html#a-conversation",
@@ -81,7 +340,7 @@
     "href": "slides/01-intro/04-prompt.html#prompt-templates",
     "title": "Prompting",
     "section": "Prompt templates",
-    "text": "Prompt templates\nPython\nprompt.md\nI want you to act like {{ role }}\nPython\nfrom chatlas import ChatOpenAI, interpolate_file\n\nchat = ChatOpenAI()\nchat.system_prompt = interpolate_file(\n  \"prompt.md\",\n  variables={\"role\": \"Yoda\"}\n)\nchat.system_prompt\nR\nlibrary(ellmer)\n\nchat &lt;- chat_anthropic()\nchat$set_system_prompt(\n  interpolate_file(\"prompt.md\", role = \"Yoda\")\n)\nchat$get_system_prompt()\n\n  \n    −\n    +\n \n 02:00"
+    "text": "Prompt templates\nPython\nprompt.md\nI want you to act like {{ role }}\nPython\nfrom chatlas import ChatOpenAI, interpolate_file\n\nchat = ChatOpenAI()\nchat.system_prompt = interpolate_file(\n  \"prompt.md\",\n  variables={\"role\": \"Yoda\"},\n)\nchat.system_prompt\nR\nlibrary(ellmer)\n\nchat &lt;- chat_anthropic()\nchat$set_system_prompt(\n  interpolate_file(\"prompt.md\", role = \"Yoda\")\n)\nchat$get_system_prompt()\n\n  \n    −\n    +\n \n 02:00"
   },
   {
     "objectID": "slides/01-intro/04-prompt.html#guides-on-prompt-writing",
@@ -140,6 +399,20 @@
     "text": "Example Instagram cooking reel (Output)\nCrispy Rice Salmon Cucumber Salad with Creamy Asian Dressing\n\n────────────────────────────────────────────────────────────────────────────────\nShopping List\n\nProduce Aisle:\n\n • 5 Persian cucumbers (or 1 large English cucumber)\n • 1 avocado\n • 1 bunch green onions (about 3/4 cup)\n\nFrozen Aisle:\n\n • 1 cup shelled edamame\n\nMeat & Seafood:\n\n • 8 oz (227 g) salmon\n\nGrains & Rice:\n\n • 2 cups cooked jasmine rice\n\nCondiments:\n\n • Soy sauce\n • Chili crisp/crunch\n • Sesame oil\n • Olive oil\n • Toasted sesame oil\n • Rice vinegar\n • Honey\n\nSpices:\n\n • Garlic powder\n • Ground ginger\n • Kosher salt\n • Black pepper\n\n────────────────────────────────────────────────────────────────────────────────\nIngredients\n\nCrispy Rice:\n\n • 2 cups cooked jasmine rice (450 g), cooled\n • 2 tsp soy sauce (10 ml)\n • 2 tbsp chili crisp/crunch (30 g)\n • 1 tbsp sesame oil (15 ml)\n\nSalmon:\n\n • 8 oz (227 g) salmon\n • Pinch of garlic powder\n • Salt and pepper to taste\n\nSalad:\n\n • 5 Persian cucumbers, thinly sliced (or 1 large English cucumber)\n • 1 cup shelled edamame (150 g)\n • 1 bunch green onions, thinly sliced (approximately 3/4 cup)\n • 1 avocado, diced\n\nCreamy Asian Dressing:\n\n • 1/4 cup olive oil (60 ml)\n • 1/4 cup toasted sesame oil (60 ml)\n • 3 tbsp soy sauce (45 ml) or coconut aminos\n • 3 tbsp rice vinegar (45 ml)\n • 2 tbsp honey (30 g)\n • 1 1/2 tsp ground ginger (7 g)\n • 1/2 tsp kosher salt (3 g)\n\n────────────────────────────────────────────────────────────────────────────────\nCooking Instructions\n\n  1 Preheat the oven to 400°F (200°C). Line a baking sheet with parchment paper.\n  2 Spread the cooked and cooled jasmine rice on the baking sheet.\n  3 Toss the rice with soy sauce, chili crisp, and sesame oil. Bake for 30-35\n    minutes, stirring halfway to ensure it doesn’t burn.\n  4 While the rice bakes, season the salmon with garlic powder, salt, and\n    pepper. Place on another baking sheet.\n  5 Add the salmon to the oven with the rice and bake for 13-14 minutes, or\n    until desired doneness.\n  6 Once done, remove the crispy rice from the oven and set it aside.\n  7 Shred the salmon into smaller pieces and set aside.\n  8 In a large bowl, combine the sliced cucumbers, shelled edamame, thinly\n    sliced green onions, and diced avocado.\n  9 Top the salad with the shredded salmon and crispy rice.\n 10 For the dressing, whisk together olive oil, toasted sesame oil, soy sauce,\n    rice vinegar, honey, ground ginger, and kosher salt.\n 11 Taste the dressing and adjust seasonings as needed. Pour it over the salad\n    and toss everything gently to combine.\n 12 Enjoy your delicious Crispy Rice Salmon Cucumber Salad!\n\n────────────────────────────────────────────────────────────────────────────────\nFeel free to follow these steps for a refreshing and textured salad experience!"
   },
   {
+    "objectID": "slides/01-intro/04-prompt.html#demo-instagram-cooking-reel",
+    "href": "slides/01-intro/04-prompt.html#demo-instagram-cooking-reel",
+    "title": "Prompting",
+    "section": "Demo: Instagram cooking reel",
+    "text": "Demo: Instagram cooking reel\nhttps://github.com/chendaniely/ai-hackathon-2024"
+  },
+  {
+    "objectID": "slides/01-intro/04-prompt.html#you-try",
+    "href": "slides/01-intro/04-prompt.html#you-try",
+    "title": "Prompting",
+    "section": "You Try",
+    "text": "You Try\n\nChange your system prompt\nChange your model\n\nSee the Models page for some example models\n\n  \n    −\n    +\n \n 05:00"
+  },
+  {
     "objectID": "slides/01-intro/02-anatomy.html#llm-conversations-are-http-requests",
     "href": "slides/01-intro/02-anatomy.html#llm-conversations-are-http-requests",
     "title": "Anatomy of a Conversation",
@@ -193,7 +466,7 @@
     "href": "slides/01-intro/02-anatomy.html#token-example",
     "title": "Anatomy of a Conversation",
     "section": "Token example",
-    "text": "Token example\nCommon words represented with a single number:\n\nWhat is the capital of the moon?\n4827, 382, 290, 9029, 328, 290, 28479, 30\n8 tokens total (including punctuation)\n\n\nOther words may require multiple numbers\n\ncounterrevolutionary\ncounter, re, volution, ary\n32128, 264, 9477, 815\n4 tokens total"
+    "text": "Token example\nCommon words represented with a single number:\n\nWhat is the capital of the moon?\n4827, 382, 290, 9029, 328, 290, 28479, 30\n8 tokens total (including punctuation)\n\n\nOther words may require multiple numbers\n\ncounterrevolutionary\ncounter, re, volution, ary\n32128, 264, 9477, 815\n4 tokens total\n2-3 Tokens ﷺ (Arabic)"
   },
   {
     "objectID": "slides/01-intro/02-anatomy.html#token-pricing-anthropic",
@@ -228,7 +501,7 @@
     "href": "workshop.html",
     "title": "Workshop",
     "section": "",
-    "text": "Time\nActivity\n\n\n\n\n09:15\nSettling in, Setup instructions, and introductions\n\n\n09:30\nWelcome! Introduction and overview\n\n\n09:45\nAnatomy of a conversation\n\n\n10:20\nbreak\n\n\n10:30\nDemo: 20 Questions by Winston Chang\n\n\n10:35\nYour first chat with an LLM\n\n\n10:35\nPrompting / Dan’s AI Hackathon Demo\n\n\n10:35\nModels\n\n\n11:20\nbreak\n\n\n13:00\nIntroduction to Shiny\n\n\n14:30\nYour first Shiny application\n\n\n14:30\nShiny’s reactivity programming model\n\n\n13:30\nAI Chat Interfaces\n\n\n13:30\nChat with your data: Querychat\n\n\n13:50\nbreak\n\n\n14:00\nTool Calling\n\n\n14:00\nStructured Data\n\n\n14:50\nbreak\n\n\n15:00\nRetrieval-augmented generation (RAG)\n\n\n15:00\nModel Context Protocol (MCP)\n\n\n15:50\nbreak\n\n\n16:30\nResources / Wrap up / End"
+    "text": "Time\nActivity\n\n\n\n\n08:30\nRegistration and Breakfast\n\n\n09:00\nSettling in\n\n\n09:15\nSetup instructions, and introductions\n\n\n09:30\nWelcome! Introduction and overview\n\n\n09:45\nAnatomy of a conversation\n\n\n10:00\nbreak\n\n\n10:15\nDemo: 20 Questions by Winston Chang\n\n\n10:20\nYour first chat with an LLM\n\n\n10:50\nPrompting / Dan’s AI Hackathon Demo\n\n\n11:00\nbreak\n\n\n11:15\nModels\n\n\n11:20\nIntroduction to Shiny\n\n\n11:30\nYour first Shiny application\n\n\n12:30\nLunch\n\n\n13:30\nShiny’s reactivity programming model\n\n\n13:45\nAI Chat Interfaces\n\n\n14:00\nChat with your data: Querychat\n\n\n14:15\nbreak\n\n\n14:30\nTool Calling\n\n\n15:00\nStructured Data\n\n\n15:15\nbreak\n\n\n15:30\nRetrieval-augmented generation (RAG)\n\n\n16:00\nModel Context Protocol (MCP)\n\n\n16:30\nResources / Wrap up / End\n\n\n17:00\nFinish"
   },
   {
     "objectID": "setup.html",
@@ -362,6 +635,13 @@
     "title": "Choosing a model",
     "section": "",
     "text": "Provider\nModel\nDescription\nNotes\nTakeaway\n\n\n\n\nOpenAI\nGPT-4.1\nGood general-purpose model\n1 million token context length\nGood models for general-purpose use\n\n\nOpenAI\nGPT-4.1-mini\nFaster, cheaper, and dumber version of GPT-4.1\n\n\n\n\nOpenAI\nGPT-4.1-nano\nEven faster, cheaper, and dumber\n\n\n\n\nOpenAI\no3\nBetter at complex math and coding\nSlower and more expensive\n\n\n\nOpenAI\no4-mini\nReasoning model, not as strong as o3\nCheaper than GPT-4.1\n\n\n\nOpenAI\nAPI\nAccess via OpenAI or Azure\nOpenAI, Azure\n\n\n\nAnthropic\nClaude 3.7 Sonnet\nGood general-purpose model\nBest for code generation\nBest model for code generation\n\n\nAnthropic\nClaude 3.5 Sonnet v2\nOlder but still excellent\nSome prefer it to 3.7\n\n\n\nAnthropic\nClaude 3.5 Haiku\nFaster, cheaper, and dumber\n\n\n\n\nAnthropic\nAPI\nAccess via Anthropic or AWS Bedrock\nAnthropic, AWS Bedrock\n\n\n\nGoogle\nGemini 2.0 Flash\nVery fast\n1 million token context length\nLargest context length — good for big input\n\n\nGoogle\nGemini 2.0 Pro\nSmarter than Flash\n2 million token context length\n\n\n\nLLaMA\nLLaMA 3.1 405b\nText-only\n229GB, not as smart as best closed models\nGood for on-premise/local use\n\n\nLLaMA\nLLaMA 3.2 90b\nText + vision\n55GB\n\n\n\nLLaMA\nLLaMA 3.2 11b\nText + vision\n7.9GB, can run on a MacBook\n\n\n\nLLaMA\nOpen weights + API access\nCan run locally\nVia Ollama, OpenRouter, Groq, AWS Bedrock\n\n\n\nDeepSeek\nDeepSeek R1 671b\nUses chain of thought\n404GB, claimed similar performance to OpenAI o1\n\n\n\nDeepSeek\nDeepSeek R1 32b\nSmaller variant\n20GB, not actually DeepSeek architecture, significantly worse\n\n\n\nDeepSeek\nDeepSeek R1 70b\nMid-size variant\n43GB, not actually DeepSeek architecture\n\n\n\nDeepSeek\nOpen weights + API access\nCan run locally\nVia DeepSeek, OpenRouter\n\n\n\n\n\nTable values taken from Joe Cheng’s LLM Quickstart and converted into a table using ChatGPT."
+  },
+  {
+    "objectID": "07-app.html",
+    "href": "07-app.html",
+    "title": "Shiny",
+    "section": "",
+    "text": "View slides in full screen"
   },
   {
     "objectID": "09-chatbot.html",
@@ -837,7 +1117,7 @@
     "href": "slides/03-shiny-llm/02-querychat.html#demo-querychat-python",
     "title": "Chat with your data: Querychat",
     "section": "Demo: querychat Python",
-    "text": "Demo: querychat Python\nimport querychat\nfrom chatlas import ChatAnthropic\nfrom seaborn import load_dataset\nfrom shiny.express import render\n\n# data -----\ntitanic = load_dataset(\"titanic\")\n\n# chatbot setup -----\ndef create_chat_callback(system_prompt):\n    return ChatAnthropic(system_prompt=system_prompt)\n\n\nquerychat_config = querychat.init(\n    titanic,\n    \"titanic\",\n    greeting=\"\"\"Hello! I'm here to help you explore the Titanic dataset.\"\"\",\n    create_chat_callback=create_chat_callback,\n)\n\nchat = querychat.server(\"chat\", querychat_config)\n\n# shiny application -----\n\n# querychat UI\nquerychat.sidebar(\"chat\")\n\n# querychat filtered dataframe\n@render.data_frame\ndef data_table():\n    return chat[\"df\"]()"
+    "text": "Demo: querychat Python\nimport querychat\nfrom chatlas import ChatAnthropic\nfrom seaborn import load_dataset\nfrom shiny.express import render\n\n# data -----\ntitanic = load_dataset(\"titanic\")\n\n\n# chatbot setup -----\ndef create_chat_callback(system_prompt):\n    return ChatAnthropic(system_prompt=system_prompt)\n\n\nquerychat_config = querychat.init(\n    titanic,\n    \"titanic\",\n    # greeting=\"\"\"Hello! I'm here to help you explore the Titanic dataset.\"\"\",\n    create_chat_callback=create_chat_callback,\n)\n\nchat = querychat.server(\"chat\", querychat_config)\n\n# shiny application -----\n\n# querychat UI\nquerychat.sidebar(\"chat\")\n\n\n# querychat filtered dataframe\n@render.data_frame\ndef data_table():\n    return chat[\"df\"]()"
   },
   {
     "objectID": "slides/03-shiny-llm/02-querychat.html#your-turn-change-querrychat-llm",
@@ -852,5 +1132,124 @@
     "title": "Chat with your data: Querychat",
     "section": "Extending querychat -> sidebot",
     "text": "Extending querychat -&gt; sidebot\n\nSide bot extends querychat into a fullblown dashboard\nDemo: https://shiny.posit.co/py/templates/sidebot/\nuse natural language to drill down into a dataset\n\nPython template example code:\nshiny create --mode core --github jcheng5/py-databot"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#find-structure-in-data",
+    "href": "slides/04-misc/02-structure.html#find-structure-in-data",
+    "title": "Structured Data",
+    "section": "Find structure in data",
+    "text": "Find structure in data\nFrom the chatlas docs:\n\nArticle summaries: Extract key points from lengthy reports or articles to create concise summaries for decision-makers.\nEntity recognition: Identify and extract entities such as names, dates, and locations from unstructured text to create structured datasets.\nSentiment analysis: Extract sentiment scores and associated entities from customer reviews or social media posts to gain insights into public opinion.\nClassification: Classify text into predefined categories, such as spam detection or topic classification.\nImage/PDF input: Extract data from images or PDFs, such as tables or forms, to automate data entry processes."
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#components",
+    "href": "slides/04-misc/02-structure.html#components",
+    "title": "Structured Data",
+    "section": "Components",
+    "text": "Components\n\nchatlas: Chat.extract_data() method\npydantic: data model from BaseModel, with optional Field descriptions"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#simple-example",
+    "href": "slides/04-misc/02-structure.html#simple-example",
+    "title": "Structured Data",
+    "section": "Simple example",
+    "text": "Simple example\nimport chatlas as ctl\nfrom pydantic import BaseModel\n\nclass Person(BaseModel):\n    name: str\n    age: int\n\nchat = ctl.ChatOpenAI()\nchat.extract_data(\n  \"My name is Susan and I'm 13 years old\",\n  data_model=Person,\n)\noutput:\n{\"name\": \"Susan\", \"age\": 13}"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#add-descriptions",
+    "href": "slides/04-misc/02-structure.html#add-descriptions",
+    "title": "Structured Data",
+    "section": "Add descriptions",
+    "text": "Add descriptions\n\nField(): add a description to the model\nType hint with None: to allow optional\n\nimport chatlas as ctl\nfrom pydantic import BaseModel, Field\n\n\nclass Person(BaseModel):\n    \"\"\"A person\"\"\"\n\n    name: str = Field(description=\"Name\")\n    age: int = Field(description=\"Age, in years\")\n    hobbies: list[str] | None = Field(\n        description=\"List of hobbies. Should be exclusive and brief.\"\n    )\n\nchat = ctl.ChatAnthropic() # changed to Anthropic\nchat.extract_data(\n  \"My name is Susan and I'm 13 years old\",\n  data_model=Person,\n)"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#article-summary",
+    "href": "slides/04-misc/02-structure.html#article-summary",
+    "title": "Structured Data",
+    "section": "Article summary",
+    "text": "Article summary\nDemo Chatlas docs: https://posit-dev.github.io/chatlas/structured-data/article-summary.html"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#entity-recognition",
+    "href": "slides/04-misc/02-structure.html#entity-recognition",
+    "title": "Structured Data",
+    "section": "Entity recognition",
+    "text": "Entity recognition\n\nIf you want a pandas dataframe as an output\n\nTou need to create the row-wise spec of data\nThen create a list of your row data\n\n\nDemo Chatlas docs: https://posit-dev.github.io/chatlas/structured-data/entity-recognition.html"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#sentiment-analysis",
+    "href": "slides/04-misc/02-structure.html#sentiment-analysis",
+    "title": "Structured Data",
+    "section": "Sentiment analysis",
+    "text": "Sentiment analysis\nDemo Chatlas docs: https://posit-dev.github.io/chatlas/structured-data/sentiment-analysis.html"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#classification",
+    "href": "slides/04-misc/02-structure.html#classification",
+    "title": "Structured Data",
+    "section": "Classification",
+    "text": "Classification\nDemo Chatlas Docs: https://posit-dev.github.io/chatlas/structured-data/classification.html"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#multi-modal-input",
+    "href": "slides/04-misc/02-structure.html#multi-modal-input",
+    "title": "Structured Data",
+    "section": "Multi-modal input",
+    "text": "Multi-modal input\n\nImages\nPDFs\n\nDemo Chatlas Docs: https://posit-dev.github.io/chatlas/structured-data/multi-modal.html"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#multi-modal-input-images",
+    "href": "slides/04-misc/02-structure.html#multi-modal-input-images",
+    "title": "Structured Data",
+    "section": "Multi-modal input: Images",
+    "text": "Multi-modal input: Images\nDemo: https://github.com/chendaniely/nydsaic2025-llm/blob/main/code/04-structured/02-image.py"
+  },
+  {
+    "objectID": "slides/04-misc/02-structure.html#multi-modal-input-pdf",
+    "href": "slides/04-misc/02-structure.html#multi-modal-input-pdf",
+    "title": "Structured Data",
+    "section": "Multi-modal input: PDF",
+    "text": "Multi-modal input: PDF\nDemo: https://github.com/chendaniely/nydsaic2025-llm/blob/main/code/04-structured/03-pdf.py"
+  },
+  {
+    "objectID": "slides/04-misc/04-mcp.html#what-is-model-context-protocol-mcp",
+    "href": "slides/04-misc/04-mcp.html#what-is-model-context-protocol-mcp",
+    "title": "Model Context Protocol (MCP)",
+    "section": "What is Model Context Protocol (MCP)?",
+    "text": "What is Model Context Protocol (MCP)?\n\nAn open standard for connecting LLMs to external tools and data\nDefines how a model can discover, call, and interact with tools\nMakes tool use interoperable across different apps and providers"
+  },
+  {
+    "objectID": "slides/04-misc/04-mcp.html#why-mcp",
+    "href": "slides/04-misc/04-mcp.html#why-mcp",
+    "title": "Model Context Protocol (MCP)",
+    "section": "Why MCP?",
+    "text": "Why MCP?\n\nWithout MCP: each app or provider defines its own tool API format\nWith MCP: one protocol → tools can work with any LLM that supports MCP\nReduces friction for developers (no custom glue code for every integration)"
+  },
+  {
+    "objectID": "slides/04-misc/04-mcp.html#mcp-vs-rag",
+    "href": "slides/04-misc/04-mcp.html#mcp-vs-rag",
+    "title": "Model Context Protocol (MCP)",
+    "section": "MCP vs RAG",
+    "text": "MCP vs RAG\n\nRAG: retrieval pipeline (vector DB, search, unstructured docs)\nMCP: standard way to connect to any tool (databases, APIs, search engines, etc.)\nTogether: RAG retrieval itself could be exposed as a tool via MCP"
+  },
+  {
+    "objectID": "slides/04-misc/04-mcp.html#benefits-of-mcp",
+    "href": "slides/04-misc/04-mcp.html#benefits-of-mcp",
+    "title": "Model Context Protocol (MCP)",
+    "section": "Benefits of MCP",
+    "text": "Benefits of MCP\n\nPortable: one tool, many LLM hosts\nExtensible: supports structured inputs/outputs\nSecure: standardizes permissions and auditing\nFuture-proof: ecosystem of reusable MCP tools"
+  },
+  {
+    "objectID": "slides/04-misc/04-mcp.html#example-mcp-use-case",
+    "href": "slides/04-misc/04-mcp.html#example-mcp-use-case",
+    "title": "Model Context Protocol (MCP)",
+    "section": "Example MCP Use Case",
+    "text": "Example MCP Use Case\n\nLLM is asked: “What’s the latest issue assigned to me in GitHub?”\nModel calls the GitHub MCP tool\nTool fetches trusted data via API\nModel responds with the result — no custom integration required"
+  },
+  {
+    "objectID": "slides/04-misc/04-mcp.html#demo-run-python",
+    "href": "slides/04-misc/04-mcp.html#demo-run-python",
+    "title": "Model Context Protocol (MCP)",
+    "section": "Demo: Run python",
+    "text": "Demo: Run python\nhttps://github.com/chendaniely/nydsaic2025-llm/tree/main/code/07-mcp"
   }
 ]

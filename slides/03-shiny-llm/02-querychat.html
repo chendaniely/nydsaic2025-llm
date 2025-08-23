@@ -97,7 +97,6 @@
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-d25e68c9ad75043bc9785404553ea3be.css">
-  <link rel="stylesheet" href="styles.css">
   <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -251,29 +250,31 @@
 <span id="cb2-6"><a></a><span class="co"># data -----</span></span>
 <span id="cb2-7"><a></a>titanic <span class="op">=</span> load_dataset(<span class="st">"titanic"</span>)</span>
 <span id="cb2-8"><a></a></span>
-<span id="cb2-9"><a></a><span class="co"># chatbot setup -----</span></span>
-<span id="cb2-10"><a></a><span class="kw">def</span> create_chat_callback(system_prompt):</span>
-<span id="cb2-11"><a></a>    <span class="cf">return</span> ChatAnthropic(system_prompt<span class="op">=</span>system_prompt)</span>
-<span id="cb2-12"><a></a></span>
+<span id="cb2-9"><a></a></span>
+<span id="cb2-10"><a></a><span class="co"># chatbot setup -----</span></span>
+<span id="cb2-11"><a></a><span class="kw">def</span> create_chat_callback(system_prompt):</span>
+<span id="cb2-12"><a></a>    <span class="cf">return</span> ChatAnthropic(system_prompt<span class="op">=</span>system_prompt)</span>
 <span id="cb2-13"><a></a></span>
-<span id="cb2-14"><a></a>querychat_config <span class="op">=</span> querychat.init(</span>
-<span id="cb2-15"><a></a>    titanic,</span>
-<span id="cb2-16"><a></a>    <span class="st">"titanic"</span>,</span>
-<span id="cb2-17"><a></a>    greeting<span class="op">=</span><span class="st">"""Hello! I'm here to help you explore the Titanic dataset."""</span>,</span>
-<span id="cb2-18"><a></a>    create_chat_callback<span class="op">=</span>create_chat_callback,</span>
-<span id="cb2-19"><a></a>)</span>
-<span id="cb2-20"><a></a></span>
-<span id="cb2-21"><a></a>chat <span class="op">=</span> querychat.server(<span class="st">"chat"</span>, querychat_config)</span>
-<span id="cb2-22"><a></a></span>
-<span id="cb2-23"><a></a><span class="co"># shiny application -----</span></span>
-<span id="cb2-24"><a></a></span>
-<span id="cb2-25"><a></a><span class="co"># querychat UI</span></span>
-<span id="cb2-26"><a></a>querychat.sidebar(<span class="st">"chat"</span>)</span>
-<span id="cb2-27"><a></a></span>
-<span id="cb2-28"><a></a><span class="co"># querychat filtered dataframe</span></span>
-<span id="cb2-29"><a></a><span class="at">@render.data_frame</span></span>
-<span id="cb2-30"><a></a><span class="kw">def</span> data_table():</span>
-<span id="cb2-31"><a></a>    <span class="cf">return</span> chat[<span class="st">"df"</span>]()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-14"><a></a></span>
+<span id="cb2-15"><a></a>querychat_config <span class="op">=</span> querychat.init(</span>
+<span id="cb2-16"><a></a>    titanic,</span>
+<span id="cb2-17"><a></a>    <span class="st">"titanic"</span>,</span>
+<span id="cb2-18"><a></a>    <span class="co"># greeting="""Hello! I'm here to help you explore the Titanic dataset.""",</span></span>
+<span id="cb2-19"><a></a>    create_chat_callback<span class="op">=</span>create_chat_callback,</span>
+<span id="cb2-20"><a></a>)</span>
+<span id="cb2-21"><a></a></span>
+<span id="cb2-22"><a></a>chat <span class="op">=</span> querychat.server(<span class="st">"chat"</span>, querychat_config)</span>
+<span id="cb2-23"><a></a></span>
+<span id="cb2-24"><a></a><span class="co"># shiny application -----</span></span>
+<span id="cb2-25"><a></a></span>
+<span id="cb2-26"><a></a><span class="co"># querychat UI</span></span>
+<span id="cb2-27"><a></a>querychat.sidebar(<span class="st">"chat"</span>)</span>
+<span id="cb2-28"><a></a></span>
+<span id="cb2-29"><a></a></span>
+<span id="cb2-30"><a></a><span class="co"># querychat filtered dataframe</span></span>
+<span id="cb2-31"><a></a><span class="at">@render.data_frame</span></span>
+<span id="cb2-32"><a></a><span class="kw">def</span> data_table():</span>
+<span id="cb2-33"><a></a>    <span class="cf">return</span> chat[<span class="st">"df"</span>]()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="your-turn-change-querrychat-llm" class="slide level2">
 <h2>Your turn: Change querrychat LLM</h2>
@@ -281,7 +282,7 @@
 <li>Modify one of the querychat examples and swap it with another model</li>
 <li>Try using one of the local Ollama models and compare with your neighbor</li>
 </ul>
-<div id="timer_28b9bb34bd2d7d130af6ac790ab65274844c7676" class="countdown" data-warn-when="0" data-update-every="1" data-play-sound="true" data-blink-colon="false" data-start-immediately="false" tabindex="0" style="right: 0;bottom: 0;">
+<div id="timer_ebd1617b9d45347a3de9c052fd19ed65c3e92d97" class="countdown" data-warn-when="0" data-update-every="1" data-play-sound="true" data-blink-colon="false" data-start-immediately="false" tabindex="0" style="right: 0;bottom: 0;">
   <div class="countdown-controls">
     <button class="countdown-bump-down">−</button>
     <button class="countdown-bump-up">+</button>
