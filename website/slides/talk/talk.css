@@ -1,0 +1,5 @@
+.text-output {
+    font-size: 0.65em;
+    line-height: 1.4; /* Adjust line spacing for readability */
+    color: #555; /* Optional: slightly muted color */
+}
