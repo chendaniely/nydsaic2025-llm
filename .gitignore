@@ -6,6 +6,7 @@ temp/
 node_modules
 *_files
 *.html
+**.quarto_ipynb
 
 _site/
 site_libs
