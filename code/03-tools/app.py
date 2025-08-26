@@ -1,8 +1,8 @@
 from chatlas import ChatAnthropic
 from shiny.express import ui
 
-from code.get_coordinates import get_coordinates
-from code.get_weather import get_weather
+from helper.get_coordinates import get_coordinates
+from helper.get_weather import get_weather
 
 chat_client = ChatAnthropic()
 
