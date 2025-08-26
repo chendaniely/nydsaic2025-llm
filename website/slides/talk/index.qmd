@@ -46,7 +46,21 @@ You can harness to power of LLMs in your own work.
 
 ## Hallucinations?
 
-- Create a vending machine... call the FBI on you
+::: {.columns}
+::: {.column}
+
+![](/img/talk/paper.png)
+
+:::
+::: {.column}
+
+![](/img/talk/paper-fbi.png)
+
+:::
+:::
+
+
+<https://arxiv.org/abs/2502.15840>
 
 ## Draw ASCII
 
@@ -69,7 +83,7 @@ You can harness to power of LLMs in your own work.
 - Transparent: Am I able to audit and inspect your work ... easily?
 - Reproducible/replicable: Can others come to the same conclusion?
 
-...
+. . .
 
 But these are everything LLMs are notoriously bad at!
 
@@ -414,15 +428,6 @@ For Claude Sonnet:
 {"role": "assistant", "content": "Yes, I am sure. The moon has no capital or formal governance."}
 ```
 
-## Summary
-
-- A message is an object with:
-  - role (e.g., “system”, “user”, “assistant”)
-  - content string
-- A chat conversation is a growing list of messages
-- The OpenAI chat API is a stateless HTTP endpoint: takes a list of messages as input, returns a new message as output
-
-
 # LLMs + Data Science
 
 ## Packages
@@ -431,7 +436,7 @@ For Claude Sonnet:
 ::: {.column}
 Python Chatlas
 
-![](/img/logo-chatlas.png)
+![](/img/logo-chatlas.png){width="300"}
 
 <https://posit-dev.github.io/chatlas/>
 
@@ -439,7 +444,7 @@ Python Chatlas
 ::: {.column}
 R Ellmer
 
-![](/img/logo-ellmer.png)
+![](/img/logo-ellmer.png){width="300"}
 
 <https://ellmer.tidyverse.org/>
 
@@ -810,7 +815,7 @@ Learn More:
 ::: {.column}
 
 ![](/img/talk/qr-code.png)
+:::
+:::
 
 <https://github.com/chendaniely/nydsaic2025-llm>
-:::
-:::
