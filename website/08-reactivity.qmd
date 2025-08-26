@@ -5,6 +5,6 @@ toc: false
 
 :::{.column-page-inset-right}
 
-{{< revealjs file="slides/02-shiny/02-reactivity.html" height="500px" class="ratio ratio-16x9" >}}
+{{< revealjs file="slides/02-shiny/03-reactivity.html" height="500px" class="ratio ratio-16x9" >}}
 
 :::
