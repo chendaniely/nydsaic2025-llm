@@ -431,7 +431,7 @@
     "href": "slides/04-misc/01-tools.html#example-weather-tool---weather-1",
     "title": "Tool Calling",
     "section": "Example Weather tool - Weather",
-    "text": "Example Weather tool - Weather\n\n\n{'latitude': 40.710335,\n 'longitude': -73.99309,\n 'generationtime_ms': 0.07367134094238281,\n 'utc_offset_seconds': 0,\n 'timezone': 'GMT',\n 'timezone_abbreviation': 'GMT',\n 'elevation': 32.0,\n 'current_weather_units': {'time': 'iso8601',\n  'interval': 'seconds',\n  'temperature': '°C',\n  'windspeed': 'km/h',\n  'winddirection': '°',\n  'is_day': '',\n  'weathercode': 'wmo code'},\n 'current_weather': {'time': '2025-08-26T02:00',\n  'interval': 900,\n  'temperature': 24.0,\n  'windspeed': 12.2,\n  'winddirection': 246,\n  'is_day': 0,\n  'weathercode': 3}}"
+    "text": "Example Weather tool - Weather\n\n\n{'latitude': 40.710335,\n 'longitude': -73.99309,\n 'generationtime_ms': 0.08571147918701172,\n 'utc_offset_seconds': 0,\n 'timezone': 'GMT',\n 'timezone_abbreviation': 'GMT',\n 'elevation': 32.0,\n 'current_weather_units': {'time': 'iso8601',\n  'interval': 'seconds',\n  'temperature': '°C',\n  'windspeed': 'km/h',\n  'winddirection': '°',\n  'is_day': '',\n  'weathercode': 'wmo code'},\n 'current_weather': {'time': '2025-08-26T12:45',\n  'interval': 900,\n  'temperature': 21.3,\n  'windspeed': 11.1,\n  'winddirection': 306,\n  'is_day': 1,\n  'weathercode': 0}}"
   },
   {
     "objectID": "slides/04-misc/01-tools.html#example-weather-tool---register",
