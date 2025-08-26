@@ -11,6 +11,7 @@ project:
 
 website:
   title: "NYDSAIC 2025"
+  google-analytics: "G-9V0PHPJJY9"
   navbar:
     left:
       - href: workshop.qmd
