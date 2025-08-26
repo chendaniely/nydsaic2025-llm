@@ -236,7 +236,7 @@
 </section>
 <section id="example-weather-tool---geocode-1" class="slide level2">
 <h2>Example Weather tool - Geocode</h2>
-<div id="a1490d19" class="cell" data-execution_count="2">
+<div id="5e610702" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>{'lat': 40.7127281, 'lon': -74.0060152}</code></pre>
 </div>
@@ -247,11 +247,11 @@
 </section>
 <section id="example-weather-tool---weather-1" class="slide level2">
 <h2>Example Weather tool - Weather</h2>
-<div id="7875b090" class="cell" data-execution_count="4">
+<div id="06932c9b" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>{'latitude': 40.710335,
  'longitude': -73.99309,
- 'generationtime_ms': 0.06771087646484375,
+ 'generationtime_ms': 0.07367134094238281,
  'utc_offset_seconds': 0,
  'timezone': 'GMT',
  'timezone_abbreviation': 'GMT',
@@ -263,13 +263,13 @@
   'winddirection': '°',
   'is_day': '',
   'weathercode': 'wmo code'},
- 'current_weather': {'time': '2025-08-23T03:00',
+ 'current_weather': {'time': '2025-08-26T02:00',
   'interval': 900,
-  'temperature': 21.1,
-  'windspeed': 10.5,
-  'winddirection': 221,
+  'temperature': 24.0,
+  'windspeed': 12.2,
+  'winddirection': 246,
   'is_day': 0,
-  'weathercode': 0}}</code></pre>
+  'weathercode': 3}}</code></pre>
 </div>
 </div>
 </section>
@@ -382,8 +382,8 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> chatlas <span class="im">import</span> ChatAnthropic</span>
 <span id="cb6-2"><a></a><span class="im">from</span> shiny.express <span class="im">import</span> ui</span>
 <span id="cb6-3"><a></a></span>
-<span id="cb6-4"><a></a><span class="im">from</span> code.get_coordinates <span class="im">import</span> get_coordinates</span>
-<span id="cb6-5"><a></a><span class="im">from</span> code.get_weather <span class="im">import</span> get_weather</span>
+<span id="cb6-4"><a></a><span class="im">from</span> helper.get_coordinates <span class="im">import</span> get_coordinates</span>
+<span id="cb6-5"><a></a><span class="im">from</span> helper.get_weather <span class="im">import</span> get_weather</span>
 <span id="cb6-6"><a></a></span>
 <span id="cb6-7"><a></a>chat_client <span class="op">=</span> ChatAnthropic()</span>
 <span id="cb6-8"><a></a></span>
